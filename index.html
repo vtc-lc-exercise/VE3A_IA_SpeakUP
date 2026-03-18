@@ -694,11 +694,15 @@
         function initVoices() { voices = synth.getVoices(); }
         synth.onvoiceschanged = initVoices;
 
+        // 【重點更新】呢度加咗正則表達式，將 am 同 pm 換成 A M 同 P M
         function speakText(text, accentId, speedId) {
             if (synth.speaking) synth.cancel();
             if (!text || text.trim() === '') return;
             
-            let processedText = text.replace(/20K/gi, '20 thousand');
+            let processedText = text.replace(/20K/gi, '20 thousand')
+                                    .replace(/\bpm\b/gi, 'P M')
+                                    .replace(/\bam\b/gi, 'A M');
+                                    
             const utterThis = new SpeechSynthesisUtterance(processedText);
             const selectedAccent = document.getElementById(accentId).value;
             const speed = document.getElementById(speedId).value;
@@ -940,7 +944,6 @@
             }, 3500);
         }
 
-        // 修改咗呢個 function ！！！
         function makeTextClickable(node) {
             if (node.nodeType === Node.TEXT_NODE && node.nodeValue.trim() !== '') {
                 const words = node.nodeValue.split(/(\s+)/);
@@ -960,7 +963,6 @@
                 });
                 if (hasWord) node.parentNode.replaceChild(fragment, node);
             } else if (node.nodeType === Node.ELEMENT_NODE) {
-                // 加咗 !node.classList.contains('pointer-events-none') 條件
                 if (node.nodeName !== 'SCRIPT' && node.nodeName !== 'STYLE' && node.nodeName !== 'BUTTON' && !node.classList.contains('fa-solid') && !node.classList.contains('pointer-events-none')) {
                     Array.from(node.childNodes).forEach(makeTextClickable);
                 }
