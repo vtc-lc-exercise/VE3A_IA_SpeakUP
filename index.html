@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SpeakUp! VE3A: Integrated Assessment</title>
+    <title>SpeakUp! Vocational English 3A: Integrated Assessment</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
@@ -29,7 +29,7 @@
         
         /* Responsive Slide Container */
         .slide-container { 
-            aspect-ratio: 4/3; /* Taller on mobile */
+            min-height: 320px;
             background: #fff; 
             border: 2px solid #e2e8f0; 
             border-radius: 8px; 
@@ -38,11 +38,13 @@
             overflow-x: hidden;
             box-shadow: 0 4px 6px rgba(0,0,0,0.05); 
             width: 100%;
+            display: flex;
+            flex-direction: column;
         }
-        /* Desktop aspect ratio */
         @media (min-width: 768px) {
             .slide-container {
                 aspect-ratio: 16/9;
+                min-height: auto;
                 overflow: hidden;
             }
         }
@@ -213,7 +215,7 @@
                     <div>
                         <label class="block text-sm font-bold text-gray-800 mb-2 flex items-center gap-2"><i class="fa-solid fa-head-side-cough text-purple-800"></i> Voice</label>
                         <select id="assess-voice" class="border border-gray-300 rounded-md px-3 py-2 bg-white focus:outline-none focus:ring-2 focus:ring-purple-400 min-w-[140px] text-gray-700">
-                            <option value="UK">UK English</option>
+                            <option value="UK" selected>UK English</option>
                             <option value="US">US English</option>
                         </select>
                     </div>
@@ -273,7 +275,7 @@
                 <div>
                     <label class="text-sm font-bold text-gray-700 block mb-1">🗣️ Accent</label>
                     <select id="accent-select" class="border border-gray-300 rounded-md p-1.5 text-sm bg-white focus:ring-2 focus:ring-indigo-500 outline-none">
-                        <option value="UK">UK English</option>
+                        <option value="UK" selected>UK English</option>
                         <option value="US">US English</option>
                     </select>
                 </div>
@@ -293,18 +295,20 @@
 
             <!-- STEP 1: Study Slides -->
             <div id="step-1" class="glass-panel p-6 mb-6 transition-all duration-500">
-                <div class="flex justify-between items-center mb-4 border-b pb-2">
-                    <h3 class="text-xl md:text-2xl font-bold text-gray-800"><i class="fa-solid fa-chalkboard text-blue-500 mr-2"></i> Step 1: Study the Slides</h3>
-                    <span id="step1-badge" class="bg-blue-100 text-blue-800 text-xs font-bold px-3 py-1 rounded-full">1 of 3</span>
+                <div class="flex justify-between items-center mb-4 border-b pb-2 gap-2">
+                    <h3 class="text-xl md:text-2xl font-bold text-gray-800 leading-tight"><i class="fa-solid fa-chalkboard text-blue-500 mr-2"></i> Step 1: Study the Slides</h3>
+                    <span id="step1-badge" class="bg-blue-100 text-blue-800 text-xs font-bold px-3 py-1 rounded-full whitespace-nowrap shrink-0">1 of 3</span>
                 </div>
                 <p class="text-gray-600 mb-4 text-sm"><i class="fa-solid fa-lightbulb text-yellow-500 mr-1"></i> <strong>Tip:</strong> Click on <strong>ANY word</strong> in the slides to hear its pronunciation and see its syllables!</p>
                 
                 <div class="max-w-4xl mx-auto">
-                    <div class="slide-container flex flex-col p-2 sm:p-4 bg-white" id="slide-display-study"></div>
-                    <div class="flex justify-between items-center mt-4 bg-gray-100 p-2 rounded-lg">
-                        <button onclick="changeSlide(-1)" class="bg-white px-4 py-2 rounded shadow hover:bg-gray-50 font-semibold text-gray-700"><i class="fa-solid fa-chevron-left mr-1"></i> Prev</button>
-                        <span class="text-sm font-mono text-gray-500 font-bold" id="slide-counter-study">Slide 1 / 3</span>
-                        <button onclick="changeSlide(1)" class="bg-indigo-600 text-white px-4 py-2 rounded shadow hover:bg-indigo-700 font-semibold">Next <i class="fa-solid fa-chevron-right ml-1"></i></button>
+                    <div class="slide-container p-2 sm:p-4 bg-white" id="slide-display-study"></div>
+                    <div class="flex justify-between items-center mt-4 bg-gray-100 p-2 rounded-lg gap-2">
+                        <button onclick="changeSlide(-1)" class="bg-white px-3 md:px-4 py-2 rounded shadow hover:bg-gray-50 font-semibold text-gray-700 text-sm md:text-base shrink-0"><i class="fa-solid fa-chevron-left mr-1"></i> Prev</button>
+                        <div class="flex flex-col items-center flex-1 text-center">
+                            <span class="text-xs md:text-sm font-mono text-gray-500 font-bold" id="slide-counter-study">Slide 1 / 3</span>
+                        </div>
+                        <button onclick="changeSlide(1)" class="bg-indigo-600 text-white px-3 md:px-4 py-2 rounded shadow hover:bg-indigo-700 font-semibold text-sm md:text-base shrink-0">Next <i class="fa-solid fa-chevron-right ml-1"></i></button>
                     </div>
                 </div>
                 <div class="mt-8 text-right">
@@ -314,9 +318,9 @@
 
             <!-- STEP 2: Study Script -->
             <div id="step-2" class="glass-panel p-6 mb-6 hidden transition-all duration-500">
-                <div class="flex justify-between items-center mb-4 border-b pb-2">
-                    <h3 class="text-xl md:text-2xl font-bold text-gray-800"><i class="fa-solid fa-book-open text-indigo-500 mr-2"></i> Step 2: Study the Script</h3>
-                    <span class="bg-indigo-100 text-indigo-800 text-xs font-bold px-3 py-1 rounded-full">2 of 3</span>
+                <div class="flex justify-between items-center mb-4 border-b pb-2 gap-2">
+                    <h3 class="text-xl md:text-2xl font-bold text-gray-800 leading-tight"><i class="fa-solid fa-book-open text-indigo-500 mr-2"></i> Step 2: Study the Script</h3>
+                    <span class="bg-indigo-100 text-indigo-800 text-xs font-bold px-3 py-1 rounded-full whitespace-nowrap shrink-0">2 of 3</span>
                 </div>
                 
                 <p class="text-gray-600 mb-4 text-sm"><i class="fa-solid fa-lightbulb text-yellow-500 mr-1"></i> <strong>Tip:</strong> Click on <strong>ANY word</strong> in the script to hear its pronunciation and see its syllables!</p>
@@ -335,9 +339,9 @@
 
             <!-- STEP 3: Video Recording -->
             <div id="step-3" class="glass-panel p-6 hidden transition-all duration-500">
-                <div class="flex justify-between items-center mb-4 border-b pb-2">
-                    <h3 class="text-xl md:text-2xl font-bold text-gray-800"><i class="fa-solid fa-video text-green-500 mr-2"></i> Step 3: Present & Record</h3>
-                    <span id="step3-badge" class="bg-green-100 text-green-800 text-xs font-bold px-3 py-1 rounded-full">3 of 3</span>
+                <div class="flex justify-between items-center mb-4 border-b pb-2 gap-2">
+                    <h3 class="text-xl md:text-2xl font-bold text-gray-800 leading-tight"><i class="fa-solid fa-video text-green-500 mr-2"></i> Step 3: Present & Record</h3>
+                    <span id="step3-badge" class="bg-green-100 text-green-800 text-xs font-bold px-3 py-1 rounded-full whitespace-nowrap shrink-0">3 of 3</span>
                 </div>
                 
                 <div class="bg-blue-50 border-l-4 border-blue-500 p-4 mb-6 rounded-r shadow-sm flex items-start gap-3">
@@ -351,16 +355,16 @@
                 <div class="flex flex-col gap-6 max-w-4xl mx-auto">
                     <!-- Slides -->
                     <div class="w-full">
-                        <div class="slide-container flex flex-col p-2 sm:p-4 bg-white" id="slide-display-record"></div>
-                        <div class="flex justify-between items-center mt-2 bg-gray-100 p-2 rounded-lg">
-                            <button onclick="changeSlide(-1)" class="bg-white px-4 py-2 rounded shadow hover:bg-gray-50 text-sm font-semibold text-gray-700"><i class="fa-solid fa-chevron-left mr-1"></i> Prev</button>
+                        <div class="slide-container p-2 sm:p-4 bg-white" id="slide-display-record"></div>
+                        <div class="flex justify-between items-center mt-2 bg-gray-100 p-2 rounded-lg gap-2">
+                            <button onclick="changeSlide(-1)" class="bg-white px-3 md:px-4 py-2 rounded shadow hover:bg-gray-50 text-sm font-semibold text-gray-700 shrink-0"><i class="fa-solid fa-chevron-left mr-1"></i> Prev</button>
                             
-                            <div class="flex flex-col items-center">
-                                <span class="text-sm font-mono text-gray-500 font-bold" id="slide-counter-record">Slide 1 / 3</span>
-                                <span class="text-xs text-red-500 font-bold animate-pulse mt-1"><i class="fa-solid fa-hand-pointer"></i> Remember to click Next!</span>
+                            <div class="flex flex-col items-center flex-1 text-center">
+                                <span class="text-xs md:text-sm font-mono text-gray-500 font-bold" id="slide-counter-record">Slide 1 / 3</span>
+                                <span class="text-[10px] md:text-xs text-red-500 font-bold animate-pulse mt-1 leading-tight"><i class="fa-solid fa-hand-pointer"></i> Remember to click Next!</span>
                             </div>
 
-                            <button onclick="changeSlide(1)" class="bg-indigo-600 text-white px-4 py-2 rounded shadow hover:bg-indigo-700 text-sm font-semibold">Next <i class="fa-solid fa-chevron-right ml-1"></i></button>
+                            <button onclick="changeSlide(1)" class="bg-indigo-600 text-white px-3 md:px-4 py-2 rounded shadow hover:bg-indigo-700 text-sm font-semibold shrink-0">Next <i class="fa-solid fa-chevron-right ml-1"></i></button>
                         </div>
                     </div>
 
@@ -469,26 +473,26 @@
             }
         }
 
-        // --- Data Structure ---
+        // --- Data Structure (Updated exactly to match images) ---
         const db = {
             practice: [
                 {
                     title: "Practice Paper 1: Aviation Fair",
                     topic: "Hong Kong Aviation Fair",
                     bgProblem: "average seat occupancy rate: 72% <span class='pointer-events-none' aria-hidden='true'>/</span> month (<span class='pointer-events-none' aria-hidden='true'>↓</span> around 23% since last quarter)",
-                    bgObjective: "To join the Fair <span class='pointer-events-none' aria-hidden='true'>→</span> promote upgraded service package and attract potential customers",
-                    proposal: ["Estimated cost: $20,000", "Period: 15 <span class='pointer-events-none' aria-hidden='true'>-</span> 17 Aug 2026", "Activities: airplane displays, pilot workshops"],
+                    bgObjective: "To join the Hong Kong Aviation Fair <span class='pointer-events-none' aria-hidden='true'>→</span> promote the upgraded service package and attract potential customers",
+                    proposal: ["Estimated cost: $20,000 (fair permit, booth installation, promotional materials)", "Period: 15 <span class='pointer-events-none' aria-hidden='true'>-</span> 17 Aug 20xx", "New airplane displays, pilot workshops, interactive games"],
                     suggestion: "Contact Finance Department <span class='pointer-events-none' aria-hidden='true'>→</span> detailed budget plan",
-                    invitation: ["Fair briefing <span class='pointer-events-none' aria-hidden='true'>→</span> obtain event details", "Next Thurs, 2pm <span class='pointer-events-none' aria-hidden='true'>-</span> 3pm, Meeting Room B"],
+                    invitation: ["Fair briefing <span class='pointer-events-none' aria-hidden='true'>→</span> obtain event details", "Next Thurs, 2pm – 3pm, Meeting Room B"],
                     script: [
                         "Good morning, everyone. Thank you for coming today. I'm Joe. In today's presentation, I'll talk about the proposal for joining the Hong Kong Aviation Fair.",
                         "As you can see on the screen, this presentation will be divided into 4 parts: background, proposal details, benefits and concerns, and lastly, suggestion.",
                         "Let's start with the background information. As you may know, the average seat occupancy rate is 72% per month. It has decreased by around 23% since last quarter. We are therefore proposing joining the Fair to promote our upgraded service package and attract potential customers.",
-                        "Moving on to our proposal details, the estimated cost is 20 thousand dollars, including fair permit, booth installation and promotional materials. The fair will be held from 15 to 17 August 2026. There will be new airplane displays, pilot workshops and interactive games.",
+                        "Moving on to our proposal details, the estimated cost is 20 thousand dollars, including fair permit, booth installation and promotional materials. The fair will be held from 15 to 17 August. There will be new airplane displays, pilot workshops and interactive games.",
                         "You may ask: how would this proposal benefit our company? First, it gives direct exposure to aviation fans and potential customers. Second, it raises our brand awareness among other airlines.",
                         "We understand you may have some concerns. One might ask: Will we get good return from this 20 thousand spending? To address this, we should do customer surveys after the fair.",
                         "You may also wonder if our booth stands out from other airlines. For this, we can assure you that our special service demonstrations will attract more visitors.",
-                        "Based on what we have discussed, we suggest contacting the Finance Department to get a detailed budget plan. I would also like to invite you to our fair briefing to obtain event details. It will be held from 2 pm to 3 pm next Thursday at Meeting Room B.",
+                        "Based on what we have discussed, we suggest contacting the Finance Department to get a detailed budget plan. I would also like to invite you to our fair briefing. It will be held from 2 pm to 3 pm next Thursday at Meeting Room B.",
                         "That's all for my presentation. Thank you for listening. Do you have any questions?"
                     ]
                 },
@@ -496,10 +500,10 @@
                     title: "Practice Paper 2: New Photocopiers",
                     topic: "New Photocopiers",
                     bgProblem: "average no. of copies made: 15,000 <span class='pointer-events-none' aria-hidden='true'>/</span> day (<span class='pointer-events-none' aria-hidden='true'>↑</span> about 33% since last quarter)",
-                    bgObjective: "To offer better photocopying services <span class='pointer-events-none' aria-hidden='true'>→</span> purchase 3 new photocopiers",
-                    proposal: ["Estimated cost: $85,000", "Placed in project room & self-study areas", "A3 & A4 sized, B&W copies only"],
+                    bgObjective: "To offer better photocopying services to students <span class='pointer-events-none' aria-hidden='true'>→</span> purchase 3 new photocopiers",
+                    proposal: ["Estimated cost: $85,000 (machines, maintenance plan)", "Placed in project room & self-study areas", "A3 & A4 sized, black & white copies only"],
                     suggestion: "Contact Supplies Department <span class='pointer-events-none' aria-hidden='true'>→</span> suitable models",
-                    invitation: ["Product demonstration by Best Office Equipment", "15 Jan, 2pm <span class='pointer-events-none' aria-hidden='true'>-</span> 3pm, Room 1207"],
+                    invitation: ["Product demonstration by Best Office Equipment", "15 Jan, 2pm – 3pm, Room 1207"],
                     script: [
                         "Good morning, everyone. Thank you for being here today. I'm Carol Yuen. Today, I'd like to present our proposal for purchasing new photocopiers.",
                         "This presentation covers 4 parts: background, proposal details, benefits and concerns, and lastly, suggestion.",
@@ -516,10 +520,10 @@
                     title: "Practice Paper 3: Chill-out Room",
                     topic: "Chill-out Room",
                     bgProblem: "average no. of colleagues on sick leave: 12 <span class='pointer-events-none' aria-hidden='true'>/</span> month (<span class='pointer-events-none' aria-hidden='true'>↑</span> about 25% since last year)",
-                    bgObjective: "To set up a chill-out room <span class='pointer-events-none' aria-hidden='true'>→</span> provide a space for relaxation and enhance well-being",
-                    proposal: ["Estimated cost: $50,000", "Set-up period: 21 <span class='pointer-events-none' aria-hidden='true'>-</span> 28 March 2026", "Refreshments, massage chairs, yoga mats"],
+                    bgObjective: "To set up a chill-out room <span class='pointer-events-none' aria-hidden='true'>→</span> provide a space for relaxation from work and enhance overall well-being",
+                    proposal: ["Estimated cost: $50,000 (design, renovation, furniture)", "Set-up period: 21 <span class='pointer-events-none' aria-hidden='true'>-</span> 28 March 20xx", "Refreshments, massage chairs, yoga mats"],
                     suggestion: "Source designer house <span class='pointer-events-none' aria-hidden='true'>→</span> interior design plan",
-                    invitation: ["Monthly Business Meeting <span class='pointer-events-none' aria-hidden='true'>→</span> discuss preference", "Next Tue, 10am <span class='pointer-events-none' aria-hidden='true'>-</span> 11am, Conference Room A"],
+                    invitation: ["Monthly Business Meeting <span class='pointer-events-none' aria-hidden='true'>→</span> discuss preference", "Next Tue, 10am - 11am, Conference Room A"],
                     script: [
                         "Good morning, everyone. Thank you for joining us today. I'm Kate Fong, Executive Officer at IT Solutions. Today, I'd like to present our proposal for setting up a chill-out room.",
                         "I have divided today's talk into 4 sections: background, proposal details, benefits and concerns, and finally, suggestion.",
@@ -535,11 +539,11 @@
                 {
                     title: "Practice Paper 4: Dragon Boat Race",
                     topic: "Hong Kong Dragon Boat Race",
-                    bgProblem: "average no. of members last year: 150<span class='pointer-events-none' aria-hidden='true'>/</span>month (<span class='pointer-events-none' aria-hidden='true'>↓</span> about 42%)",
-                    bgObjective: "To join the Dragon Boat Race <span class='pointer-events-none' aria-hidden='true'>→</span> enhance the visibility of our fitness centre",
-                    proposal: ["Expected cost: $30,000", "Period: 1 Apr <span class='pointer-events-none' aria-hidden='true'>-</span> 10 Jun 2026", "Rowing practice, fitness training"],
+                    bgProblem: "average no. of members last year: 150 <span class='pointer-events-none' aria-hidden='true'>/</span> month (<span class='pointer-events-none' aria-hidden='true'>↓</span> about 42%)",
+                    bgObjective: "To join the Hong Kong Dragon Boat Race <span class='pointer-events-none' aria-hidden='true'>→</span> enhance the visibility of our fitness centre to the public",
+                    proposal: ["Expected cost: $30,000 (team gear, training fees, insurance)", "Training and Racing Period: 1 Apr <span class='pointer-events-none' aria-hidden='true'>-</span> 10 Jun 2025", "Rowing practice, fitness training"],
                     suggestion: "Contact race organiser <span class='pointer-events-none' aria-hidden='true'>→</span> event details",
-                    invitation: ["General Staff Meeting <span class='pointer-events-none' aria-hidden='true'>→</span> discuss the logistics", "Next Thu, 10:30am <span class='pointer-events-none' aria-hidden='true'>-</span>  11:30am, Meeting Room B"],
+                    invitation: ["General Staff Meeting <span class='pointer-events-none' aria-hidden='true'>→</span> discuss the logistics", "Next Thu, 10:30am - 11:30am, Meeting Room B"],
                     script: [
                         "Good morning, everyone. Thank you for being here today. I'm Sofia Kong, Marketing Officer at Wellness Fitness. Today, I'd like to present our proposal for joining the Hong Kong Dragon Boat Race.",
                         "This presentation consists of 4 parts: background, proposal details, benefits and concerns, and lastly, suggestion.",
@@ -556,11 +560,11 @@
             mock: {
                 title: "Mock Exam: Business Seminar in New York",
                 topic: "Business Seminar in New York",
-                bgProblem: "average no. of US suppliers <span class='pointer-events-none' aria-hidden='true'>:</span> 184 <span class='pointer-events-none' aria-hidden='true'>/</span> month (<span class='pointer-events-none' aria-hidden='true'>↓</span> about 15% since last month)",
-                bgObjective: "To join the Business Seminar <span class='pointer-events-none' aria-hidden='true'>→</span> attract more US suppliers to use our platform",
-                proposal: ["Estimated budget: $47,000", "Period: 13 <span class='pointer-events-none' aria-hidden='true'>-</span> 15 Aug 2026", "Talks, lunch conference, meetings"],
+                bgProblem: "average no. of US suppliers : 184 <span class='pointer-events-none' aria-hidden='true'>/</span> month (<span class='pointer-events-none' aria-hidden='true'>↓</span> around 15% since last month)",
+                bgObjective: "To join the Business Seminar in New York <span class='pointer-events-none' aria-hidden='true'>→</span> attract more US suppliers to use our online trading platform",
+                proposal: ["Estimated budget: $47,000 (transport & accommodation)", "Period: 13 <span class='pointer-events-none' aria-hidden='true'>-</span> 15 Aug 20xx", "Talks, lunch conference, meetingsবিজনেস owners"],
                 suggestion: "Email seminar organiser <span class='pointer-events-none' aria-hidden='true'>→</span> event details",
-                invitation: ["Business development meeting <span class='pointer-events-none' aria-hidden='true'>→</span> understand work plans", "Next Thu, 10:30 <span class='pointer-events-none' aria-hidden='true'>-</span> 12:30pm, Project Room B"],
+                invitation: ["Business development meeting <span class='pointer-events-none' aria-hidden='true'>→</span> understand work plans", "Next Thu, 10:30 - 12:30pm, Project Room B"],
                 script: [] 
             }
         };
@@ -573,7 +577,7 @@
             return [
                 {
                     html: `
-                        <div class="flex-1 h-fit min-h-full w-full flex flex-col items-center justify-center gap-4 text-center bg-blue-50/30 p-4 md:p-8 border-4 border-blue-100 box-border">
+                        <div class="flex-1 h-fit min-h-full w-full flex flex-col items-center justify-center gap-2 sm:gap-4 text-center bg-blue-50/30 p-2 sm:p-4 md:p-8 border-4 border-blue-100 box-border">
                             <div class="w-full text-left"><div class="bg-blue-200 text-blue-800 px-3 py-1 font-bold tracking-widest uppercase text-[10px] md:text-xs mb-1 inline-block rounded">Presentation Topic</div></div>
                             <h1 class="text-xl sm:text-2xl md:text-5xl font-extrabold text-gray-900 leading-tight my-2">${data.topic}</h1>
                             <div class="w-full text-left mt-2"><div class="bg-blue-200 text-blue-800 px-3 py-1 font-bold tracking-widest uppercase text-[10px] md:text-xs mb-2 inline-block rounded">Presentation Outline</div></div>
@@ -588,7 +592,7 @@
                 },
                 {
                     html: `
-                        <div class="flex-1 h-fit min-h-full w-full flex flex-col justify-center gap-2 sm:gap-4 bg-white p-3 md:p-8 border-4 border-blue-50 text-left box-border">
+                        <div class="flex-1 h-fit min-h-full w-full flex flex-col justify-center gap-2 sm:gap-4 bg-white p-2 sm:p-3 md:p-8 border-4 border-blue-50 text-left box-border">
                             <div>
                                 <div class="bg-blue-200 text-blue-800 px-3 py-1 font-bold tracking-widest uppercase text-[10px] md:text-xs mb-1 md:mb-2 inline-block rounded">Background</div>
                                 <div class="pl-2 md:pl-4 text-[11px] sm:text-xs md:text-base">
@@ -611,29 +615,29 @@
                 },
                 {
                     html: `
-                        <div class="flex-1 h-fit min-h-full w-full flex flex-col justify-center gap-3 sm:gap-4 bg-white p-4 md:p-6 border-4 border-blue-50 text-left box-border">
+                        <div class="flex-1 h-fit min-h-full w-full flex flex-col justify-center gap-1.5 sm:gap-4 bg-white p-2 sm:p-4 md:p-6 border-4 border-blue-50 text-left box-border">
                             <div class="w-full">
-                                <div class="bg-blue-200 text-blue-800 px-2 py-0.5 md:px-3 md:py-1 font-bold tracking-widest uppercase text-[9px] md:text-xs mb-1 inline-block rounded">Benefit(s)</div>
-                                <div class="bg-gray-200 h-4 sm:h-6 md:h-8 w-full rounded"></div>
+                                <div class="bg-blue-200 text-blue-800 px-2 py-0.5 md:px-3 md:py-1 font-bold tracking-widest uppercase text-[9px] md:text-xs mb-0.5 md:mb-1 inline-block rounded">Benefit(s)</div>
+                                <div class="bg-gray-200 h-3 sm:h-6 md:h-8 w-full rounded"></div>
                             </div>
                             <div class="w-full">
-                                <div class="bg-blue-200 text-blue-800 px-2 py-0.5 md:px-3 md:py-1 font-bold tracking-widest uppercase text-[9px] md:text-xs mb-1 inline-block rounded">Concern(s)</div>
-                                <div class="flex items-stretch w-full min-h-[3rem]">
+                                <div class="bg-blue-200 text-blue-800 px-2 py-0.5 md:px-3 md:py-1 font-bold tracking-widest uppercase text-[9px] md:text-xs mb-0.5 md:mb-1 inline-block rounded">Concern(s)</div>
+                                <div class="flex items-stretch w-full min-h-[2.5rem] sm:min-h-[3rem]">
                                     <div class="bg-gray-200 flex-grow rounded-l"></div>
-                                    <div class="bg-white border-2 border-black rounded-r px-2 py-1 text-[10px] sm:text-xs md:text-sm font-bold shrink-0 flex items-center justify-center text-center shadow-sm leading-tight">
+                                    <div class="bg-white border-2 border-black rounded-r px-1.5 py-1 text-[9px] sm:text-xs md:text-sm font-bold shrink-0 flex items-center justify-center text-center shadow-sm leading-tight">
                                         Possible<br>Solution(s)
                                     </div>
                                 </div>
                             </div>
                             <div class="w-full">
-                                <div class="bg-blue-200 text-blue-800 px-2 py-0.5 md:px-3 md:py-1 font-bold tracking-widest uppercase text-[9px] md:text-xs mb-1 inline-block rounded">Suggestion</div>
-                                <div class="bg-gray-50 p-2 md:p-3 rounded text-[10px] sm:text-[11px] md:text-sm text-gray-700 border border-gray-200">
+                                <div class="bg-blue-200 text-blue-800 px-2 py-0.5 md:px-3 md:py-1 font-bold tracking-widest uppercase text-[9px] md:text-xs mb-0.5 md:mb-1 inline-block rounded">Suggestion</div>
+                                <div class="bg-gray-50 p-1.5 sm:p-2 md:p-3 rounded text-[9px] sm:text-[11px] md:text-sm text-gray-700 border border-gray-200">
                                     <ul class="list-disc pl-4 md:pl-5"><li>${data.suggestion}</li></ul>
                                 </div>
                             </div>
                             <div class="w-full">
-                                <div class="bg-blue-200 text-blue-800 px-2 py-0.5 md:px-3 md:py-1 font-bold tracking-widest uppercase text-[9px] md:text-xs mb-1 inline-block rounded">Invitation</div>
-                                <div class="bg-gray-50 p-2 md:p-3 rounded text-[10px] sm:text-[11px] md:text-sm text-gray-700 border border-gray-200">
+                                <div class="bg-blue-200 text-blue-800 px-2 py-0.5 md:px-3 md:py-1 font-bold tracking-widest uppercase text-[9px] md:text-xs mb-0.5 md:mb-1 inline-block rounded">Invitation</div>
+                                <div class="bg-gray-50 p-1.5 sm:p-2 md:p-3 rounded text-[9px] sm:text-[11px] md:text-sm text-gray-700 border border-gray-200">
                                     <ul class="list-disc pl-4 md:pl-5 space-y-0.5 md:space-y-1">
                                         ${data.invitation.map(i => `<li>${i}</li>`).join('')}
                                     </ul>
@@ -694,21 +698,25 @@
         function initVoices() { voices = synth.getVoices(); }
         synth.onvoiceschanged = initVoices;
 
-        // 【重點更新】呢度加咗正則表達式，將 am 同 pm 換成 A M 同 P M
         function speakText(text, accentId, speedId) {
             if (synth.speaking) synth.cancel();
             if (!text || text.trim() === '') return;
             
             let processedText = text.replace(/20K/gi, '20 thousand')
                                     .replace(/\bpm\b/gi, 'P M')
-                                    .replace(/\bam\b/gi, 'A M');
+                                    .replace(/\bam\b/gi, 'A M')
+                                    .replace(/&/g, ' and '); // Fix ampersand pronunciation
                                     
             const utterThis = new SpeechSynthesisUtterance(processedText);
             const selectedAccent = document.getElementById(accentId).value;
             const speed = document.getElementById(speedId).value;
             
-            let voice = voices.find(v => v.lang.includes(selectedAccent === 'UK' ? 'en-GB' : 'en-US') && (v.name.includes('Female') || v.name.includes('Google') || v.name.includes('Natural')));
-            if(!voice) voice = voices.find(v => v.lang.includes(selectedAccent === 'UK' ? 'en-GB' : 'en-US'));
+            // 【關鍵修改】：強制鎖定語言為英文，防止數字讀成中文
+            const langCode = selectedAccent === 'UK' ? 'en-GB' : 'en-US';
+            utterThis.lang = langCode; 
+            
+            let voice = voices.find(v => v.lang.includes(langCode) && (v.name.includes('Female') || v.name.includes('Google') || v.name.includes('Natural')));
+            if(!voice) voice = voices.find(v => v.lang.includes(langCode));
             if(voice) utterThis.voice = voice;
             utterThis.rate = parseFloat(speed); 
             
@@ -793,7 +801,7 @@
                 try {
                     await navigator.share({
                         title: 'My SpeakUp Audio Practice',
-                        text: 'Here is my audio recording for VE3A!',
+                        text: 'Here is my audio recording for Vocational English 3A!',
                         files: [file]
                     });
                 } catch (err) {
@@ -870,12 +878,17 @@
             '42%': 'forty two percent', '150': 'one hundred and fifty',
             '$85000': 'eighty five thousand dollars',
             '$50000': 'fifty thousand dollars',
+            '$47000': 'forty seven thousand dollars',
             '$30000': 'thirty thousand dollars',
+            '$20000': 'twenty thousand dollars',
             '85000': 'eighty five thousand',
             '50000': 'fifty thousand',
+            '47000': 'forty seven thousand',
             '30000': 'thirty thousand',
-            '2025': 'twenty twenty five', '2026': 'twenty twenty six',
-            '1207': 'twelve oh seven', 'pm': 'P M', 'am': 'A M'
+            '20000': 'twenty thousand',
+            '2025': 'twenty twenty five', '2026': 'twenty twenty six', '20xx': 'twenty twenty',
+            '1207': 'twelve oh seven', 'pm': 'P M', 'am': 'A M',
+            'no': 'number', '&': 'and'
         };
 
         const syllableDict = { 
@@ -897,6 +910,7 @@
             'survey': 'sur-vey',
             'surveys': 'sur-veys',
             'colleagues': 'col-leagues',
+            'accommodation': 'ac-com-mo-da-tion',
             'aug': 'Au-gust', 'jan': 'Jan-u-a-ry', 'apr': 'A-pril', 'jun': 'June',
             'thurs': 'Thurs-day', 'thu': 'Thurs-day', 'tue': 'Tues-day',
             '20': 'twen-ty', '15': 'fif-teen', '17': 'se-ven-teen',
@@ -905,12 +919,17 @@
             '42%': 'for-ty-two per-cent', '150': 'one hun-dred and fif-ty',
             '$85000': 'eigh-ty-five thou-sand dol-lars',
             '$50000': 'fif-ty thou-sand dol-lars',
+            '$47000': 'for-ty-se-ven thou-sand dol-lars',
             '$30000': 'thir-ty thou-sand dol-lars',
+            '$20000': 'twen-ty thou-sand dol-lars',
             '85000': 'eigh-ty-five thou-sand',
             '50000': 'fif-ty thou-sand',
+            '47000': 'for-ty-se-ven thou-sand',
             '30000': 'thir-ty thou-sand',
-            '2025': 'twen-ty twen-ty-five', '2026': 'twen-ty twen-ty-six',
-            '1207': 'twelve oh se-ven', 'pm': 'p-m', 'am': 'a-m'
+            '20000': 'twen-ty thou-sand',
+            '2025': 'twen-ty twen-ty-five', '2026': 'twen-ty twen-ty-six', '20xx': 'twen-ty twen-ty',
+            '1207': 'twelve oh se-ven', 'pm': 'p-m', 'am': 'a-m',
+            'no': 'num-ber', '&': 'and'
         };
 
         function showSyllable(word) {
@@ -946,11 +965,13 @@
 
         function makeTextClickable(node) {
             if (node.nodeType === Node.TEXT_NODE && node.nodeValue.trim() !== '') {
+                // Split by spaces, but keep punctuation attached to words for now
                 const words = node.nodeValue.split(/(\s+)/);
                 const fragment = document.createDocumentFragment();
                 let hasWord = false;
                 words.forEach(word => {
-                    if (word.trim() !== '') {
+                    // Only make it clickable if it contains at least one letter or number, or is an ampersand
+                    if (word.trim() !== '' && (/[a-zA-Z0-9]/.test(word) || word.includes('&'))) {
                         const span = document.createElement('span');
                         span.className = 'clickable-word';
                         span.onclick = (e) => { e.stopPropagation(); showSyllable(word); };
@@ -958,6 +979,7 @@
                         fragment.appendChild(span);
                         hasWord = true;
                     } else {
+                        // If it's just pure punctuation or empty space, append as normal text
                         fragment.appendChild(document.createTextNode(word));
                     }
                 });
@@ -989,7 +1011,6 @@
             }
 
             function wrapText(context, text, x, y, maxWidth, lineHeight) {
-                // Remove HTML tags for canvas drawing
                 let cleanText = text.replace(/<[^>]*>?/gm, '');
                 let words = cleanText.split(' ');
                 let line = '';
@@ -1199,7 +1220,7 @@
                 try {
                     await navigator.share({
                         title: 'My SpeakUp Presentation',
-                        text: 'Here is my presentation recording for VE3A!',
+                        text: 'Here is my presentation recording for Vocational English 3A!',
                         files: [file]
                     });
                 } catch (err) {
