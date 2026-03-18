@@ -573,7 +573,7 @@
             return [
                 {
                     html: `
-                        <div class="min-h-full w-full flex flex-col items-center justify-center gap-4 text-center bg-blue-50/30 p-4 md:p-8 border-4 border-blue-100 box-border">
+                        <div class="flex-1 h-fit min-h-full w-full flex flex-col items-center justify-center gap-4 text-center bg-blue-50/30 p-4 md:p-8 border-4 border-blue-100 box-border">
                             <div class="w-full text-left"><div class="bg-blue-200 text-blue-800 px-3 py-1 font-bold tracking-widest uppercase text-[10px] md:text-xs mb-1 inline-block rounded">Presentation Topic</div></div>
                             <h1 class="text-xl sm:text-2xl md:text-5xl font-extrabold text-gray-900 leading-tight my-2">${data.topic}</h1>
                             <div class="w-full text-left mt-2"><div class="bg-blue-200 text-blue-800 px-3 py-1 font-bold tracking-widest uppercase text-[10px] md:text-xs mb-2 inline-block rounded">Presentation Outline</div></div>
@@ -588,20 +588,20 @@
                 },
                 {
                     html: `
-                        <div class="min-h-full w-full flex flex-col justify-center gap-3 sm:gap-5 bg-white p-4 md:p-8 border-4 border-blue-50 text-left box-border">
+                        <div class="flex-1 h-fit min-h-full w-full flex flex-col justify-center gap-2 sm:gap-4 bg-white p-3 md:p-8 border-4 border-blue-50 text-left box-border">
                             <div>
-                                <div class="bg-blue-200 text-blue-800 px-3 py-1 font-bold tracking-widest uppercase text-[10px] md:text-xs mb-2 inline-block rounded">Background</div>
+                                <div class="bg-blue-200 text-blue-800 px-3 py-1 font-bold tracking-widest uppercase text-[10px] md:text-xs mb-1 md:mb-2 inline-block rounded">Background</div>
                                 <div class="pl-2 md:pl-4 text-[11px] sm:text-xs md:text-base">
-                                    <p class="font-bold mb-1 text-gray-800">Problem:</p>
-                                    <ul class="list-disc pl-4 md:pl-5 mb-3 text-gray-700 leading-relaxed"><li>${data.bgProblem}</li></ul>
-                                    <p class="font-bold mb-1 text-gray-800">Objective:</p>
-                                    <ul class="list-disc pl-4 md:pl-5 text-gray-700 leading-relaxed"><li>${data.bgObjective}</li></ul>
+                                    <p class="font-bold mb-0.5 md:mb-1 text-gray-800">Problem:</p>
+                                    <ul class="list-disc pl-4 md:pl-5 mb-2 md:mb-3 text-gray-700 leading-snug md:leading-relaxed"><li>${data.bgProblem}</li></ul>
+                                    <p class="font-bold mb-0.5 md:mb-1 text-gray-800">Objective:</p>
+                                    <ul class="list-disc pl-4 md:pl-5 text-gray-700 leading-snug md:leading-relaxed"><li>${data.bgObjective}</li></ul>
                                 </div>
                             </div>
                             <div>
-                                <div class="bg-blue-200 text-blue-800 px-3 py-1 font-bold tracking-widest uppercase text-[10px] md:text-xs mb-2 inline-block rounded">Proposal</div>
+                                <div class="bg-blue-200 text-blue-800 px-3 py-1 font-bold tracking-widest uppercase text-[10px] md:text-xs mb-1 md:mb-2 inline-block rounded">Proposal</div>
                                 <div class="pl-2 md:pl-4 text-gray-700 text-[11px] sm:text-xs md:text-base">
-                                    <ol class="list-decimal pl-4 md:pl-5 space-y-1 md:space-y-2 leading-relaxed">
+                                    <ol class="list-decimal pl-4 md:pl-5 space-y-0.5 md:space-y-2 leading-snug md:leading-relaxed">
                                         ${data.proposal.map(p => `<li>${p}</li>`).join('')}
                                     </ol>
                                 </div>
@@ -611,16 +611,18 @@
                 },
                 {
                     html: `
-                        <div class="min-h-full w-full flex flex-col justify-center gap-3 sm:gap-4 bg-white p-4 md:p-6 border-4 border-blue-50 text-left box-border">
+                        <div class="flex-1 h-fit min-h-full w-full flex flex-col justify-center gap-3 sm:gap-4 bg-white p-4 md:p-6 border-4 border-blue-50 text-left box-border">
                             <div class="w-full">
                                 <div class="bg-blue-200 text-blue-800 px-2 py-0.5 md:px-3 md:py-1 font-bold tracking-widest uppercase text-[9px] md:text-xs mb-1 inline-block rounded">Benefit(s)</div>
                                 <div class="bg-gray-200 h-4 sm:h-6 md:h-8 w-full rounded"></div>
                             </div>
                             <div class="w-full">
                                 <div class="bg-blue-200 text-blue-800 px-2 py-0.5 md:px-3 md:py-1 font-bold tracking-widest uppercase text-[9px] md:text-xs mb-1 inline-block rounded">Concern(s)</div>
-                                <div class="flex items-stretch w-full min-h-[2.5rem] sm:min-h-[3rem]">
-                                    <div class="bg-gray-200 w-[60%] rounded-l"></div>
-                                    <div class="bg-white border-2 border-black rounded-r p-1 text-[9px] sm:text-[10px] md:text-sm font-bold w-[40%] flex items-center justify-center text-center shadow-sm leading-tight">Possible<br>Solution(s)</div>
+                                <div class="flex items-stretch w-full min-h-[3rem]">
+                                    <div class="bg-gray-200 flex-grow rounded-l"></div>
+                                    <div class="bg-white border-2 border-black rounded-r px-2 py-1 text-[10px] sm:text-xs md:text-sm font-bold shrink-0 flex items-center justify-center text-center shadow-sm leading-tight">
+                                        Possible<br>Solution(s)
+                                    </div>
                                 </div>
                             </div>
                             <div class="w-full">
