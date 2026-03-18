@@ -34,7 +34,7 @@
             border: 2px solid #e2e8f0; 
             border-radius: 8px; 
             position: relative; 
-            overflow-y: auto; /* Allow scrolling if content overflows on very small screens */
+            overflow-y: auto; 
             overflow-x: hidden;
             box-shadow: 0 4px 6px rgba(0,0,0,0.05); 
             width: 100%;
@@ -47,7 +47,6 @@
             }
         }
         
-        /* Custom scrollbar for slide container */
         .slide-container::-webkit-scrollbar { width: 4px; }
         .slide-container::-webkit-scrollbar-track { background: transparent; }
         .slide-container::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
@@ -74,7 +73,6 @@
         .script-scroll::-webkit-scrollbar-track { background: #f1f5f9; border-radius: 4px; }
         .script-scroll::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
         
-        /* Hidden Canvas for Video Recording */
         #recording-canvas {
             position: fixed;
             top: -9999px;
@@ -86,10 +84,8 @@
 </head>
 <body class="bg-gradient-to-br from-[#f4f7fe] to-[#eef2ff] min-h-screen text-gray-800">
 
-    <!-- Hidden Canvas used to generate the Video Stream -->
     <canvas id="recording-canvas" width="1280" height="720"></canvas>
 
-    <!-- Syllable Toast -->
     <div id="syllable-toast" class="fixed top-24 left-1/2 transform -translate-x-1/2 bg-gray-900 text-yellow-300 px-8 py-4 rounded-xl shadow-2xl z-[100] hidden transition-all duration-300 opacity-0 font-mono text-2xl tracking-widest border-2 border-yellow-500 text-center">
         <div class="text-xs text-gray-300 mb-1 font-sans tracking-normal uppercase">Syllables</div>
         <span id="syllable-text"></span>
@@ -125,7 +121,6 @@
             <h2 class="text-3xl font-extrabold text-[#2d3748] mb-10 mt-4">Select a Practice Module</h2>
             
             <div class="flex flex-col gap-6 max-w-3xl mx-auto">
-                <!-- Module 1: Practice Papers -->
                 <div onclick="nav('practice-menu')" class="bg-white rounded-2xl p-6 flex items-center gap-6 cursor-pointer transform hover:scale-[1.02] transition-transform border border-indigo-400 border-l-8 shadow-sm text-left">
                     <div class="bg-[#f0f4ff] p-4 rounded-xl text-5xl w-24 h-24 flex items-center justify-center shrink-0">📚</div>
                     <div>
@@ -134,7 +129,6 @@
                     </div>
                 </div>
 
-                <!-- Module 2: Mock Paper -->
                 <div onclick="nav('mock-login')" class="bg-white rounded-2xl p-6 flex items-center gap-6 cursor-pointer transform hover:scale-[1.02] transition-transform border border-pink-400 border-l-8 shadow-sm text-left">
                     <div class="bg-[#fff1f2] p-4 rounded-xl text-5xl w-24 h-24 flex items-center justify-center shrink-0">🎯</div>
                     <div>
@@ -143,7 +137,6 @@
                     </div>
                 </div>
 
-                <!-- Module 3: Assessment Prep -->
                 <div onclick="nav('assessment')" class="bg-white rounded-2xl p-6 flex items-center gap-6 cursor-pointer transform hover:scale-[1.02] transition-transform border border-purple-400 border-l-8 shadow-sm text-left">
                     <div class="bg-[#faf5ff] p-4 rounded-xl text-5xl w-24 h-24 flex items-center justify-center shrink-0">🛠️</div>
                     <div>
@@ -214,7 +207,7 @@
                         <i class="fa-solid fa-arrow-left"></i> Back
                     </button>
                 </div>
-                <p class="text-gray-600 mb-6">Paste your own script below to practise text-to-speech and record your audio.</p>
+                <p class="text-gray-600 mb-6">Paste your own script below to practice text-to-speech and record your audio.</p>
                 <textarea id="assessment-script" class="w-full h-64 p-4 border border-[#e9d5ff] rounded-xl focus:ring-2 focus:ring-purple-400 focus:outline-none resize-y mb-6 text-gray-700 text-lg leading-relaxed shadow-inner" placeholder="Paste your script here..."></textarea>
                 <div class="bg-[#faf5ff] border border-[#f3e8ff] rounded-xl p-5 mb-8 flex flex-wrap gap-6 items-end">
                     <div>
@@ -259,7 +252,7 @@
                                     <i class="fa-brands fa-whatsapp text-xl"></i> Share to WhatsApp
                                 </button>
                                 <a id="assess-download-link" class="flex items-center justify-center gap-2 w-full bg-gray-600 text-white px-4 py-2 rounded-lg hover:bg-gray-700 transition font-bold text-sm">
-                                    <i class="fa-solid fa-download"></i> Save to Device
+                                    <i class="fa-solid fa-download"></i> Save as MP3
                                 </a>
                             </div>
                         </div>
@@ -568,7 +561,7 @@
                 proposal: ["Estimated budget: $47,000", "Period: 13 - 15 Aug 20xx", "Talks, lunch conference, meetings"],
                 suggestion: "Email seminar organiser -> event details",
                 invitation: ["Business development meeting -> understand work plans", "Next Thu, 10:30 - 12:30pm, Project Room B"],
-                script: [] // Mock has no script
+                script: [] 
             }
         };
 
@@ -669,7 +662,6 @@
                     `;
                 });
                 
-                // Make the script text clickable for syllables
                 makeTextClickable(scriptContainer);
 
                 document.getElementById('btn-to-step2').innerText = "Next: Study Script";
@@ -680,7 +672,6 @@
                 document.getElementById('step1-badge').innerText = "1 of 3";
                 document.getElementById('step3-badge').innerText = "3 of 3";
             } else {
-                // Mock Mode
                 document.getElementById('btn-to-step2').innerText = "Next: Record Video";
                 document.getElementById('btn-to-step2').setAttribute('onclick', 'switchStep(3)');
                 document.getElementById('btn-back-from-3').innerText = "Back to Slides";
@@ -733,7 +724,7 @@
         let assessAudioRecorder;
         let assessAudioChunks = [];
         let isAssessRecording = false;
-        let globalAssessAudioBlob = null; // Store the audio blob for sharing
+        let globalAssessAudioBlob = null; 
 
         async function toggleAssessRecording() {
             const btn = document.getElementById('btn-assess-record');
@@ -759,10 +750,10 @@
                         const player = document.getElementById('assess-audio-player');
                         player.src = audioUrl;
                         
-                        const ext = mimeType.includes('mp4') ? 'm4a' : 'webm';
+                        // 強制將下載副檔名改為 mp3
                         const downloadLink = document.getElementById('assess-download-link');
                         downloadLink.href = audioUrl;
-                        downloadLink.download = `SpeakUp_Audio_Practice.${ext}`;
+                        downloadLink.download = `SpeakUp_Audio_Practice.mp3`;
                         
                         document.getElementById('assess-audio-result').classList.remove('hidden');
                         stream.getTracks().forEach(track => track.stop());
@@ -789,11 +780,10 @@
             }
         }
 
-        // Audio Share Function
         async function shareAudio() {
             if (!globalAssessAudioBlob) return;
-            const ext = globalAssessAudioBlob.type.includes('mp4') ? 'm4a' : 'webm';
-            const file = new File([globalAssessAudioBlob], `SpeakUp_Audio_Practice.${ext}`, { type: globalAssessAudioBlob.type });
+            // 強制設定檔名為 MP3 方便 WhatsApp 處理
+            const file = new File([globalAssessAudioBlob], `SpeakUp_Audio_Practice.mp3`, { type: globalAssessAudioBlob.type });
             
             if (navigator.canShare && navigator.canShare({ files: [file] })) {
                 try {
@@ -806,7 +796,7 @@
                     console.log("Share cancelled or failed", err);
                 }
             } else {
-                alert("Direct WhatsApp sharing is not supported on this browser. Please use the 'Save to Device' button below, then share the audio manually.");
+                alert("Direct WhatsApp sharing is not supported on this browser. Please use the 'Save as MP3' button below, then share the audio manually.");
             }
         }
 
@@ -994,7 +984,6 @@
                 ctx.fillText(text.toUpperCase(), x + 20, y);
             }
 
-            // Helper function to wrap long text inside Canvas
             function wrapText(context, text, x, y, maxWidth, lineHeight) {
                 let words = text.split(' ');
                 let line = '';
@@ -1026,7 +1015,6 @@
                 ctx.textAlign = 'left';
                 drawBadge('Presentation Outline', 100, 500);
                 
-                // Divide the 1280px width evenly into 4 columns and center the text
                 ctx.font = 'bold 24px sans-serif';
                 ctx.fillStyle = '#0d9488';
                 ctx.textAlign = 'center';
@@ -1057,7 +1045,6 @@
                 });
                 
             } else if (slideIndex === 2) {
-                // Fixed alignment for grey boxes relative to badges
                 drawBadge('Benefit(s)', 80, 100);
                 ctx.fillStyle = '#e5e7eb'; ctx.fillRect(80, 130, 1040, 40);
                 
