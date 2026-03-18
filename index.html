@@ -573,11 +573,11 @@
             return [
                 {
                     html: `
-                        <div class="h-full w-full flex flex-col items-center justify-evenly text-center bg-blue-50/30 p-2 md:p-8 border-4 border-blue-100 box-border">
-                            <div class="w-full text-left"><div class="bg-blue-200 text-blue-800 px-3 py-1 font-bold tracking-widest uppercase text-[10px] md:text-xs mb-1 md:mb-2 inline-block rounded">Presentation Topic</div></div>
-                            <h1 class="text-xl sm:text-2xl md:text-5xl font-extrabold text-gray-900 leading-tight my-2 md:my-4">${data.topic}</h1>
-                            <div class="w-full text-left mt-2 md:mt-4"><div class="bg-blue-200 text-blue-800 px-3 py-1 font-bold tracking-widest uppercase text-[10px] md:text-xs mb-2 md:mb-4 inline-block rounded">Presentation Outline</div></div>
-                            <div class="flex justify-between gap-1 sm:gap-2 md:gap-6 w-full px-1 md:px-2">
+                        <div class="min-h-full w-full flex flex-col items-center justify-center gap-4 text-center bg-blue-50/30 p-4 md:p-8 border-4 border-blue-100 box-border">
+                            <div class="w-full text-left"><div class="bg-blue-200 text-blue-800 px-3 py-1 font-bold tracking-widest uppercase text-[10px] md:text-xs mb-1 inline-block rounded">Presentation Topic</div></div>
+                            <h1 class="text-xl sm:text-2xl md:text-5xl font-extrabold text-gray-900 leading-tight my-2">${data.topic}</h1>
+                            <div class="w-full text-left mt-2"><div class="bg-blue-200 text-blue-800 px-3 py-1 font-bold tracking-widest uppercase text-[10px] md:text-xs mb-2 inline-block rounded">Presentation Outline</div></div>
+                            <div class="flex justify-between gap-2 md:gap-6 w-full px-1 md:px-2">
                                 <div class="flex flex-col items-center w-1/4"><div class="w-8 h-8 sm:w-10 sm:h-10 md:w-14 md:h-14 bg-teal-600 rounded-full flex items-center justify-center text-white text-sm md:text-2xl mb-1 md:mb-2"><i class="fa-solid fa-info"></i></div><span class="font-bold text-[9px] sm:text-[10px] md:text-sm leading-tight">1. Background</span></div>
                                 <div class="flex flex-col items-center w-1/4"><div class="w-8 h-8 sm:w-10 sm:h-10 md:w-14 md:h-14 bg-teal-600 rounded-full flex items-center justify-center text-white text-sm md:text-2xl mb-1 md:mb-2"><i class="fa-solid fa-file-signature"></i></div><span class="font-bold text-[9px] sm:text-[10px] md:text-sm leading-tight">2. Proposal<br>Details</span></div>
                                 <div class="flex flex-col items-center w-1/4"><div class="w-8 h-8 sm:w-10 sm:h-10 md:w-14 md:h-14 bg-teal-600 rounded-full flex items-center justify-center text-white text-sm md:text-2xl mb-1 md:mb-2"><i class="fa-solid fa-scale-balanced"></i></div><span class="font-bold text-[9px] sm:text-[10px] md:text-sm leading-tight">3. Benefit(s) &<br>Concern(s)</span></div>
@@ -588,18 +588,18 @@
                 },
                 {
                     html: `
-                        <div class="h-full w-full flex flex-col justify-evenly bg-white p-3 md:p-8 border-4 border-blue-50 text-left box-border">
+                        <div class="min-h-full w-full flex flex-col justify-center gap-3 sm:gap-5 bg-white p-4 md:p-8 border-4 border-blue-50 text-left box-border">
                             <div>
-                                <div class="bg-blue-200 text-blue-800 px-3 py-1 font-bold tracking-widest uppercase text-[10px] md:text-xs mb-1 md:mb-3 inline-block rounded">Background</div>
+                                <div class="bg-blue-200 text-blue-800 px-3 py-1 font-bold tracking-widest uppercase text-[10px] md:text-xs mb-2 inline-block rounded">Background</div>
                                 <div class="pl-2 md:pl-4 text-[11px] sm:text-xs md:text-base">
-                                    <p class="font-bold mb-0.5 md:mb-1 text-gray-800">Problem:</p>
-                                    <ul class="list-disc pl-4 md:pl-5 mb-2 md:mb-4 text-gray-700 leading-relaxed"><li>${data.bgProblem}</li></ul>
-                                    <p class="font-bold mb-0.5 md:mb-1 text-gray-800">Objective:</p>
+                                    <p class="font-bold mb-1 text-gray-800">Problem:</p>
+                                    <ul class="list-disc pl-4 md:pl-5 mb-3 text-gray-700 leading-relaxed"><li>${data.bgProblem}</li></ul>
+                                    <p class="font-bold mb-1 text-gray-800">Objective:</p>
                                     <ul class="list-disc pl-4 md:pl-5 text-gray-700 leading-relaxed"><li>${data.bgObjective}</li></ul>
                                 </div>
                             </div>
-                            <div class="mt-2 md:mt-4">
-                                <div class="bg-blue-200 text-blue-800 px-3 py-1 font-bold tracking-widest uppercase text-[10px] md:text-xs mb-1 md:mb-3 inline-block rounded">Proposal</div>
+                            <div>
+                                <div class="bg-blue-200 text-blue-800 px-3 py-1 font-bold tracking-widest uppercase text-[10px] md:text-xs mb-2 inline-block rounded">Proposal</div>
                                 <div class="pl-2 md:pl-4 text-gray-700 text-[11px] sm:text-xs md:text-base">
                                     <ol class="list-decimal pl-4 md:pl-5 space-y-1 md:space-y-2 leading-relaxed">
                                         ${data.proposal.map(p => `<li>${p}</li>`).join('')}
@@ -611,26 +611,26 @@
                 },
                 {
                     html: `
-                        <div class="h-full w-full flex flex-col justify-evenly bg-white p-3 md:p-6 border-4 border-blue-50 text-left box-border">
+                        <div class="min-h-full w-full flex flex-col justify-center gap-3 sm:gap-4 bg-white p-4 md:p-6 border-4 border-blue-50 text-left box-border">
                             <div class="w-full">
-                                <div class="bg-blue-200 text-blue-800 px-2 py-0.5 md:px-3 md:py-1 font-bold tracking-widest uppercase text-[9px] md:text-xs mb-1 md:mb-2 inline-block rounded">Benefit(s)</div>
+                                <div class="bg-blue-200 text-blue-800 px-2 py-0.5 md:px-3 md:py-1 font-bold tracking-widest uppercase text-[9px] md:text-xs mb-1 inline-block rounded">Benefit(s)</div>
                                 <div class="bg-gray-200 h-4 sm:h-6 md:h-8 w-full rounded"></div>
                             </div>
                             <div class="w-full">
-                                <div class="bg-blue-200 text-blue-800 px-2 py-0.5 md:px-3 md:py-1 font-bold tracking-widest uppercase text-[9px] md:text-xs mb-1 md:mb-2 inline-block rounded">Concern(s)</div>
-                                <div class="relative flex h-8 sm:h-10 md:h-12">
-                                    <div class="bg-gray-200 h-full w-2/3 rounded-l"></div>
-                                    <div class="bg-white border-2 border-black rounded-r p-1 md:p-2 text-[9px] sm:text-[10px] md:text-sm font-bold w-1/3 flex items-center justify-center text-center shadow-sm">Possible Solution(s)</div>
+                                <div class="bg-blue-200 text-blue-800 px-2 py-0.5 md:px-3 md:py-1 font-bold tracking-widest uppercase text-[9px] md:text-xs mb-1 inline-block rounded">Concern(s)</div>
+                                <div class="flex items-stretch w-full min-h-[2.5rem] sm:min-h-[3rem]">
+                                    <div class="bg-gray-200 w-[60%] rounded-l"></div>
+                                    <div class="bg-white border-2 border-black rounded-r p-1 text-[9px] sm:text-[10px] md:text-sm font-bold w-[40%] flex items-center justify-center text-center shadow-sm leading-tight">Possible<br>Solution(s)</div>
                                 </div>
                             </div>
                             <div class="w-full">
-                                <div class="bg-blue-200 text-blue-800 px-2 py-0.5 md:px-3 md:py-1 font-bold tracking-widest uppercase text-[9px] md:text-xs mb-1 md:mb-2 inline-block rounded">Suggestion</div>
+                                <div class="bg-blue-200 text-blue-800 px-2 py-0.5 md:px-3 md:py-1 font-bold tracking-widest uppercase text-[9px] md:text-xs mb-1 inline-block rounded">Suggestion</div>
                                 <div class="bg-gray-50 p-2 md:p-3 rounded text-[10px] sm:text-[11px] md:text-sm text-gray-700 border border-gray-200">
                                     <ul class="list-disc pl-4 md:pl-5"><li>${data.suggestion}</li></ul>
                                 </div>
                             </div>
                             <div class="w-full">
-                                <div class="bg-blue-200 text-blue-800 px-2 py-0.5 md:px-3 md:py-1 font-bold tracking-widest uppercase text-[9px] md:text-xs mb-1 md:mb-2 inline-block rounded">Invitation</div>
+                                <div class="bg-blue-200 text-blue-800 px-2 py-0.5 md:px-3 md:py-1 font-bold tracking-widest uppercase text-[9px] md:text-xs mb-1 inline-block rounded">Invitation</div>
                                 <div class="bg-gray-50 p-2 md:p-3 rounded text-[10px] sm:text-[11px] md:text-sm text-gray-700 border border-gray-200">
                                     <ul class="list-disc pl-4 md:pl-5 space-y-0.5 md:space-y-1">
                                         ${data.invitation.map(i => `<li>${i}</li>`).join('')}
@@ -750,7 +750,6 @@
                         const player = document.getElementById('assess-audio-player');
                         player.src = audioUrl;
                         
-                        // 強制將下載副檔名改為 mp3
                         const downloadLink = document.getElementById('assess-download-link');
                         downloadLink.href = audioUrl;
                         downloadLink.download = `SpeakUp_Audio_Practice.mp3`;
@@ -782,7 +781,6 @@
 
         async function shareAudio() {
             if (!globalAssessAudioBlob) return;
-            // 強制設定檔名為 MP3 方便 WhatsApp 處理
             const file = new File([globalAssessAudioBlob], `SpeakUp_Audio_Practice.mp3`, { type: globalAssessAudioBlob.type });
             
             if (navigator.canShare && navigator.canShare({ files: [file] })) {
