@@ -27,17 +27,31 @@
         }
         .clickable-word:hover { background-color: #e0e7ff; color: #3730a3; }
         
+        /* Responsive Slide Container */
         .slide-container { 
-            aspect-ratio: 16/9; 
+            aspect-ratio: 4/3; /* Taller on mobile */
             background: #fff; 
             border: 2px solid #e2e8f0; 
             border-radius: 8px; 
             position: relative; 
-            overflow: hidden; 
+            overflow-y: auto; /* Allow scrolling if content overflows on very small screens */
+            overflow-x: hidden;
             box-shadow: 0 4px 6px rgba(0,0,0,0.05); 
             width: 100%;
         }
+        /* Desktop aspect ratio */
+        @media (min-width: 768px) {
+            .slide-container {
+                aspect-ratio: 16/9;
+                overflow: hidden;
+            }
+        }
         
+        /* Custom scrollbar for slide container */
+        .slide-container::-webkit-scrollbar { width: 4px; }
+        .slide-container::-webkit-scrollbar-track { background: transparent; }
+        .slide-container::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+
         .page { 
             display: none; 
             opacity: 0;
@@ -238,7 +252,6 @@
                             <i class="fa-solid fa-microphone"></i> Start Recording
                         </button>
                         
-                        <!-- Updated Audio Result Area with Share Button -->
                         <div id="assess-audio-result" class="hidden w-full max-w-md mt-4 bg-gray-50 p-4 rounded-xl border border-gray-200">
                             <audio id="assess-audio-player" controls class="w-full mb-3"></audio>
                             <div class="flex flex-col gap-2">
@@ -567,35 +580,35 @@
             return [
                 {
                     html: `
-                        <div class="h-full w-full flex flex-col items-center justify-evenly text-center bg-blue-50/30 p-4 md:p-8 border-4 border-blue-100 box-border">
-                            <div class="w-full text-left"><div class="bg-blue-200 text-blue-800 px-4 py-1 font-bold tracking-widest uppercase text-xs mb-2 inline-block rounded">Presentation Topic</div></div>
-                            <h1 class="text-3xl md:text-5xl font-extrabold text-gray-900 leading-tight my-4">${data.topic}</h1>
-                            <div class="w-full text-left mt-4"><div class="bg-blue-200 text-blue-800 px-4 py-1 font-bold tracking-widest uppercase text-xs mb-4 inline-block rounded">Presentation Outline</div></div>
-                            <div class="flex justify-between gap-2 md:gap-6 w-full px-2">
-                                <div class="flex flex-col items-center"><div class="w-10 h-10 md:w-14 md:h-14 bg-teal-600 rounded-full flex items-center justify-center text-white text-lg md:text-2xl mb-2"><i class="fa-solid fa-info"></i></div><span class="font-bold text-[10px] md:text-sm leading-tight">1. Background</span></div>
-                                <div class="flex flex-col items-center"><div class="w-10 h-10 md:w-14 md:h-14 bg-teal-600 rounded-full flex items-center justify-center text-white text-lg md:text-2xl mb-2"><i class="fa-solid fa-file-signature"></i></div><span class="font-bold text-[10px] md:text-sm leading-tight">2. Proposal<br>Details</span></div>
-                                <div class="flex flex-col items-center"><div class="w-10 h-10 md:w-14 md:h-14 bg-teal-600 rounded-full flex items-center justify-center text-white text-lg md:text-2xl mb-2"><i class="fa-solid fa-scale-balanced"></i></div><span class="font-bold text-[10px] md:text-sm leading-tight">3. Benefit(s) &<br>Concern(s)</span></div>
-                                <div class="flex flex-col items-center"><div class="w-10 h-10 md:w-14 md:h-14 bg-teal-600 rounded-full flex items-center justify-center text-white text-lg md:text-2xl mb-2"><i class="fa-solid fa-lightbulb"></i></div><span class="font-bold text-[10px] md:text-sm leading-tight">4. Suggestion</span></div>
+                        <div class="h-full w-full flex flex-col items-center justify-evenly text-center bg-blue-50/30 p-2 md:p-8 border-4 border-blue-100 box-border">
+                            <div class="w-full text-left"><div class="bg-blue-200 text-blue-800 px-3 py-1 font-bold tracking-widest uppercase text-[10px] md:text-xs mb-1 md:mb-2 inline-block rounded">Presentation Topic</div></div>
+                            <h1 class="text-xl sm:text-2xl md:text-5xl font-extrabold text-gray-900 leading-tight my-2 md:my-4">${data.topic}</h1>
+                            <div class="w-full text-left mt-2 md:mt-4"><div class="bg-blue-200 text-blue-800 px-3 py-1 font-bold tracking-widest uppercase text-[10px] md:text-xs mb-2 md:mb-4 inline-block rounded">Presentation Outline</div></div>
+                            <div class="flex justify-between gap-1 sm:gap-2 md:gap-6 w-full px-1 md:px-2">
+                                <div class="flex flex-col items-center w-1/4"><div class="w-8 h-8 sm:w-10 sm:h-10 md:w-14 md:h-14 bg-teal-600 rounded-full flex items-center justify-center text-white text-sm md:text-2xl mb-1 md:mb-2"><i class="fa-solid fa-info"></i></div><span class="font-bold text-[9px] sm:text-[10px] md:text-sm leading-tight">1. Background</span></div>
+                                <div class="flex flex-col items-center w-1/4"><div class="w-8 h-8 sm:w-10 sm:h-10 md:w-14 md:h-14 bg-teal-600 rounded-full flex items-center justify-center text-white text-sm md:text-2xl mb-1 md:mb-2"><i class="fa-solid fa-file-signature"></i></div><span class="font-bold text-[9px] sm:text-[10px] md:text-sm leading-tight">2. Proposal<br>Details</span></div>
+                                <div class="flex flex-col items-center w-1/4"><div class="w-8 h-8 sm:w-10 sm:h-10 md:w-14 md:h-14 bg-teal-600 rounded-full flex items-center justify-center text-white text-sm md:text-2xl mb-1 md:mb-2"><i class="fa-solid fa-scale-balanced"></i></div><span class="font-bold text-[9px] sm:text-[10px] md:text-sm leading-tight">3. Benefit(s) &<br>Concern(s)</span></div>
+                                <div class="flex flex-col items-center w-1/4"><div class="w-8 h-8 sm:w-10 sm:h-10 md:w-14 md:h-14 bg-teal-600 rounded-full flex items-center justify-center text-white text-sm md:text-2xl mb-1 md:mb-2"><i class="fa-solid fa-lightbulb"></i></div><span class="font-bold text-[9px] sm:text-[10px] md:text-sm leading-tight">4. Suggestion</span></div>
                             </div>
                         </div>
                     `
                 },
                 {
                     html: `
-                        <div class="h-full w-full flex flex-col justify-evenly bg-white p-4 md:p-8 border-4 border-blue-50 text-left box-border">
+                        <div class="h-full w-full flex flex-col justify-evenly bg-white p-3 md:p-8 border-4 border-blue-50 text-left box-border">
                             <div>
-                                <div class="bg-blue-200 text-blue-800 px-4 py-1 font-bold tracking-widest uppercase text-xs mb-3 inline-block rounded">Background</div>
-                                <div class="pl-2 md:pl-4 text-xs md:text-base">
-                                    <p class="font-bold mb-1 text-gray-800">Problem:</p>
-                                    <ul class="list-disc pl-5 mb-4 text-gray-700 leading-relaxed"><li>${data.bgProblem}</li></ul>
-                                    <p class="font-bold mb-1 text-gray-800">Objective:</p>
-                                    <ul class="list-disc pl-5 text-gray-700 leading-relaxed"><li>${data.bgObjective}</li></ul>
+                                <div class="bg-blue-200 text-blue-800 px-3 py-1 font-bold tracking-widest uppercase text-[10px] md:text-xs mb-1 md:mb-3 inline-block rounded">Background</div>
+                                <div class="pl-2 md:pl-4 text-[11px] sm:text-xs md:text-base">
+                                    <p class="font-bold mb-0.5 md:mb-1 text-gray-800">Problem:</p>
+                                    <ul class="list-disc pl-4 md:pl-5 mb-2 md:mb-4 text-gray-700 leading-relaxed"><li>${data.bgProblem}</li></ul>
+                                    <p class="font-bold mb-0.5 md:mb-1 text-gray-800">Objective:</p>
+                                    <ul class="list-disc pl-4 md:pl-5 text-gray-700 leading-relaxed"><li>${data.bgObjective}</li></ul>
                                 </div>
                             </div>
-                            <div class="mt-4">
-                                <div class="bg-blue-200 text-blue-800 px-4 py-1 font-bold tracking-widest uppercase text-xs mb-3 inline-block rounded">Proposal</div>
-                                <div class="pl-2 md:pl-4 text-gray-700 text-xs md:text-base">
-                                    <ol class="list-decimal pl-5 space-y-2 leading-relaxed">
+                            <div class="mt-2 md:mt-4">
+                                <div class="bg-blue-200 text-blue-800 px-3 py-1 font-bold tracking-widest uppercase text-[10px] md:text-xs mb-1 md:mb-3 inline-block rounded">Proposal</div>
+                                <div class="pl-2 md:pl-4 text-gray-700 text-[11px] sm:text-xs md:text-base">
+                                    <ol class="list-decimal pl-4 md:pl-5 space-y-1 md:space-y-2 leading-relaxed">
                                         ${data.proposal.map(p => `<li>${p}</li>`).join('')}
                                     </ol>
                                 </div>
@@ -605,28 +618,28 @@
                 },
                 {
                     html: `
-                        <div class="h-full w-full flex flex-col justify-evenly bg-white p-4 md:p-6 border-4 border-blue-50 text-left box-border">
+                        <div class="h-full w-full flex flex-col justify-evenly bg-white p-3 md:p-6 border-4 border-blue-50 text-left box-border">
                             <div class="w-full">
-                                <div class="bg-blue-200 text-blue-800 px-3 py-1 font-bold tracking-widest uppercase text-[10px] md:text-xs mb-2 inline-block rounded">Benefit(s)</div>
-                                <div class="bg-gray-200 h-6 md:h-8 w-full rounded"></div>
+                                <div class="bg-blue-200 text-blue-800 px-2 py-0.5 md:px-3 md:py-1 font-bold tracking-widest uppercase text-[9px] md:text-xs mb-1 md:mb-2 inline-block rounded">Benefit(s)</div>
+                                <div class="bg-gray-200 h-4 sm:h-6 md:h-8 w-full rounded"></div>
                             </div>
                             <div class="w-full">
-                                <div class="bg-blue-200 text-blue-800 px-3 py-1 font-bold tracking-widest uppercase text-[10px] md:text-xs mb-2 inline-block rounded">Concern(s)</div>
-                                <div class="relative flex h-10 md:h-12">
+                                <div class="bg-blue-200 text-blue-800 px-2 py-0.5 md:px-3 md:py-1 font-bold tracking-widest uppercase text-[9px] md:text-xs mb-1 md:mb-2 inline-block rounded">Concern(s)</div>
+                                <div class="relative flex h-8 sm:h-10 md:h-12">
                                     <div class="bg-gray-200 h-full w-2/3 rounded-l"></div>
-                                    <div class="bg-white border-2 border-black rounded-r p-1 md:p-2 text-[10px] md:text-sm font-bold w-1/3 flex items-center justify-center text-center shadow-sm">Possible Solution(s)</div>
+                                    <div class="bg-white border-2 border-black rounded-r p-1 md:p-2 text-[9px] sm:text-[10px] md:text-sm font-bold w-1/3 flex items-center justify-center text-center shadow-sm">Possible Solution(s)</div>
                                 </div>
                             </div>
                             <div class="w-full">
-                                <div class="bg-blue-200 text-blue-800 px-3 py-1 font-bold tracking-widest uppercase text-[10px] md:text-xs mb-2 inline-block rounded">Suggestion</div>
-                                <div class="bg-gray-50 p-3 rounded text-[10px] md:text-sm text-gray-700 border border-gray-200">
-                                    <ul class="list-disc pl-5"><li>${data.suggestion}</li></ul>
+                                <div class="bg-blue-200 text-blue-800 px-2 py-0.5 md:px-3 md:py-1 font-bold tracking-widest uppercase text-[9px] md:text-xs mb-1 md:mb-2 inline-block rounded">Suggestion</div>
+                                <div class="bg-gray-50 p-2 md:p-3 rounded text-[10px] sm:text-[11px] md:text-sm text-gray-700 border border-gray-200">
+                                    <ul class="list-disc pl-4 md:pl-5"><li>${data.suggestion}</li></ul>
                                 </div>
                             </div>
                             <div class="w-full">
-                                <div class="bg-blue-200 text-blue-800 px-3 py-1 font-bold tracking-widest uppercase text-[10px] md:text-xs mb-2 inline-block rounded">Invitation</div>
-                                <div class="bg-gray-50 p-3 rounded text-[10px] md:text-sm text-gray-700 border border-gray-200">
-                                    <ul class="list-disc pl-5 space-y-1">
+                                <div class="bg-blue-200 text-blue-800 px-2 py-0.5 md:px-3 md:py-1 font-bold tracking-widest uppercase text-[9px] md:text-xs mb-1 md:mb-2 inline-block rounded">Invitation</div>
+                                <div class="bg-gray-50 p-2 md:p-3 rounded text-[10px] sm:text-[11px] md:text-sm text-gray-700 border border-gray-200">
+                                    <ul class="list-disc pl-4 md:pl-5 space-y-0.5 md:space-y-1">
                                         ${data.invitation.map(i => `<li>${i}</li>`).join('')}
                                     </ul>
                                 </div>
@@ -1013,7 +1026,7 @@
                 ctx.textAlign = 'left';
                 drawBadge('Presentation Outline', 100, 500);
                 
-                // Fix: Divide the 1280px width evenly into 4 columns and center the text
+                // Divide the 1280px width evenly into 4 columns and center the text
                 ctx.font = 'bold 24px sans-serif';
                 ctx.fillStyle = '#0d9488';
                 ctx.textAlign = 'center';
@@ -1044,27 +1057,28 @@
                 });
                 
             } else if (slideIndex === 2) {
+                // Fixed alignment for grey boxes relative to badges
                 drawBadge('Benefit(s)', 80, 100);
-                ctx.fillStyle = '#e5e7eb'; ctx.fillRect(120, 130, 1000, 40);
+                ctx.fillStyle = '#e5e7eb'; ctx.fillRect(80, 130, 1040, 40);
                 
                 drawBadge('Concern(s)', 80, 260);
-                ctx.fillStyle = '#e5e7eb'; ctx.fillRect(120, 290, 700, 60);
+                ctx.fillStyle = '#e5e7eb'; ctx.fillRect(80, 290, 740, 60);
                 ctx.strokeStyle = '#000'; ctx.lineWidth = 3; ctx.strokeRect(820, 290, 300, 60);
                 ctx.fillStyle = '#000'; ctx.font = 'bold 24px sans-serif'; ctx.textAlign = 'center';
                 ctx.fillText('Possible Solution(s)', 970, 330);
                 
                 ctx.textAlign = 'left';
                 drawBadge('Suggestion', 80, 440);
-                ctx.fillStyle = '#f9fafb'; ctx.fillRect(120, 460, 1000, 60);
+                ctx.fillStyle = '#f9fafb'; ctx.fillRect(80, 460, 1040, 60);
                 ctx.fillStyle = '#374151'; ctx.font = '26px sans-serif';
-                wrapText(ctx, '• ' + currentData.suggestion, 140, 500, 950, 35);
+                wrapText(ctx, '• ' + currentData.suggestion, 100, 500, 1000, 35);
                 
                 drawBadge('Invitation', 80, 580);
-                ctx.fillStyle = '#f9fafb'; ctx.fillRect(120, 600, 1000, 90);
+                ctx.fillStyle = '#f9fafb'; ctx.fillRect(80, 600, 1040, 90);
                 ctx.fillStyle = '#374151';
                 let invY = 635;
                 currentData.invitation.forEach((inv, i) => {
-                    invY = wrapText(ctx, '• ' + inv, 140, invY, 950, 35);
+                    invY = wrapText(ctx, '• ' + inv, 100, invY, 1000, 35);
                 });
             }
         }
