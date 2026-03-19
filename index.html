@@ -7,42 +7,64 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap');
         body { font-family: 'Poppins', sans-serif; overflow-x: hidden; background-color: #f8fafc; }
         
-        /* Ambient Background Orbs */
-        .bg-orb-1 { position: fixed; top: -10%; left: -10%; width: 50vw; height: 50vw; background: radial-gradient(circle, rgba(99,102,241,0.15) 0%, rgba(0,0,0,0) 70%); border-radius: 50%; z-index: -2; animation: floatOrb 15s infinite alternate ease-in-out; }
-        .bg-orb-2 { position: fixed; bottom: -10%; right: -10%; width: 60vw; height: 60vw; background: radial-gradient(circle, rgba(168,85,247,0.12) 0%, rgba(0,0,0,0) 70%); border-radius: 50%; z-index: -2; animation: floatOrb 20s infinite alternate-reverse ease-in-out; }
-        @keyframes floatOrb { 0% { transform: translate(0, 0) scale(1); } 100% { transform: translate(5%, 5%) scale(1.1); } }
+        /* Ambient Background Orbs - Enhanced */
+        .bg-orb-1 { position: fixed; top: -10%; left: -10%; width: 50vw; height: 50vw; background: radial-gradient(circle, rgba(99,102,241,0.18) 0%, rgba(0,0,0,0) 70%); border-radius: 50%; z-index: -2; animation: floatOrb 15s infinite alternate ease-in-out; filter: blur(40px); }
+        .bg-orb-2 { position: fixed; bottom: -10%; right: -10%; width: 60vw; height: 60vw; background: radial-gradient(circle, rgba(236,72,153,0.12) 0%, rgba(168,85,247,0.12) 40%, rgba(0,0,0,0) 70%); border-radius: 50%; z-index: -2; animation: floatOrb 20s infinite alternate-reverse ease-in-out; filter: blur(40px); }
+        @keyframes floatOrb { 0% { transform: translate(0, 0) scale(1); } 100% { transform: translate(8%, 8%) scale(1.15); } }
 
+        /* Premium Glass Panel */
         .glass-panel {
-            background: rgba(255, 255, 255, 0.85);
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
+            background: rgba(255, 255, 255, 0.75);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
             border-radius: 1.5rem;
-            box-shadow: 0 10px 40px rgba(31, 38, 135, 0.08);
+            box-shadow: 0 20px 40px -10px rgba(31, 38, 135, 0.05), inset 0 1px 0 rgba(255,255,255,0.8);
             border: 1px solid rgba(255, 255, 255, 0.6);
+        }
+        
+        /* Button Shine Animation */
+        @keyframes shine {
+            0% { left: -100%; }
+            20% { left: 200%; }
+            100% { left: 200%; }
+        }
+        .btn-shine { position: relative; overflow: hidden; }
+        .btn-shine::before {
+            content: ''; position: absolute; top: 0; left: -100%; width: 50%; height: 100%;
+            background: linear-gradient(to right, rgba(255,255,255,0) 0%, rgba(255,255,255,0.4) 50%, rgba(255,255,255,0) 100%);
+            transform: skewX(-20deg); animation: shine 4s infinite ease-in-out; z-index: 1;
         }
         
         .clickable-word {
             cursor: pointer;
-            transition: all 0.2s ease;
-            border-radius: 4px;
-            padding: 0 3px;
-            margin: 0 -3px;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            border-radius: 6px;
+            padding: 0 4px;
+            margin: 0 -4px;
+            position: relative;
         }
-        .clickable-word:hover { background-color: #e0e7ff; color: #4338ca; transform: scale(1.05); display: inline-block; }
+        .clickable-word:hover, .clickable-word:active { 
+            background-color: #e0e7ff; 
+            color: #4338ca; 
+            transform: scale(1.08) translateY(-1px); 
+            display: inline-block; 
+            box-shadow: 0 4px 10px -2px rgba(67, 56, 202, 0.2);
+            z-index: 10;
+        }
         
         /* Responsive Slide Container */
         .slide-container { 
             min-height: 320px;
             background: #fff; 
             border: 1px solid #e2e8f0; 
-            border-radius: 12px; 
+            border-radius: 16px; 
             position: relative; 
             overflow-y: auto; 
             overflow-x: hidden;
-            box-shadow: 0 10px 25px -5px rgba(0,0,0,0.05); 
+            box-shadow: 0 10px 30px -5px rgba(0,0,0,0.06), inset 0 2px 10px rgba(0,0,0,0.02); 
             width: 100%;
             display: flex;
             flex-direction: column;
@@ -60,7 +82,7 @@
             display: none; 
             opacity: 0;
             transition: opacity 0.5s cubic-bezier(0.4, 0, 0.2, 1), transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-            transform: translateY(15px);
+            transform: translateY(20px);
         }
         .page.active { display: block; opacity: 1; transform: translateY(0); }
         #page-intro.active { display: flex; }
@@ -69,15 +91,23 @@
         .emoji { position: absolute; font-size: 2rem; opacity: 0; animation: floatUp linear infinite; filter: drop-shadow(0 4px 6px rgba(0,0,0,0.1)); }
         @keyframes floatUp {
             0% { transform: translateY(100vh) rotate(0deg) scale(0.8); opacity: 0; }
-            10% { opacity: 0.2; transform: scale(1); }
-            90% { opacity: 0.2; }
+            10% { opacity: 0.15; transform: scale(1); }
+            90% { opacity: 0.15; }
             100% { transform: translateY(-10vh) rotate(360deg) scale(0.8); opacity: 0; }
         }
 
-        .script-scroll::-webkit-scrollbar { width: 6px; }
-        .script-scroll::-webkit-scrollbar-track { background: #f8fafc; border-radius: 10px; }
-        .script-scroll::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+        /* Sleek Scrollbar for Script */
+        .script-scroll::-webkit-scrollbar { width: 5px; }
+        .script-scroll::-webkit-scrollbar-track { background: rgba(248,250,252,0.5); border-radius: 10px; }
+        .script-scroll::-webkit-scrollbar-thumb { background: #94a3b8; border-radius: 10px; }
+        .script-scroll::-webkit-scrollbar-thumb:hover { background: #64748b; }
         
+        /* Script fade out effect */
+        .script-container-mask {
+            mask-image: linear-gradient(to bottom, black 85%, transparent 100%);
+            -webkit-mask-image: linear-gradient(to bottom, black 85%, transparent 100%);
+        }
+
         #recording-canvas { position: fixed; top: -9999px; left: -9999px; pointer-events: none; opacity: 0; }
     </style>
 </head>
@@ -89,14 +119,14 @@
 
     <canvas id="recording-canvas" width="1280" height="720"></canvas>
 
-    <!-- Sleek Syllable Toast (FIXED: Added whitespace-nowrap, adjusted mobile padding/font size) -->
-    <div id="syllable-toast" class="fixed top-20 left-1/2 transform -translate-x-1/2 bg-white/95 backdrop-blur-xl text-gray-800 px-5 py-3 md:px-8 md:py-4 rounded-full shadow-[0_20px_50px_rgba(0,0,0,0.15)] z-[100] hidden transition-all duration-400 opacity-0 border border-white/80 flex items-center gap-3 md:gap-4 max-w-[90vw]">
-        <div class="bg-indigo-100 text-indigo-600 w-8 h-8 md:w-10 md:h-10 rounded-full flex items-center justify-center shrink-0 text-sm md:text-base">
+    <!-- Sleek Syllable Toast -->
+    <div id="syllable-toast" class="fixed top-20 left-1/2 transform -translate-x-1/2 bg-white/95 backdrop-blur-xl text-gray-800 px-5 py-3 md:px-8 md:py-4 rounded-full shadow-[0_20px_50px_rgba(79,70,229,0.15)] z-[100] hidden transition-all duration-400 opacity-0 border border-indigo-100/50 flex items-center gap-3 md:gap-4 max-w-[90vw]">
+        <div class="bg-gradient-to-br from-indigo-100 to-purple-100 text-indigo-600 w-8 h-8 md:w-10 md:h-10 rounded-full flex items-center justify-center shrink-0 text-sm md:text-base shadow-inner">
             <i class="fa-solid fa-volume-high"></i>
         </div>
         <div class="text-left overflow-hidden">
-            <div class="text-[9px] md:text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-0.5">Syllables</div>
-            <div id="syllable-text" class="font-mono text-base md:text-xl tracking-wider md:tracking-widest font-bold text-indigo-900 whitespace-nowrap overflow-hidden text-ellipsis"></div>
+            <div class="text-[9px] md:text-[10px] font-bold text-indigo-400/80 uppercase tracking-widest mb-0.5">Syllables</div>
+            <div id="syllable-text" class="font-mono text-base md:text-xl tracking-wider md:tracking-widest font-black text-transparent bg-clip-text bg-gradient-to-r from-indigo-800 to-purple-800 whitespace-nowrap overflow-hidden text-ellipsis"></div>
         </div>
     </div>
 
@@ -104,28 +134,27 @@
 
     <!-- 1. Intro Landing Page -->
     <div id="page-intro" class="page active fixed inset-0 z-50 flex-col items-center min-h-[100dvh] w-full overflow-y-auto p-4">
-        <div class="glass-panel p-8 md:p-16 max-w-4xl w-full sm:w-11/12 text-center transform transition-all duration-500 flex flex-col items-center m-auto relative overflow-hidden group">
-            <div class="absolute inset-0 bg-gradient-to-tr from-indigo-50/50 to-purple-50/50 opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none"></div>
+        <div class="glass-panel p-8 md:p-16 max-w-4xl w-full sm:w-11/12 text-center transform transition-all duration-500 flex flex-col items-center m-auto relative overflow-hidden group border-white/80">
+            <div class="absolute inset-0 bg-gradient-to-tr from-indigo-50/30 to-purple-50/30 opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none"></div>
             
-            <div class="text-6xl md:text-7xl mb-6 animate-bounce text-indigo-600 drop-shadow-md"><i class="fa-solid fa-video"></i></div>
+            <div class="text-6xl md:text-7xl mb-6 animate-bounce text-transparent bg-clip-text bg-gradient-to-br from-indigo-500 to-purple-600 drop-shadow-sm"><i class="fa-solid fa-video"></i></div>
             <h2 class="text-sm md:text-lg text-indigo-500 font-bold mb-3 uppercase tracking-[0.2em] border-b-2 border-indigo-100 pb-2 inline-block">Language Centre</h2>
             <h3 class="text-2xl md:text-4xl font-bold text-gray-700 mb-4 leading-tight">Vocational English 3A:<br>Integrated Assessment</h3>
             <h1 class="text-6xl md:text-8xl font-black text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-500 mb-10 tracking-tight drop-shadow-sm">SpeakUp!</h1>
             
-            <button onclick="startApp()" class="group relative inline-flex items-center justify-center px-10 py-4 font-bold text-white transition-all duration-300 bg-gradient-to-r from-indigo-600 to-purple-600 rounded-full hover:from-indigo-500 hover:to-purple-500 hover:shadow-[0_10px_40px_-10px_rgba(79,70,229,0.8)] active:scale-95 text-lg md:text-2xl overflow-hidden">
-                <span class="absolute w-0 h-0 transition-all duration-500 ease-out bg-white rounded-full group-hover:w-56 group-hover:h-56 opacity-10"></span>
-                <span class="relative flex items-center gap-3">Let's Get Started!! <span class="group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform">🚀</span></span>
+            <button onclick="startApp()" class="btn-shine group relative inline-flex items-center justify-center px-10 py-4 font-bold text-white transition-all duration-300 bg-gradient-to-r from-indigo-600 to-purple-600 rounded-full hover:from-indigo-500 hover:to-purple-500 hover:shadow-[0_15px_40px_-10px_rgba(79,70,229,0.8)] active:scale-95 text-lg md:text-2xl border border-indigo-400/30">
+                <span class="relative flex items-center gap-3 z-10">Let's Get Started!! <span class="group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform">🚀</span></span>
             </button>
         </div>
     </div>
 
     <!-- Navigation -->
-    <nav id="main-nav" class="bg-white/70 backdrop-blur-lg border-b border-gray-100 sticky top-0 z-40 hidden transition-all duration-300">
+    <nav id="main-nav" class="bg-white/80 backdrop-blur-xl border-b border-gray-100/50 sticky top-0 z-40 hidden transition-all duration-300 shadow-sm">
         <div class="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
-            <div class="font-black text-xl md:text-2xl text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-purple-600 cursor-pointer flex items-center gap-2" onclick="goToHome()">
+            <div class="font-black text-xl md:text-2xl text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-purple-600 cursor-pointer flex items-center gap-2 hover:opacity-80 transition-opacity" onclick="goToHome()">
                 <i class="fa-solid fa-video text-indigo-600"></i> SpeakUp!
             </div>
-            <button onclick="goToHome()" class="text-gray-500 hover:text-indigo-600 font-semibold flex items-center gap-2 transition-colors active:scale-95 bg-gray-50 hover:bg-indigo-50 px-4 py-2 rounded-full text-sm">
+            <button onclick="goToHome()" class="text-gray-500 hover:text-indigo-600 font-semibold flex items-center gap-2 transition-all active:scale-95 bg-gray-50 hover:bg-indigo-50 px-5 py-2 rounded-full text-sm border border-transparent hover:border-indigo-100">
                 <i class="fa-solid fa-house"></i> Home
             </button>
         </div>
@@ -135,37 +164,43 @@
         
         <!-- 2. Main Menu -->
         <div id="page-menu" class="page text-center">
-            <h2 class="text-4xl font-black text-gray-800 mb-12 mt-4 tracking-tight">Select a Practice Module</h2>
+            <h2 class="text-4xl font-black text-transparent bg-clip-text bg-gradient-to-r from-gray-800 to-gray-600 mb-12 mt-4 tracking-tight">Select a Practice Module</h2>
             
             <div class="flex flex-col gap-6 max-w-3xl mx-auto">
-                <div onclick="nav('practice-menu')" class="group bg-white/80 backdrop-blur-sm rounded-3xl p-6 flex items-center gap-6 cursor-pointer transform transition-all duration-300 hover:-translate-y-2 hover:shadow-[0_20px_40px_-15px_rgba(79,70,229,0.2)] border border-gray-100 text-left relative overflow-hidden">
-                    <div class="absolute left-0 top-0 bottom-0 w-2 bg-indigo-500 group-hover:w-3 transition-all"></div>
-                    <div class="bg-indigo-50 group-hover:bg-indigo-100 transition-colors p-4 rounded-2xl text-5xl w-24 h-24 flex items-center justify-center shrink-0 group-hover:scale-110 duration-300">📚</div>
+                <div onclick="nav('practice-menu')" class="group bg-gradient-to-br from-white to-gray-50/50 backdrop-blur-sm rounded-3xl p-6 flex items-center gap-6 cursor-pointer transform transition-all duration-300 hover:-translate-y-2 hover:shadow-[0_20px_40px_-15px_rgba(79,70,229,0.25)] border border-gray-100 hover:border-indigo-200 text-left relative overflow-hidden">
+                    <div class="absolute left-0 top-0 bottom-0 w-2 bg-gradient-to-b from-indigo-400 to-indigo-600 group-hover:w-3 transition-all"></div>
+                    <div class="bg-indigo-50 group-hover:bg-indigo-100 transition-colors p-4 rounded-2xl text-5xl w-24 h-24 flex items-center justify-center shrink-0 group-hover:scale-110 duration-300 shadow-inner">📚</div>
                     <div>
                         <h2 class="text-2xl font-bold text-gray-800 group-hover:text-indigo-600 transition-colors mb-1">Practice Papers</h2>
                         <p class="text-gray-500 text-sm md:text-base">Guided practice with segmented scripts and slide recording.</p>
                     </div>
-                    <i class="fa-solid fa-chevron-right ml-auto text-gray-300 group-hover:text-indigo-500 group-hover:translate-x-1 transition-all text-xl"></i>
+                    <div class="ml-auto bg-white w-10 h-10 rounded-full flex items-center justify-center shadow-sm group-hover:bg-indigo-50 transition-colors">
+                        <i class="fa-solid fa-chevron-right text-gray-300 group-hover:text-indigo-500 group-hover:translate-x-0.5 transition-all text-lg"></i>
+                    </div>
                 </div>
 
-                <div onclick="nav('mock-login')" class="group bg-white/80 backdrop-blur-sm rounded-3xl p-6 flex items-center gap-6 cursor-pointer transform transition-all duration-300 hover:-translate-y-2 hover:shadow-[0_20px_40px_-15px_rgba(225,29,72,0.2)] border border-gray-100 text-left relative overflow-hidden">
-                    <div class="absolute left-0 top-0 bottom-0 w-2 bg-rose-500 group-hover:w-3 transition-all"></div>
-                    <div class="bg-rose-50 group-hover:bg-rose-100 transition-colors p-4 rounded-2xl text-5xl w-24 h-24 flex items-center justify-center shrink-0 group-hover:scale-110 duration-300">🎯</div>
+                <div onclick="nav('mock-login')" class="group bg-gradient-to-br from-white to-gray-50/50 backdrop-blur-sm rounded-3xl p-6 flex items-center gap-6 cursor-pointer transform transition-all duration-300 hover:-translate-y-2 hover:shadow-[0_20px_40px_-15px_rgba(225,29,72,0.25)] border border-gray-100 hover:border-rose-200 text-left relative overflow-hidden">
+                    <div class="absolute left-0 top-0 bottom-0 w-2 bg-gradient-to-b from-rose-400 to-rose-600 group-hover:w-3 transition-all"></div>
+                    <div class="bg-rose-50 group-hover:bg-rose-100 transition-colors p-4 rounded-2xl text-5xl w-24 h-24 flex items-center justify-center shrink-0 group-hover:scale-110 duration-300 shadow-inner">🎯</div>
                     <div>
                         <h2 class="text-2xl font-bold text-gray-800 group-hover:text-rose-600 transition-colors mb-1">Mock Paper</h2>
                         <p class="text-gray-500 text-sm md:text-base">Simulated assessment environment. (Password required)</p>
                     </div>
-                    <i class="fa-solid fa-chevron-right ml-auto text-gray-300 group-hover:text-rose-500 group-hover:translate-x-1 transition-all text-xl"></i>
+                    <div class="ml-auto bg-white w-10 h-10 rounded-full flex items-center justify-center shadow-sm group-hover:bg-rose-50 transition-colors">
+                        <i class="fa-solid fa-chevron-right text-gray-300 group-hover:text-rose-500 group-hover:translate-x-0.5 transition-all text-lg"></i>
+                    </div>
                 </div>
 
-                <div onclick="nav('assessment')" class="group bg-white/80 backdrop-blur-sm rounded-3xl p-6 flex items-center gap-6 cursor-pointer transform transition-all duration-300 hover:-translate-y-2 hover:shadow-[0_20px_40px_-15px_rgba(147,51,234,0.2)] border border-gray-100 text-left relative overflow-hidden">
-                    <div class="absolute left-0 top-0 bottom-0 w-2 bg-purple-500 group-hover:w-3 transition-all"></div>
-                    <div class="bg-purple-50 group-hover:bg-purple-100 transition-colors p-4 rounded-2xl text-5xl w-24 h-24 flex items-center justify-center shrink-0 group-hover:scale-110 duration-300">🛠️</div>
+                <div onclick="nav('assessment')" class="group bg-gradient-to-br from-white to-gray-50/50 backdrop-blur-sm rounded-3xl p-6 flex items-center gap-6 cursor-pointer transform transition-all duration-300 hover:-translate-y-2 hover:shadow-[0_20px_40px_-15px_rgba(147,51,234,0.25)] border border-gray-100 hover:border-purple-200 text-left relative overflow-hidden">
+                    <div class="absolute left-0 top-0 bottom-0 w-2 bg-gradient-to-b from-purple-400 to-purple-600 group-hover:w-3 transition-all"></div>
+                    <div class="bg-purple-50 group-hover:bg-purple-100 transition-colors p-4 rounded-2xl text-5xl w-24 h-24 flex items-center justify-center shrink-0 group-hover:scale-110 duration-300 shadow-inner">🛠️</div>
                     <div>
                         <h2 class="text-2xl font-bold text-gray-800 group-hover:text-purple-600 transition-colors mb-1">Assessment Prep</h2>
                         <p class="text-gray-500 text-sm md:text-base">Paste your own script, listen to AI, and record audio.</p>
                     </div>
-                    <i class="fa-solid fa-chevron-right ml-auto text-gray-300 group-hover:text-purple-500 group-hover:translate-x-1 transition-all text-xl"></i>
+                    <div class="ml-auto bg-white w-10 h-10 rounded-full flex items-center justify-center shadow-sm group-hover:bg-purple-50 transition-colors">
+                        <i class="fa-solid fa-chevron-right text-gray-300 group-hover:text-purple-500 group-hover:translate-x-0.5 transition-all text-lg"></i>
+                    </div>
                 </div>
             </div>
         </div>
@@ -174,34 +209,34 @@
         <div id="page-practice-menu" class="page text-center">
             <div class="flex justify-between items-center mb-8 max-w-3xl mx-auto">
                 <h2 class="text-3xl font-black text-gray-800">Select a Practice Paper</h2>
-                <button onclick="nav('menu')" class="text-gray-500 hover:text-indigo-600 bg-white hover:bg-indigo-50 px-5 py-2.5 rounded-full shadow-sm transition-all active:scale-95 text-sm font-semibold flex items-center gap-2"><i class="fa-solid fa-arrow-left"></i> Back</button>
+                <button onclick="nav('menu')" class="text-gray-500 hover:text-indigo-600 bg-white hover:bg-indigo-50 px-5 py-2.5 rounded-full shadow-sm border border-gray-100 hover:border-indigo-100 transition-all active:scale-95 text-sm font-semibold flex items-center gap-2"><i class="fa-solid fa-arrow-left"></i> Back</button>
             </div>
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-5 max-w-3xl mx-auto">
-                <div onclick="loadPaper('practice', 0)" class="group bg-white rounded-2xl p-6 cursor-pointer transform transition-all duration-300 hover:-translate-y-1 hover:shadow-xl border border-gray-100 text-left flex flex-col items-start gap-4">
-                    <div class="text-4xl bg-blue-50 w-16 h-16 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform">✈️</div>
+                <div onclick="loadPaper('practice', 0)" class="group bg-gradient-to-br from-white to-gray-50 rounded-2xl p-6 cursor-pointer transform transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_15px_30px_-10px_rgba(59,130,246,0.2)] border border-gray-100 hover:border-blue-200 text-left flex flex-col items-start gap-4">
+                    <div class="text-4xl bg-gradient-to-br from-blue-50 to-blue-100 w-16 h-16 rounded-2xl flex items-center justify-center group-hover:scale-110 transition-transform shadow-inner border border-blue-50">✈️</div>
                     <div>
-                        <h3 class="text-lg font-bold text-gray-800 group-hover:text-indigo-600 transition-colors">Practice Paper 1</h3>
+                        <h3 class="text-lg font-bold text-gray-800 group-hover:text-blue-600 transition-colors">Practice Paper 1</h3>
                         <p class="text-gray-500 text-sm mt-1">Aviation Fair</p>
                     </div>
                 </div>
-                <div onclick="loadPaper('practice', 1)" class="group bg-white rounded-2xl p-6 cursor-pointer transform transition-all duration-300 hover:-translate-y-1 hover:shadow-xl border border-gray-100 text-left flex flex-col items-start gap-4">
-                    <div class="text-4xl bg-green-50 w-16 h-16 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform">🖨️</div>
+                <div onclick="loadPaper('practice', 1)" class="group bg-gradient-to-br from-white to-gray-50 rounded-2xl p-6 cursor-pointer transform transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_15px_30px_-10px_rgba(16,185,129,0.2)] border border-gray-100 hover:border-emerald-200 text-left flex flex-col items-start gap-4">
+                    <div class="text-4xl bg-gradient-to-br from-emerald-50 to-emerald-100 w-16 h-16 rounded-2xl flex items-center justify-center group-hover:scale-110 transition-transform shadow-inner border border-emerald-50">🖨️</div>
                     <div>
-                        <h3 class="text-lg font-bold text-gray-800 group-hover:text-indigo-600 transition-colors">Practice Paper 2</h3>
+                        <h3 class="text-lg font-bold text-gray-800 group-hover:text-emerald-600 transition-colors">Practice Paper 2</h3>
                         <p class="text-gray-500 text-sm mt-1">New Photocopiers</p>
                     </div>
                 </div>
-                <div onclick="loadPaper('practice', 2)" class="group bg-white rounded-2xl p-6 cursor-pointer transform transition-all duration-300 hover:-translate-y-1 hover:shadow-xl border border-gray-100 text-left flex flex-col items-start gap-4">
-                    <div class="text-4xl bg-yellow-50 w-16 h-16 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform">🛋️</div>
+                <div onclick="loadPaper('practice', 2)" class="group bg-gradient-to-br from-white to-gray-50 rounded-2xl p-6 cursor-pointer transform transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_15px_30px_-10px_rgba(245,158,11,0.2)] border border-gray-100 hover:border-amber-200 text-left flex flex-col items-start gap-4">
+                    <div class="text-4xl bg-gradient-to-br from-amber-50 to-amber-100 w-16 h-16 rounded-2xl flex items-center justify-center group-hover:scale-110 transition-transform shadow-inner border border-amber-50">🛋️</div>
                     <div>
-                        <h3 class="text-lg font-bold text-gray-800 group-hover:text-indigo-600 transition-colors">Practice Paper 3</h3>
+                        <h3 class="text-lg font-bold text-gray-800 group-hover:text-amber-600 transition-colors">Practice Paper 3</h3>
                         <p class="text-gray-500 text-sm mt-1">Chill-out Room</p>
                     </div>
                 </div>
-                <div onclick="loadPaper('practice', 3)" class="group bg-white rounded-2xl p-6 cursor-pointer transform transition-all duration-300 hover:-translate-y-1 hover:shadow-xl border border-gray-100 text-left flex flex-col items-start gap-4">
-                    <div class="text-4xl bg-red-50 w-16 h-16 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform">🐉</div>
+                <div onclick="loadPaper('practice', 3)" class="group bg-gradient-to-br from-white to-gray-50 rounded-2xl p-6 cursor-pointer transform transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_15px_30px_-10px_rgba(239,68,68,0.2)] border border-gray-100 hover:border-red-200 text-left flex flex-col items-start gap-4">
+                    <div class="text-4xl bg-gradient-to-br from-red-50 to-red-100 w-16 h-16 rounded-2xl flex items-center justify-center group-hover:scale-110 transition-transform shadow-inner border border-red-50">🐉</div>
                     <div>
-                        <h3 class="text-lg font-bold text-gray-800 group-hover:text-indigo-600 transition-colors">Practice Paper 4</h3>
+                        <h3 class="text-lg font-bold text-gray-800 group-hover:text-red-600 transition-colors">Practice Paper 4</h3>
                         <p class="text-gray-500 text-sm mt-1">Hong Kong Dragon Boat Race</p>
                     </div>
                 </div>
@@ -210,15 +245,17 @@
 
         <!-- ================= Mock Login Page ================= -->
         <div id="page-mock-login" class="page text-center">
-            <div class="max-w-md mx-auto bg-white rounded-3xl p-10 shadow-xl border border-gray-100 mt-10 relative overflow-hidden">
-                <div class="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-rose-400 to-pink-500"></div>
+            <div class="max-w-md mx-auto bg-white/90 backdrop-blur-md rounded-3xl p-10 shadow-[0_20px_50px_-15px_rgba(225,29,72,0.15)] border border-gray-100 mt-10 relative overflow-hidden">
+                <div class="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-rose-400 via-pink-500 to-purple-500"></div>
                 <button onclick="nav('menu')" class="text-gray-400 hover:text-gray-800 mb-8 flex items-center text-sm transition-colors active:scale-95"><i class="fa-solid fa-arrow-left mr-2"></i> Back</button>
-                <div class="text-6xl mb-6 drop-shadow-sm">🔒</div>
+                <div class="text-6xl mb-6 drop-shadow-md">🔒</div>
                 <h2 class="text-3xl font-black text-gray-800 mb-3 tracking-tight">Mock Exam</h2>
                 <p class="text-gray-500 mb-8 text-sm leading-relaxed">Please enter the password provided by your instructor to begin the assessment.</p>
-                <input type="password" id="mock-password" class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-4 mb-6 text-center text-xl focus:border-rose-400 focus:ring-4 focus:ring-rose-50 focus:outline-none transition-all" placeholder="Enter Password">
-                <button onclick="checkMockPassword()" class="w-full bg-rose-500 hover:bg-rose-600 text-white font-bold py-4 rounded-xl transition-all active:scale-95 shadow-lg shadow-rose-200 text-lg">Enter Assessment</button>
-                <p id="mock-error" class="text-rose-500 mt-4 font-bold hidden bg-rose-50 py-2 rounded-lg text-sm animate-pulse">Incorrect password!</p>
+                <input type="password" id="mock-password" class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-4 mb-6 text-center text-xl focus:border-rose-400 focus:ring-4 focus:ring-rose-50 focus:outline-none transition-all shadow-inner" placeholder="Enter Password">
+                <button onclick="checkMockPassword()" class="btn-shine w-full bg-gradient-to-r from-rose-500 to-pink-600 hover:from-rose-600 hover:to-pink-700 text-white font-bold py-4 rounded-xl transition-all active:scale-95 shadow-[0_10px_20px_-10px_rgba(225,29,72,0.6)] text-lg border border-rose-400/30">
+                    <span class="relative z-10">Enter Assessment</span>
+                </button>
+                <p id="mock-error" class="text-rose-500 mt-4 font-bold hidden bg-rose-50 py-2 rounded-lg text-sm animate-pulse border border-rose-100">Incorrect password!</p>
             </div>
         </div>
 
@@ -226,8 +263,8 @@
         <div id="page-assessment" class="page">
             <div class="glass-panel p-8 md:p-10">
                 <div class="flex justify-between items-center mb-8">
-                    <h2 class="text-3xl font-black text-gray-800 tracking-tight flex items-center gap-3">
-                        <span class="bg-purple-100 text-purple-600 p-2 rounded-xl text-xl"><i class="fa-solid fa-wand-magic-sparkles"></i></span> Assessment Prep
+                    <h2 class="text-3xl font-black text-transparent bg-clip-text bg-gradient-to-r from-purple-700 to-indigo-700 tracking-tight flex items-center gap-3">
+                        <span class="bg-gradient-to-br from-purple-100 to-indigo-100 text-purple-600 p-2.5 rounded-xl text-xl shadow-inner border border-purple-50"><i class="fa-solid fa-wand-magic-sparkles"></i></span> Assessment Prep
                     </h2>
                     <button onclick="nav('menu')" class="flex items-center gap-2 px-5 py-2.5 bg-white border border-gray-200 rounded-full text-gray-600 hover:bg-purple-50 hover:text-purple-600 hover:border-purple-200 transition-all active:scale-95 text-sm font-semibold shadow-sm">
                         <i class="fa-solid fa-arrow-left"></i> Back
@@ -235,19 +272,19 @@
                 </div>
                 <p class="text-gray-500 mb-6">Paste your own script below to practise text-to-speech and record your audio.</p>
                 
-                <textarea id="assessment-script" class="w-full h-64 p-5 bg-white border border-gray-200 rounded-2xl focus:ring-4 focus:ring-purple-50 focus:border-purple-400 focus:outline-none resize-y mb-6 text-gray-700 text-lg leading-relaxed shadow-sm transition-all" placeholder="Paste your script here..."></textarea>
+                <textarea id="assessment-script" class="w-full h-64 p-6 bg-white border border-gray-200 rounded-2xl focus:ring-4 focus:ring-purple-50 focus:border-purple-400 focus:outline-none resize-y mb-6 text-gray-700 text-lg leading-relaxed shadow-inner transition-all script-scroll" placeholder="Paste your script here..."></textarea>
                 
-                <div class="bg-white border border-gray-100 shadow-sm rounded-2xl p-6 mb-10 flex flex-wrap gap-6 items-end">
+                <div class="bg-gradient-to-r from-white to-purple-50/30 border border-gray-100 shadow-sm rounded-2xl p-6 mb-10 flex flex-wrap gap-6 items-end">
                     <div>
                         <label class="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-2"><i class="fa-solid fa-head-side-cough text-purple-500 mr-1"></i> Voice</label>
-                        <select id="assess-voice" class="border border-gray-200 rounded-xl px-4 py-2.5 bg-gray-50 focus:outline-none focus:ring-2 focus:ring-purple-400 min-w-[140px] text-gray-700 font-medium cursor-pointer">
+                        <select id="assess-voice" class="border border-gray-200 rounded-xl px-4 py-2.5 bg-white focus:outline-none focus:ring-2 focus:ring-purple-400 min-w-[140px] text-gray-700 font-medium cursor-pointer shadow-sm">
                             <option value="UK" selected>UK English</option>
                             <option value="US">US English</option>
                         </select>
                     </div>
                     <div>
                         <label class="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-2"><i class="fa-solid fa-sliders text-blue-500 mr-1"></i> Speed</label>
-                        <select id="assess-speed" class="border border-gray-200 rounded-xl px-4 py-2.5 bg-gray-50 focus:outline-none focus:ring-2 focus:ring-purple-400 min-w-[140px] text-gray-700 font-medium cursor-pointer">
+                        <select id="assess-speed" class="border border-gray-200 rounded-xl px-4 py-2.5 bg-white focus:outline-none focus:ring-2 focus:ring-purple-400 min-w-[140px] text-gray-700 font-medium cursor-pointer shadow-sm">
                             <option value="0.5">0.5x (Very Slow)</option>
                             <option value="0.8">0.8x (Slow)</option>
                             <option value="1.0" selected>1.0x (Normal)</option>
@@ -255,31 +292,31 @@
                         </select>
                     </div>
                     <div class="flex gap-3 ml-auto md:ml-0 w-full md:w-auto mt-2 md:mt-0">
-                        <button onclick="playAssessmentTTS()" class="flex-1 md:flex-none bg-purple-600 hover:bg-purple-700 text-white px-8 py-2.5 rounded-xl font-bold transition-all active:scale-95 flex items-center justify-center gap-2 shadow-lg shadow-purple-200">
+                        <button onclick="playAssessmentTTS()" class="flex-1 md:flex-none bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white px-8 py-2.5 rounded-xl font-bold transition-all active:scale-95 flex items-center justify-center gap-2 shadow-[0_8px_20px_-6px_rgba(147,51,234,0.5)]">
                             <i class="fa-solid fa-volume-high"></i> Listen
                         </button>
-                        <button onclick="stopTTS()" class="flex-1 md:flex-none bg-gray-100 hover:bg-gray-200 text-gray-700 px-6 py-2.5 rounded-xl font-bold transition-all active:scale-95 flex items-center justify-center gap-2">
+                        <button onclick="stopTTS()" class="flex-1 md:flex-none bg-white border border-gray-200 hover:bg-gray-50 text-gray-700 px-6 py-2.5 rounded-xl font-bold transition-all active:scale-95 flex items-center justify-center gap-2 shadow-sm">
                             <i class="fa-solid fa-stop"></i> Stop
                         </button>
                     </div>
                 </div>
                 
-                <div class="bg-gray-50 rounded-3xl p-8 border border-gray-100 text-center">
+                <div class="bg-gradient-to-br from-gray-50 to-gray-100/50 rounded-3xl p-8 border border-gray-100 text-center shadow-inner">
                     <h3 class="text-xl font-bold text-gray-800 mb-6 flex items-center justify-center gap-2">
                         <i class="fa-solid fa-microphone-lines text-rose-500"></i> Audio Recording
                     </h3>
                     <div class="flex flex-col items-center gap-4">
-                        <button id="btn-assess-record" onclick="toggleAssessRecording()" class="bg-rose-500 hover:bg-rose-600 text-white px-10 py-4 rounded-full font-bold transition-all active:scale-95 flex items-center gap-3 shadow-lg shadow-rose-200 text-lg w-full max-w-sm justify-center">
-                            <i class="fa-solid fa-microphone"></i> Start Recording
+                        <button id="btn-assess-record" onclick="toggleAssessRecording()" class="btn-shine bg-gradient-to-r from-rose-500 to-pink-600 hover:from-rose-600 hover:to-pink-700 text-white px-10 py-4 rounded-full font-bold transition-all active:scale-95 flex items-center justify-center gap-3 shadow-[0_10px_20px_-10px_rgba(244,63,94,0.6)] text-lg w-full max-w-sm border border-rose-400/30">
+                            <span class="relative z-10 flex items-center gap-2"><i class="fa-solid fa-microphone"></i> Start Recording</span>
                         </button>
                         
-                        <div id="assess-audio-result" class="hidden w-full max-w-sm mt-4 bg-white p-5 rounded-2xl shadow-sm border border-gray-100">
-                            <audio id="assess-audio-player" controls class="w-full mb-4"></audio>
+                        <div id="assess-audio-result" class="hidden w-full max-w-sm mt-4 bg-white p-5 rounded-2xl shadow-lg border border-gray-100">
+                            <audio id="assess-audio-player" controls class="w-full mb-4 rounded-lg"></audio>
                             <div class="flex flex-col gap-3">
                                 <button onclick="shareAudio()" class="flex items-center justify-center gap-2 w-full bg-[#25D366] text-white px-4 py-3 rounded-xl hover:bg-[#128C7E] transition-all active:scale-95 font-bold shadow-sm">
                                     <i class="fa-brands fa-whatsapp text-xl"></i> Share to WhatsApp
                                 </button>
-                                <a id="assess-download-link" class="flex items-center justify-center gap-2 w-full bg-gray-800 text-white px-4 py-3 rounded-xl hover:bg-gray-900 transition-all active:scale-95 font-bold">
+                                <a id="assess-download-link" class="flex items-center justify-center gap-2 w-full bg-gray-800 text-white px-4 py-3 rounded-xl hover:bg-gray-900 transition-all active:scale-95 font-bold shadow-sm">
                                     <i class="fa-solid fa-download"></i> Save as MP3
                                 </a>
                             </div>
@@ -292,22 +329,22 @@
         <!-- ================= Practice Page ================= -->
         <div id="page-practice" class="page">
             <div class="flex justify-between items-center mb-8">
-                <h2 class="text-2xl md:text-3xl font-black text-gray-800 tracking-tight" id="practice-title">Practice Paper 1</h2>
-                <button onclick="nav('menu')" class="text-gray-500 hover:text-indigo-600 bg-white hover:bg-indigo-50 px-5 py-2.5 rounded-full shadow-sm transition-all active:scale-95 text-sm font-semibold flex items-center gap-2"><i class="fa-solid fa-arrow-left"></i> Back</button>
+                <h2 class="text-2xl md:text-3xl font-black text-transparent bg-clip-text bg-gradient-to-r from-gray-800 to-gray-600 tracking-tight" id="practice-title">Practice Paper 1</h2>
+                <button onclick="nav('menu')" class="text-gray-500 hover:text-indigo-600 bg-white hover:bg-indigo-50 px-5 py-2.5 rounded-full shadow-sm border border-gray-100 hover:border-indigo-100 transition-all active:scale-95 text-sm font-semibold flex items-center gap-2"><i class="fa-solid fa-arrow-left"></i> Back</button>
             </div>
 
             <!-- Global TTS Controls for Practice -->
-            <div id="tts-controls" class="flex flex-wrap gap-6 mb-8 bg-white p-5 rounded-2xl border border-gray-100 shadow-sm items-end transition-all duration-300">
+            <div id="tts-controls" class="flex flex-wrap gap-6 mb-8 bg-white/80 backdrop-blur-md p-5 rounded-2xl border border-gray-100 shadow-sm items-end transition-all duration-300">
                 <div>
                     <label class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-2 block"><i class="fa-solid fa-earth-americas text-indigo-400 mr-1"></i> Accent</label>
-                    <select id="accent-select" class="border border-gray-200 rounded-xl px-4 py-2 bg-gray-50 focus:ring-2 focus:ring-indigo-400 outline-none font-medium cursor-pointer">
+                    <select id="accent-select" class="border border-gray-200 rounded-xl px-4 py-2 bg-white focus:ring-2 focus:ring-indigo-400 outline-none font-medium cursor-pointer shadow-sm">
                         <option value="UK" selected>UK English</option>
                         <option value="US">US English</option>
                     </select>
                 </div>
                 <div>
                     <label class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-2 block"><i class="fa-solid fa-gauge-high text-blue-400 mr-1"></i> Speed</label>
-                    <select id="speed-select" class="border border-gray-200 rounded-xl px-4 py-2 bg-gray-50 focus:ring-2 focus:ring-indigo-400 outline-none font-medium cursor-pointer">
+                    <select id="speed-select" class="border border-gray-200 rounded-xl px-4 py-2 bg-white focus:ring-2 focus:ring-indigo-400 outline-none font-medium cursor-pointer shadow-sm">
                         <option value="0.5">0.5x (Very Slow)</option>
                         <option value="0.8">0.8x (Slow)</option>
                         <option value="1.0" selected>1.0x (Normal)</option>
@@ -315,45 +352,45 @@
                     </select>
                 </div>
                 <div class="ml-auto w-full sm:w-auto mt-2 sm:mt-0">
-                    <button onclick="stopTTS()" class="w-full sm:w-auto bg-rose-50 text-rose-600 px-6 py-2.5 rounded-xl hover:bg-rose-100 transition-colors font-bold text-sm flex items-center justify-center gap-2 active:scale-95"><i class="fa-solid fa-stop"></i> Stop Audio</button>
+                    <button onclick="stopTTS()" class="w-full sm:w-auto bg-rose-50 text-rose-600 px-6 py-2.5 rounded-xl hover:bg-rose-100 border border-rose-100 transition-colors font-bold text-sm flex items-center justify-center gap-2 active:scale-95"><i class="fa-solid fa-stop"></i> Stop Audio</button>
                 </div>
             </div>
 
             <!-- STEP 1: Study Slides -->
             <div id="step-1" class="glass-panel p-6 md:p-8 mb-6 transition-all duration-500">
                 <div class="flex justify-between items-center mb-6 border-b border-gray-100 pb-4 gap-2">
-                    <h3 class="text-xl md:text-2xl font-black text-gray-800 flex items-center gap-3"><span class="bg-blue-100 text-blue-600 w-10 h-10 rounded-xl flex items-center justify-center text-lg"><i class="fa-solid fa-chalkboard"></i></span> Step 1: Study the Slides</h3>
-                    <span id="step1-badge" class="bg-blue-50 text-blue-600 text-xs font-black px-4 py-1.5 rounded-full tracking-widest uppercase shrink-0 border border-blue-100">1 of 3</span>
+                    <h3 class="text-xl md:text-2xl font-black text-gray-800 flex items-center gap-3"><span class="bg-gradient-to-br from-blue-100 to-cyan-100 text-blue-600 w-10 h-10 rounded-xl flex items-center justify-center text-lg shadow-inner border border-blue-50"><i class="fa-solid fa-chalkboard"></i></span> Step 1: Study the Slides</h3>
+                    <span id="step1-badge" class="bg-blue-50 text-blue-600 text-xs font-black px-4 py-1.5 rounded-full tracking-widest uppercase shrink-0 border border-blue-100 shadow-sm">1 of 3</span>
                 </div>
-                <div class="bg-amber-50 border border-amber-100 rounded-xl p-4 mb-6 flex items-start gap-3">
-                    <i class="fa-solid fa-lightbulb text-amber-500 text-xl mt-0.5"></i>
+                <div class="bg-gradient-to-r from-amber-50 to-yellow-50/50 border border-amber-100 rounded-xl p-4 mb-6 flex items-start gap-3 shadow-sm">
+                    <i class="fa-solid fa-lightbulb text-amber-500 text-xl mt-0.5 drop-shadow-sm"></i>
                     <p class="text-amber-800 text-sm leading-relaxed"><strong>Tip:</strong> Click on <strong>ANY word</strong> in the slides to hear its pronunciation and see its syllables!</p>
                 </div>
                 
                 <div class="max-w-4xl mx-auto">
                     <div class="slide-container p-2 sm:p-4 bg-white" id="slide-display-study"></div>
                     <div class="flex justify-between items-center mt-6 bg-white border border-gray-100 p-2 rounded-2xl gap-2 shadow-sm">
-                        <button onclick="changeSlide(-1)" class="bg-gray-50 px-5 py-2.5 rounded-xl hover:bg-gray-100 font-bold text-gray-600 text-sm transition-colors active:scale-95 shrink-0"><i class="fa-solid fa-chevron-left mr-2"></i> Prev</button>
+                        <button onclick="changeSlide(-1)" class="bg-gray-50 px-5 py-2.5 rounded-xl hover:bg-gray-100 font-bold text-gray-600 text-sm transition-colors active:scale-95 shrink-0 border border-transparent hover:border-gray-200"><i class="fa-solid fa-chevron-left mr-2"></i> Prev</button>
                         <div class="flex flex-col items-center flex-1 text-center">
                             <span class="text-sm font-bold text-gray-400 uppercase tracking-widest" id="slide-counter-study">Slide 1 / 3</span>
                         </div>
-                        <button onclick="changeSlide(1)" class="bg-indigo-600 text-white px-5 py-2.5 rounded-xl shadow-md shadow-indigo-200 hover:bg-indigo-700 font-bold text-sm transition-all active:scale-95 shrink-0">Next <i class="fa-solid fa-chevron-right ml-2"></i></button>
+                        <button onclick="changeSlide(1)" class="bg-gradient-to-r from-indigo-600 to-blue-600 text-white px-5 py-2.5 rounded-xl shadow-[0_4px_10px_-2px_rgba(79,70,229,0.5)] hover:from-indigo-700 hover:to-blue-700 font-bold text-sm transition-all active:scale-95 shrink-0">Next <i class="fa-solid fa-chevron-right ml-2"></i></button>
                     </div>
                 </div>
                 <div class="mt-10 text-right">
-                    <button id="btn-to-step2" onclick="switchStep(2)" class="bg-gray-800 text-white px-8 py-3.5 rounded-full font-bold hover:bg-gray-900 transition-all active:scale-95 shadow-lg shadow-gray-200 flex items-center gap-2 ml-auto">Next: Study Script <i class="fa-solid fa-arrow-right"></i></button>
+                    <button id="btn-to-step2" onclick="switchStep(2)" class="bg-gradient-to-r from-gray-800 to-gray-900 text-white px-8 py-3.5 rounded-full font-bold hover:shadow-lg transition-all active:scale-95 shadow-md flex items-center gap-2 ml-auto border border-gray-700">Next: Study Script <i class="fa-solid fa-arrow-right"></i></button>
                 </div>
             </div>
 
             <!-- STEP 2: Study Script -->
             <div id="step-2" class="glass-panel p-6 md:p-8 mb-6 hidden transition-all duration-500">
                 <div class="flex justify-between items-center mb-6 border-b border-gray-100 pb-4 gap-2">
-                    <h3 class="text-xl md:text-2xl font-black text-gray-800 flex items-center gap-3"><span class="bg-indigo-100 text-indigo-600 w-10 h-10 rounded-xl flex items-center justify-center text-lg"><i class="fa-solid fa-book-open"></i></span> Step 2: Study the Script</h3>
-                    <span class="bg-indigo-50 text-indigo-600 text-xs font-black px-4 py-1.5 rounded-full tracking-widest uppercase shrink-0 border border-indigo-100">2 of 3</span>
+                    <h3 class="text-xl md:text-2xl font-black text-gray-800 flex items-center gap-3"><span class="bg-gradient-to-br from-indigo-100 to-purple-100 text-indigo-600 w-10 h-10 rounded-xl flex items-center justify-center text-lg shadow-inner border border-indigo-50"><i class="fa-solid fa-book-open"></i></span> Step 2: Study the Script</h3>
+                    <span class="bg-indigo-50 text-indigo-600 text-xs font-black px-4 py-1.5 rounded-full tracking-widest uppercase shrink-0 border border-indigo-100 shadow-sm">2 of 3</span>
                 </div>
                 
-                <div class="bg-amber-50 border border-amber-100 rounded-xl p-4 mb-6 flex items-start gap-3">
-                    <i class="fa-solid fa-lightbulb text-amber-500 text-xl mt-0.5"></i>
+                <div class="bg-gradient-to-r from-amber-50 to-yellow-50/50 border border-amber-100 rounded-xl p-4 mb-6 flex items-start gap-3 shadow-sm">
+                    <i class="fa-solid fa-lightbulb text-amber-500 text-xl mt-0.5 drop-shadow-sm"></i>
                     <p class="text-amber-800 text-sm leading-relaxed"><strong>Tip:</strong> Click on <strong>ANY word</strong> in the script to hear its pronunciation and see its syllables!</p>
                 </div>
 
@@ -362,9 +399,9 @@
                 </div>
 
                 <div class="mt-10 flex flex-col-reverse sm:flex-row justify-between items-center gap-4">
-                    <button onclick="switchStep(1)" class="w-full sm:w-auto text-gray-500 hover:text-gray-800 font-bold px-6 py-3 rounded-full hover:bg-gray-100 transition-colors active:scale-95"><i class="fa-solid fa-arrow-left mr-2"></i> Back to Slides</button>
-                    <button onclick="switchStep(3)" class="w-full sm:w-auto bg-gradient-to-r from-emerald-500 to-teal-500 text-white px-10 py-4 rounded-full font-black text-lg hover:shadow-[0_10px_20px_-10px_rgba(16,185,129,0.8)] transition-all active:scale-95 flex items-center justify-center gap-3">
-                        Next: Record Video <i class="fa-solid fa-video"></i>
+                    <button onclick="switchStep(1)" class="w-full sm:w-auto text-gray-500 hover:text-gray-800 font-bold px-6 py-3 rounded-full hover:bg-gray-100 transition-colors active:scale-95 border border-transparent hover:border-gray-200"><i class="fa-solid fa-arrow-left mr-2"></i> Back to Slides</button>
+                    <button onclick="switchStep(3)" class="btn-shine w-full sm:w-auto bg-gradient-to-r from-emerald-500 to-teal-500 text-white px-10 py-4 rounded-full font-black text-lg hover:shadow-[0_10px_20px_-10px_rgba(16,185,129,0.8)] transition-all active:scale-95 flex items-center justify-center gap-3 border border-emerald-400/30">
+                        <span class="relative z-10 flex items-center gap-2">Next: Record Video <i class="fa-solid fa-video"></i></span>
                     </button>
                 </div>
             </div>
@@ -372,16 +409,41 @@
             <!-- STEP 3: Video Recording -->
             <div id="step-3" class="glass-panel p-6 md:p-8 hidden transition-all duration-500">
                 <div class="flex justify-between items-center mb-6 border-b border-gray-100 pb-4 gap-2">
-                    <h3 class="text-xl md:text-2xl font-black text-gray-800 flex items-center gap-3"><span class="bg-emerald-100 text-emerald-600 w-10 h-10 rounded-xl flex items-center justify-center text-lg"><i class="fa-solid fa-video"></i></span> Step 3: Present & Record</h3>
-                    <span id="step3-badge" class="bg-emerald-50 text-emerald-600 text-xs font-black px-4 py-1.5 rounded-full tracking-widest uppercase shrink-0 border border-emerald-100">3 of 3</span>
+                    <h3 class="text-xl md:text-2xl font-black text-gray-800 flex items-center gap-3"><span class="bg-gradient-to-br from-emerald-100 to-teal-100 text-emerald-600 w-10 h-10 rounded-xl flex items-center justify-center text-lg shadow-inner border border-emerald-50"><i class="fa-solid fa-video"></i></span> Step 3: Present & Record</h3>
+                    <span id="step3-badge" class="bg-emerald-50 text-emerald-600 text-xs font-black px-4 py-1.5 rounded-full tracking-widest uppercase shrink-0 border border-emerald-100 shadow-sm">3 of 3</span>
                 </div>
                 
-                <div class="bg-blue-50 border border-blue-100 rounded-xl p-5 mb-8 flex items-start gap-4">
-                    <div class="bg-blue-200 text-blue-600 w-8 h-8 rounded-full flex items-center justify-center shrink-0 mt-0.5"><i class="fa-solid fa-info"></i></div>
-                    <div class="text-sm text-blue-900">
-                        <p class="font-bold mb-1 text-base">Record Your Presentation</p>
-                        <p class="opacity-80">Your voice and the slides will be recorded together into a video file. Once finished, you can easily download or share it!</p>
+                <!-- UPDATED: Blue Info Box with Steps -->
+                <div class="bg-[#f4f7ff] border border-blue-100 rounded-2xl p-5 shadow-sm mb-8">
+                    <div class="flex items-center gap-3 mb-4">
+                        <div class="bg-blue-200 text-blue-700 w-8 h-8 flex items-center justify-center rounded-full shadow-inner">
+                            <i class="fa-solid fa-info"></i>
+                        </div>
+                        <h2 class="text-lg font-bold text-blue-900">How to Record</h2>
                     </div>
+                    
+                    <ul class="space-y-3 text-blue-800/80 font-bold text-sm ml-1">
+                        <li class="flex items-center gap-3">
+                            <i class="fa-solid fa-circle-dot text-red-500 w-4"></i>
+                            <span><span class="text-blue-900">Click Record</span> to start</span>
+                        </li>
+                        <li class="flex items-center gap-3">
+                            <i class="fa-solid fa-microphone text-blue-500 w-4"></i>
+                            <span><span class="text-blue-900">Allow microphone</span> access</span>
+                        </li>
+                        <li class="flex items-center gap-3">
+                            <i class="fa-solid fa-arrow-right text-blue-500 w-4"></i>
+                            <span><span class="text-blue-900">Click Next</span> to switch slides</span>
+                        </li>
+                        <li class="flex items-center gap-3">
+                            <i class="fa-solid fa-eye text-blue-500 w-4"></i>
+                            <span><span class="text-blue-900">Preview</span> your presentation</span>
+                        </li>
+                        <li class="flex items-center gap-3">
+                            <i class="fa-solid fa-download text-blue-500 w-4"></i>
+                            <span><span class="text-blue-900">Download or Share</span> your video!</span>
+                        </li>
+                    </ul>
                 </div>
 
                 <div class="flex flex-col gap-8 max-w-4xl mx-auto">
@@ -389,41 +451,44 @@
                     <div class="w-full">
                         <div class="slide-container p-2 sm:p-4 bg-white" id="slide-display-record"></div>
                         <div class="flex justify-between items-center mt-4 bg-white border border-gray-100 p-2 rounded-2xl gap-2 shadow-sm">
-                            <button onclick="changeSlide(-1)" class="bg-gray-50 px-5 py-2.5 rounded-xl hover:bg-gray-100 font-bold text-gray-600 text-sm transition-colors active:scale-95 shrink-0"><i class="fa-solid fa-chevron-left mr-2"></i> Prev</button>
+                            <button onclick="changeSlide(-1)" class="bg-gray-50 px-5 py-2.5 rounded-xl hover:bg-gray-100 font-bold text-gray-600 text-sm transition-colors active:scale-95 shrink-0 border border-transparent hover:border-gray-200"><i class="fa-solid fa-chevron-left mr-2"></i> Prev</button>
                             
                             <div class="flex flex-col items-center flex-1 text-center">
                                 <span class="text-sm font-bold text-gray-400 uppercase tracking-widest" id="slide-counter-record">Slide 1 / 3</span>
-                                <span class="text-[10px] md:text-xs text-rose-500 font-bold mt-1 bg-rose-50 px-2 py-0.5 rounded-full animate-pulse"><i class="fa-solid fa-hand-pointer mr-1"></i> Remember to click Next!</span>
+                                <span class="text-[10px] md:text-xs text-rose-500 font-bold mt-1 bg-rose-50 px-2 py-0.5 rounded-full animate-pulse border border-rose-100"><i class="fa-solid fa-hand-pointer mr-1"></i> Remember to click Next!</span>
                             </div>
 
-                            <button onclick="changeSlide(1)" class="bg-indigo-600 text-white px-5 py-2.5 rounded-xl shadow-md shadow-indigo-200 hover:bg-indigo-700 font-bold text-sm transition-all active:scale-95 shrink-0">Next <i class="fa-solid fa-chevron-right ml-2"></i></button>
+                            <button onclick="changeSlide(1)" class="bg-gradient-to-r from-indigo-600 to-blue-600 text-white px-5 py-2.5 rounded-xl shadow-[0_4px_10px_-2px_rgba(79,70,229,0.5)] hover:from-indigo-700 hover:to-blue-700 font-bold text-sm transition-all active:scale-95 shrink-0">Next <i class="fa-solid fa-chevron-right ml-2"></i></button>
                         </div>
                     </div>
 
                     <!-- Script -->
-                    <div id="script-reader-container" class="w-full bg-white border border-gray-200 rounded-2xl p-5 shadow-sm">
+                    <div id="script-reader-container" class="w-full bg-white border border-gray-200 rounded-2xl p-5 shadow-sm script-container-mask relative">
                         <h4 class="text-xs font-black text-gray-400 uppercase tracking-widest mb-4 flex items-center gap-2"><i class="fa-solid fa-file-lines text-indigo-400"></i> Your Script (Scrollable)</h4>
-                        <div class="h-48 overflow-y-auto script-scroll pr-4 text-gray-700 text-base leading-relaxed space-y-4" id="script-reader"></div>
+                        <div class="h-48 overflow-y-auto script-scroll pr-4 text-gray-700 text-base leading-relaxed space-y-4 pb-8" id="script-reader"></div>
                     </div>
                     
                     <!-- Record Controls -->
-                    <div id="record-container" class="w-full flex flex-col items-center bg-gray-50 p-8 rounded-3xl border border-gray-200 transition-all duration-300 relative overflow-hidden">
-                        <div class="text-5xl font-mono font-light mb-6 text-gray-800 tracking-tight" id="timer">00:00</div>
+                    <div id="record-container" class="w-full flex flex-col items-center bg-gradient-to-b from-gray-50 to-white p-8 rounded-3xl border border-gray-200 transition-all duration-300 relative overflow-hidden shadow-inner">
+                        <div class="flex items-center gap-3 mb-6">
+                            <span id="recording-indicator" class="w-3 h-3 bg-rose-500 rounded-full animate-pulse hidden shadow-[0_0_10px_rgba(244,63,94,0.8)]"></span>
+                            <div class="text-5xl font-mono font-light text-gray-800 tracking-tight" id="timer">00:00</div>
+                        </div>
                         
-                        <button id="btn-record" onclick="toggleRecording()" class="bg-rose-500 text-white px-10 py-4 rounded-full font-black text-xl hover:bg-rose-600 transition-all active:scale-95 shadow-[0_10px_20px_-10px_rgba(244,63,94,0.6)] mb-2 w-full max-w-sm flex items-center justify-center gap-3 z-10">
-                            <i class="fa-solid fa-video"></i> Start Recording
+                        <button id="btn-record" onclick="toggleRecording()" class="btn-shine bg-gradient-to-r from-rose-500 to-pink-600 text-white px-10 py-4 rounded-full font-black text-xl hover:from-rose-600 hover:to-pink-700 transition-all active:scale-95 shadow-[0_10px_20px_-10px_rgba(244,63,94,0.6)] mb-2 w-full max-w-sm flex items-center justify-center gap-3 z-10 border border-rose-400/30">
+                            <span class="relative z-10 flex items-center gap-2"><i class="fa-solid fa-video"></i> Start Recording</span>
                         </button>
                         
-                        <div id="download-area" class="mt-6 hidden w-full max-w-md bg-white p-6 rounded-2xl border border-emerald-100 shadow-lg text-center z-10">
-                            <div class="w-12 h-12 bg-emerald-100 text-emerald-500 rounded-full flex items-center justify-center mx-auto mb-3 text-2xl"><i class="fa-solid fa-check"></i></div>
+                        <div id="download-area" class="mt-6 hidden w-full max-w-md bg-white p-6 rounded-2xl border border-emerald-100 shadow-xl text-center z-10">
+                            <div class="w-14 h-14 bg-gradient-to-br from-emerald-100 to-teal-100 text-emerald-500 rounded-full flex items-center justify-center mx-auto mb-4 text-2xl shadow-inner border border-emerald-50"><i class="fa-solid fa-check"></i></div>
                             <h4 class="font-black text-gray-800 mb-4 text-lg">Video Saved Successfully!</h4>
-                            <video id="presentation-video-player" controls class="w-full mb-5 rounded-xl border border-gray-100 bg-black shadow-sm"></video>
+                            <video id="presentation-video-player" controls class="w-full mb-5 rounded-xl border border-gray-200 bg-black shadow-sm"></video>
                             
                             <div class="flex flex-col gap-3">
                                 <button onclick="shareVideo()" class="flex items-center justify-center gap-2 w-full bg-[#25D366] text-white px-4 py-3.5 rounded-xl hover:bg-[#128C7E] transition-all active:scale-95 font-bold shadow-sm">
                                     <i class="fa-brands fa-whatsapp text-xl"></i> Share to WhatsApp
                                 </button>
-                                <a id="download-link" class="flex items-center justify-center gap-2 w-full bg-gray-800 text-white px-4 py-3 rounded-xl hover:bg-gray-900 transition-all active:scale-95 font-bold">
+                                <a id="download-link" class="flex items-center justify-center gap-2 w-full bg-gradient-to-r from-gray-800 to-gray-900 text-white px-4 py-3 rounded-xl hover:shadow-lg transition-all active:scale-95 font-bold border border-gray-700">
                                     <i class="fa-solid fa-download"></i> Save to Device
                                 </a>
                             </div>
@@ -431,8 +496,8 @@
                     </div>
                 </div>
 
-                <div class="mt-10 pt-6 flex justify-center">
-                    <button id="btn-back-from-3" onclick="switchStep(2)" class="text-gray-500 hover:text-gray-800 font-bold px-6 py-3 rounded-full hover:bg-gray-100 transition-colors active:scale-95"><i class="fa-solid fa-arrow-left mr-2"></i> Back to Script</button>
+                <div class="mt-10 pt-6 flex justify-center border-t border-gray-100/50">
+                    <button id="btn-back-from-3" onclick="switchStep(2)" class="text-gray-500 hover:text-gray-800 font-bold px-6 py-3 rounded-full hover:bg-gray-100 transition-colors active:scale-95 border border-transparent hover:border-gray-200"><i class="fa-solid fa-arrow-left mr-2"></i> Back to Script</button>
                 </div>
             </div>
         </div>
@@ -457,7 +522,7 @@
             const currentActive = document.querySelector('.page.active');
             if(currentActive && currentActive.id !== elementId) {
                 currentActive.style.opacity = '0';
-                currentActive.style.transform = 'translateY(15px)';
+                currentActive.style.transform = 'translateY(20px)';
                 setTimeout(() => {
                     currentActive.classList.remove('active');
                     const nextElement = document.getElementById(elementId);
@@ -516,7 +581,7 @@
                     bgObjective: "To join the Hong Kong Aviation Fair <span class='pointer-events-none' aria-hidden='true'>→</span> promote the upgraded service package and attract potential customers",
                     proposal: ["Estimated cost: $20,000 (fair permit, booth installation, promotional materials)", "Period: 15 <span class='pointer-events-none' aria-hidden='true'>-</span> 17 Aug 20xx", "New airplane displays, pilot workshops, interactive games"],
                     suggestion: "Contact Finance Department <span class='pointer-events-none' aria-hidden='true'>→</span> detailed budget plan",
-                    invitation: ["Fair briefing <span class='pointer-events-none' aria-hidden='true'>→</span> obtain event details", "Next Thurs, 2pm – 3pm, Meeting Room B"],
+                    invitation: ["Fair briefing <span class='pointer-events-none' aria-hidden='true'>→</span> obtain event details", "Next Thurs, 2 p.m. – 3 p.m., Meeting Room B"],
                     script: [
                         "Good morning, everyone. Thank you for coming today. I'm Joe. In today's presentation, I'll talk about the proposal for joining the Hong Kong Aviation Fair.",
                         "As you can see on the screen, this presentation will be divided into 4 parts: background, proposal details, benefits and concerns, and lastly, suggestion.",
@@ -525,7 +590,7 @@
                         "You may ask: how would this proposal benefit our company? First, it gives direct exposure to aviation fans and potential customers. Second, it raises our brand awareness among other airlines.",
                         "We understand you may have some concerns. One might ask: Will we get good return from this 20 thousand spending? To address this, we should do customer surveys after the fair.",
                         "You may also wonder if our booth stands out from other airlines. For this, we can assure you that our special service demonstrations will attract more visitors.",
-                        "Based on what we have discussed, we suggest contacting the Finance Department to get a detailed budget plan. I would also like to invite you to our fair briefing. It will be held from 2 pm to 3 pm next Thursday at Meeting Room B.",
+                        "Based on what we have discussed, we suggest contacting the Finance Department to get a detailed budget plan. I would also like to invite you to our fair briefing. It will be held from 2 p.m. to 3 p.m. next Thursday at Meeting Room B.",
                         "That's all for my presentation. Thank you for listening. Do you have any questions?"
                     ]
                 },
@@ -536,7 +601,7 @@
                     bgObjective: "To offer better photocopying services to students <span class='pointer-events-none' aria-hidden='true'>→</span> purchase 3 new photocopiers",
                     proposal: ["Estimated cost: $85,000 (machines, maintenance plan)", "Placed in project room & self-study areas", "A3 & A4 sized, black & white copies only"],
                     suggestion: "Contact Supplies Department <span class='pointer-events-none' aria-hidden='true'>→</span> suitable models",
-                    invitation: ["Product demonstration by Best Office Equipment", "15 Jan, 2pm – 3pm, Room 1207"],
+                    invitation: ["Product demonstration by Best Office Equipment", "15 Jan, 2 p.m. – 3 p.m., Room 1207"],
                     script: [
                         "Good morning, everyone. Thank you for being here today. I'm Carol Yuen. Today, I'd like to present our proposal for purchasing new photocopiers.",
                         "This presentation covers 4 parts: background, proposal details, benefits and concerns, and lastly, suggestion.",
@@ -545,7 +610,7 @@
                         "So, what do we stand to gain? First, students will enjoy faster and more reliable photocopying services on campus. Second, having machines in key study areas can save students time between classes.",
                         "Of course, we are aware of some concerns. You might wonder: is $85,000 too costly for the college right now? In response to this, we should explore budget-friendly maintenance plans to keep long-term costs low.",
                         "Another concern might be whether the machines will be overused quickly. Please rest assured that our chosen models are built for high-volume daily use.",
-                        "Taking everything into account, we recommend contacting the Supplies Department to look into suitable models. I would also like to invite you to a product demonstration by Best Office Equipment for more details. It will be held on 15 January, from 2 pm to 3 pm, in Room 1207, Edward Building.",
+                        "Taking everything into account, we recommend contacting the Supplies Department to look into suitable models. I would also like to invite you to a product demonstration by Best Office Equipment for more details. It will be held on 15 January, from 2 p.m. to 3 p.m., in Room 1207, Edward Building.",
                         "This brings me to the end of my presentation. Thank you for your time. Are there any questions?"
                     ]
                 },
@@ -556,7 +621,7 @@
                     bgObjective: "To set up a chill-out room <span class='pointer-events-none' aria-hidden='true'>→</span> provide a space for relaxation from work and enhance overall well-being",
                     proposal: ["Estimated cost: $50,000 (design, renovation, furniture)", "Set-up period: 21 <span class='pointer-events-none' aria-hidden='true'>-</span> 28 March 20xx", "Refreshments, massage chairs, yoga mats"],
                     suggestion: "Source designer house <span class='pointer-events-none' aria-hidden='true'>→</span> interior design plan",
-                    invitation: ["Monthly Business Meeting <span class='pointer-events-none' aria-hidden='true'>→</span> discuss preference", "Next Tue, 10am - 11am, Conference Room A"],
+                    invitation: ["Monthly Business Meeting <span class='pointer-events-none' aria-hidden='true'>→</span> discuss preference", "Next Tue, 10 a.m. - 11 a.m., Conference Room A"],
                     script: [
                         "Good morning, everyone. Thank you for joining us today. I'm Kate Fong, Executive Officer at IT Solutions. Today, I'd like to present our proposal for setting up a chill-out room.",
                         "I have divided today's talk into 4 sections: background, proposal details, benefits and concerns, and finally, suggestion.",
@@ -565,7 +630,7 @@
                         "So, how exactly does this help our company? One key benefit is that a relaxing space can help reduce stress, which means fewer sick days taken by staff. Another is that it can show that our management cares about employees, which can then boost our staff morale and loyalty.",
                         "You might have a few doubts about this. Some of you may wonder: Is $50,000 a reasonable amount for this project? To handle this, we should get a few quotes from different designers to find the best value.",
                         "Some of you could also be asking whether the room will be used enough to justify the cost. We can assure you that a short staff survey has already shown strong interest from most departments.",
-                        "In light of this, we suggest sourcing a designer house to develop a proper interior design plan. May I also invite you to our Monthly Business Meeting to discuss renovation preferences? It will be held next Tuesday, from 10 am to 11 am, in Conference Room A.",
+                        "In light of this, we suggest sourcing a designer house to develop a proper interior design plan. May I also invite you to our Monthly Business Meeting to discuss renovation preferences? It will be held next Tuesday, from 10 a.m. to 11 a.m., in Conference Room A.",
                         "That's all for my presentation. Thank you for listening. Do you have any questions?"
                     ]
                 },
@@ -576,7 +641,7 @@
                     bgObjective: "To join the Hong Kong Dragon Boat Race <span class='pointer-events-none' aria-hidden='true'>→</span> enhance the visibility of our fitness centre to the public",
                     proposal: ["Expected cost: $30,000 (team gear, training fees, insurance)", "Training and Racing Period: 1 Apr <span class='pointer-events-none' aria-hidden='true'>-</span> 10 Jun 2025", "Rowing practice, fitness training"],
                     suggestion: "Contact race organiser <span class='pointer-events-none' aria-hidden='true'>→</span> event details",
-                    invitation: ["General Staff Meeting <span class='pointer-events-none' aria-hidden='true'>→</span> discuss the logistics", "Next Thu, 10:30am - 11:30am, Meeting Room B"],
+                    invitation: ["General Staff Meeting <span class='pointer-events-none' aria-hidden='true'>→</span> discuss the logistics", "Next Thu, 10:30 a.m. - 11:30 a.m., Meeting Room B"],
                     script: [
                         "Good morning, everyone. Thank you for being here today. I'm Sofia Kong, Marketing Officer at Wellness Fitness. Today, I'd like to present our proposal for joining the Hong Kong Dragon Boat Race.",
                         "This presentation consists of 4 parts: background, proposal details, benefits and concerns, and lastly, suggestion.",
@@ -585,7 +650,7 @@
                         "This leads us to the benefits. First, taking part in a well-known public event will put our brand in front of a large audience. Second, it can build team spirit among our staff, which can then create a more positive and energetic workplace.",
                         "We understand you may have some concerns. One might ask: Is our current staff physically ready for this kind of competition? To handle this, we should arrange a fitness assessment for all interested team members beforehand.",
                         "You may also wonder if $30,000 is too high given our current drop in membership. For this, we can assure you that the media coverage from the race will likely bring in far more new members than the cost.",
-                        "To make this proposal happen, we suggest contacting the race organiser to get full event details and registration information. You are also welcome to join our General Staff Meeting to discuss the logistics. It will be held next Thursday, from 10:30 am to 11:30 am, in Meeting Room B.",
+                        "To make this proposal happen, we suggest contacting the race organiser to get full event details and registration information. You are also welcome to join our General Staff Meeting to discuss the logistics. It will be held next Thursday, from 10:30 a.m. to 11:30 a.m., in Meeting Room B.",
                         "That's all for my presentation. Thank you for your time. Does anyone have any questions?"
                     ]
                 }
@@ -597,7 +662,7 @@
                 bgObjective: "To join the Business Seminar in New York <span class='pointer-events-none' aria-hidden='true'>→</span> attract more US suppliers to use our online trading platform",
                 proposal: ["Estimated budget: $47,000 (transport & accommodation)", "Period: 13 <span class='pointer-events-none' aria-hidden='true'>-</span> 15 Aug 20xx", "Talks, lunch conference, meetings with business owners"],
                 suggestion: "Email seminar organiser <span class='pointer-events-none' aria-hidden='true'>→</span> event details",
-                invitation: ["Business development meeting <span class='pointer-events-none' aria-hidden='true'>→</span> understand work plans", "Next Thu, 10:30 - 12:30pm, Project Room B"],
+                invitation: ["Business development meeting <span class='pointer-events-none' aria-hidden='true'>→</span> understand work plans", "Next Thu, 10:30 a.m. - 12:30 p.m., Project Room B"],
                 script: [] 
             }
         };
@@ -610,24 +675,24 @@
             return [
                 {
                     html: `
-                        <div class="flex-1 h-fit min-h-full w-full flex flex-col items-center justify-center gap-2 sm:gap-4 text-center bg-blue-50/30 p-2 sm:p-4 md:p-8 border-4 border-blue-100 box-border">
-                            <div class="w-full text-left"><div class="bg-blue-200 text-blue-800 px-3 py-1 font-bold tracking-widest uppercase text-[10px] md:text-xs mb-1 inline-block rounded">Presentation Topic</div></div>
-                            <h1 class="text-xl sm:text-2xl md:text-5xl font-extrabold text-gray-900 leading-tight my-2">${data.topic}</h1>
-                            <div class="w-full text-left mt-2"><div class="bg-blue-200 text-blue-800 px-3 py-1 font-bold tracking-widest uppercase text-[10px] md:text-xs mb-2 inline-block rounded">Presentation Outline</div></div>
+                        <div class="flex-1 h-fit min-h-full w-full flex flex-col items-center justify-center gap-2 sm:gap-4 text-center bg-gradient-to-br from-blue-50/50 to-indigo-50/50 p-2 sm:p-4 md:p-8 border-4 border-blue-100 box-border rounded-lg">
+                            <div class="w-full text-left"><div class="bg-gradient-to-r from-blue-200 to-indigo-200 text-blue-800 px-3 py-1 font-bold tracking-widest uppercase text-[10px] md:text-xs mb-1 inline-block rounded shadow-sm">Presentation Topic</div></div>
+                            <h1 class="text-xl sm:text-2xl md:text-5xl font-extrabold text-gray-800 leading-tight my-2 drop-shadow-sm">${data.topic}</h1>
+                            <div class="w-full text-left mt-2"><div class="bg-gradient-to-r from-blue-200 to-indigo-200 text-blue-800 px-3 py-1 font-bold tracking-widest uppercase text-[10px] md:text-xs mb-2 inline-block rounded shadow-sm">Presentation Outline</div></div>
                             <div class="flex justify-between gap-2 md:gap-6 w-full px-1 md:px-2">
-                                <div class="flex flex-col items-center w-1/4"><div class="w-8 h-8 sm:w-10 sm:h-10 md:w-14 md:h-14 bg-teal-600 rounded-full flex items-center justify-center text-white text-sm md:text-2xl mb-1 md:mb-2"><i class="fa-solid fa-info"></i></div><span class="font-bold text-[9px] sm:text-[10px] md:text-sm leading-tight">1. Background</span></div>
-                                <div class="flex flex-col items-center w-1/4"><div class="w-8 h-8 sm:w-10 sm:h-10 md:w-14 md:h-14 bg-teal-600 rounded-full flex items-center justify-center text-white text-sm md:text-2xl mb-1 md:mb-2"><i class="fa-solid fa-file-signature"></i></div><span class="font-bold text-[9px] sm:text-[10px] md:text-sm leading-tight">2. Proposal<br>Details</span></div>
-                                <div class="flex flex-col items-center w-1/4"><div class="w-8 h-8 sm:w-10 sm:h-10 md:w-14 md:h-14 bg-teal-600 rounded-full flex items-center justify-center text-white text-sm md:text-2xl mb-1 md:mb-2"><i class="fa-solid fa-scale-balanced"></i></div><span class="font-bold text-[9px] sm:text-[10px] md:text-sm leading-tight">3. Benefit(s) &<br>Concern(s)</span></div>
-                                <div class="flex flex-col items-center w-1/4"><div class="w-8 h-8 sm:w-10 sm:h-10 md:w-14 md:h-14 bg-teal-600 rounded-full flex items-center justify-center text-white text-sm md:text-2xl mb-1 md:mb-2"><i class="fa-solid fa-lightbulb"></i></div><span class="font-bold text-[9px] sm:text-[10px] md:text-sm leading-tight">4. Suggestion</span></div>
+                                <div class="flex flex-col items-center w-1/4"><div class="w-8 h-8 sm:w-10 sm:h-10 md:w-14 md:h-14 bg-gradient-to-br from-teal-500 to-teal-600 rounded-full flex items-center justify-center text-white text-sm md:text-2xl mb-1 md:mb-2 shadow-md"><i class="fa-solid fa-info"></i></div><span class="font-bold text-[9px] sm:text-[10px] md:text-sm leading-tight text-gray-700">1. Background</span></div>
+                                <div class="flex flex-col items-center w-1/4"><div class="w-8 h-8 sm:w-10 sm:h-10 md:w-14 md:h-14 bg-gradient-to-br from-teal-500 to-teal-600 rounded-full flex items-center justify-center text-white text-sm md:text-2xl mb-1 md:mb-2 shadow-md"><i class="fa-solid fa-file-signature"></i></div><span class="font-bold text-[9px] sm:text-[10px] md:text-sm leading-tight text-gray-700">2. Proposal<br>Details</span></div>
+                                <div class="flex flex-col items-center w-1/4"><div class="w-8 h-8 sm:w-10 sm:h-10 md:w-14 md:h-14 bg-gradient-to-br from-teal-500 to-teal-600 rounded-full flex items-center justify-center text-white text-sm md:text-2xl mb-1 md:mb-2 shadow-md"><i class="fa-solid fa-scale-balanced"></i></div><span class="font-bold text-[9px] sm:text-[10px] md:text-sm leading-tight text-gray-700">3. Benefit(s) &<br>Concern(s)</span></div>
+                                <div class="flex flex-col items-center w-1/4"><div class="w-8 h-8 sm:w-10 sm:h-10 md:w-14 md:h-14 bg-gradient-to-br from-teal-500 to-teal-600 rounded-full flex items-center justify-center text-white text-sm md:text-2xl mb-1 md:mb-2 shadow-md"><i class="fa-solid fa-lightbulb"></i></div><span class="font-bold text-[9px] sm:text-[10px] md:text-sm leading-tight text-gray-700">4. Suggestion</span></div>
                             </div>
                         </div>
                     `
                 },
                 {
                     html: `
-                        <div class="flex-1 h-fit min-h-full w-full flex flex-col justify-center gap-2 sm:gap-4 bg-white p-2 sm:p-3 md:p-8 border-4 border-blue-50 text-left box-border">
+                        <div class="flex-1 h-fit min-h-full w-full flex flex-col justify-center gap-2 sm:gap-4 bg-white p-2 sm:p-3 md:p-8 border-4 border-blue-50 text-left box-border rounded-lg">
                             <div>
-                                <div class="bg-blue-200 text-blue-800 px-3 py-1 font-bold tracking-widest uppercase text-[10px] md:text-xs mb-1 md:mb-2 inline-block rounded">Background</div>
+                                <div class="bg-gradient-to-r from-blue-200 to-indigo-200 text-blue-800 px-3 py-1 font-bold tracking-widest uppercase text-[10px] md:text-xs mb-1 md:mb-2 inline-block rounded shadow-sm">Background</div>
                                 <div class="pl-2 md:pl-4 text-[11px] sm:text-xs md:text-base">
                                     <p class="font-bold mb-0.5 md:mb-1 text-gray-800">Problem:</p>
                                     <ul class="list-disc pl-4 md:pl-5 mb-2 md:mb-3 text-gray-700 leading-snug md:leading-relaxed"><li>${data.bgProblem}</li></ul>
@@ -636,7 +701,7 @@
                                 </div>
                             </div>
                             <div>
-                                <div class="bg-blue-200 text-blue-800 px-3 py-1 font-bold tracking-widest uppercase text-[10px] md:text-xs mb-1 md:mb-2 inline-block rounded">Proposal</div>
+                                <div class="bg-gradient-to-r from-blue-200 to-indigo-200 text-blue-800 px-3 py-1 font-bold tracking-widest uppercase text-[10px] md:text-xs mb-1 md:mb-2 inline-block rounded shadow-sm">Proposal</div>
                                 <div class="pl-2 md:pl-4 text-gray-700 text-[11px] sm:text-xs md:text-base">
                                     <ol class="list-decimal pl-4 md:pl-5 space-y-0.5 md:space-y-2 leading-snug md:leading-relaxed">
                                         ${data.proposal.map(p => `<li>${p}</li>`).join('')}
@@ -648,29 +713,29 @@
                 },
                 {
                     html: `
-                        <div class="flex-1 h-fit min-h-full w-full flex flex-col justify-center gap-1.5 sm:gap-4 bg-white p-2 sm:p-4 md:p-6 border-4 border-blue-50 text-left box-border">
+                        <div class="flex-1 h-fit min-h-full w-full flex flex-col justify-center gap-1.5 sm:gap-4 bg-white p-2 sm:p-4 md:p-6 border-4 border-blue-50 text-left box-border rounded-lg">
                             <div class="w-full">
-                                <div class="bg-blue-200 text-blue-800 px-2 py-0.5 md:px-3 md:py-1 font-bold tracking-widest uppercase text-[9px] md:text-xs mb-0.5 md:mb-1 inline-block rounded">Benefit(s)</div>
-                                <div class="bg-gray-200 h-3 sm:h-6 md:h-8 w-full rounded"></div>
+                                <div class="bg-gradient-to-r from-blue-200 to-indigo-200 text-blue-800 px-2 py-0.5 md:px-3 md:py-1 font-bold tracking-widest uppercase text-[9px] md:text-xs mb-0.5 md:mb-1 inline-block rounded shadow-sm">Benefit(s)</div>
+                                <div class="bg-gray-100 h-3 sm:h-6 md:h-8 w-full rounded shadow-inner border border-gray-200/50"></div>
                             </div>
                             <div class="w-full">
-                                <div class="bg-blue-200 text-blue-800 px-2 py-0.5 md:px-3 md:py-1 font-bold tracking-widest uppercase text-[9px] md:text-xs mb-0.5 md:mb-1 inline-block rounded">Concern(s)</div>
+                                <div class="bg-gradient-to-r from-blue-200 to-indigo-200 text-blue-800 px-2 py-0.5 md:px-3 md:py-1 font-bold tracking-widest uppercase text-[9px] md:text-xs mb-0.5 md:mb-1 inline-block rounded shadow-sm">Concern(s)</div>
                                 <div class="flex items-stretch w-full min-h-[2.5rem] sm:min-h-[3rem]">
-                                    <div class="bg-gray-200 flex-grow rounded-l"></div>
-                                    <div class="bg-white border-2 border-black rounded-r px-1.5 py-1 text-[9px] sm:text-xs md:text-sm font-bold shrink-0 flex items-center justify-center text-center shadow-sm leading-tight">
+                                    <div class="bg-gray-100 flex-grow rounded-l shadow-inner border border-gray-200/50 border-r-0"></div>
+                                    <div class="bg-white border-2 border-gray-800 rounded-r px-1.5 py-1 text-[9px] sm:text-xs md:text-sm font-bold shrink-0 flex items-center justify-center text-center shadow-sm leading-tight text-gray-800">
                                         Possible<br>Solution(s)
                                     </div>
                                 </div>
                             </div>
                             <div class="w-full">
-                                <div class="bg-blue-200 text-blue-800 px-2 py-0.5 md:px-3 md:py-1 font-bold tracking-widest uppercase text-[9px] md:text-xs mb-0.5 md:mb-1 inline-block rounded">Suggestion</div>
-                                <div class="bg-gray-50 p-1.5 sm:p-2 md:p-3 rounded text-[9px] sm:text-[11px] md:text-sm text-gray-700 border border-gray-200">
+                                <div class="bg-gradient-to-r from-blue-200 to-indigo-200 text-blue-800 px-2 py-0.5 md:px-3 md:py-1 font-bold tracking-widest uppercase text-[9px] md:text-xs mb-0.5 md:mb-1 inline-block rounded shadow-sm">Suggestion</div>
+                                <div class="bg-gray-50 p-1.5 sm:p-2 md:p-3 rounded text-[9px] sm:text-[11px] md:text-sm text-gray-700 border border-gray-200 shadow-sm">
                                     <ul class="list-disc pl-4 md:pl-5"><li>${data.suggestion}</li></ul>
                                 </div>
                             </div>
                             <div class="w-full">
-                                <div class="bg-blue-200 text-blue-800 px-2 py-0.5 md:px-3 md:py-1 font-bold tracking-widest uppercase text-[9px] md:text-xs mb-0.5 md:mb-1 inline-block rounded">Invitation</div>
-                                <div class="bg-gray-50 p-1.5 sm:p-2 md:p-3 rounded text-[9px] sm:text-[11px] md:text-sm text-gray-700 border border-gray-200">
+                                <div class="bg-gradient-to-r from-blue-200 to-indigo-200 text-blue-800 px-2 py-0.5 md:px-3 md:py-1 font-bold tracking-widest uppercase text-[9px] md:text-xs mb-0.5 md:mb-1 inline-block rounded shadow-sm">Invitation</div>
+                                <div class="bg-gray-50 p-1.5 sm:p-2 md:p-3 rounded text-[9px] sm:text-[11px] md:text-sm text-gray-700 border border-gray-200 shadow-sm">
                                     <ul class="list-disc pl-4 md:pl-5 space-y-0.5 md:space-y-1">
                                         ${data.invitation.map(i => `<li>${i}</li>`).join('')}
                                     </ul>
@@ -694,8 +759,8 @@
             if (mode === 'practice') {
                 currentData.script.forEach((para, i) => {
                     scriptContainer.innerHTML += `
-                        <div class="flex gap-4 p-4 hover:bg-indigo-50/50 rounded-xl transition-colors border border-transparent hover:border-indigo-100">
-                            <button onclick="speakSegment('seg${i}')" class="text-indigo-400 hover:text-indigo-600 text-2xl mt-0.5 shrink-0 transition-transform active:scale-90"><i class="fa-solid fa-circle-play"></i></button>
+                        <div class="flex gap-4 p-4 hover:bg-indigo-50/50 rounded-xl transition-colors border border-transparent hover:border-indigo-100 group">
+                            <button onclick="speakSegment('seg${i}')" class="text-indigo-300 hover:text-indigo-600 group-hover:text-indigo-500 text-2xl mt-0.5 shrink-0 transition-transform active:scale-90"><i class="fa-solid fa-circle-play"></i></button>
                             <div id="seg${i}" class="text-gray-700">${para}</div>
                         </div>
                     `;
@@ -711,8 +776,10 @@
                 document.getElementById('step1-badge').innerText = "1 of 3";
                 document.getElementById('step3-badge').innerText = "3 of 3";
             } else {
-                document.getElementById('btn-to-step2').innerHTML = `Next: Record Video <i class="fa-solid fa-video ml-2"></i>`;
+                document.getElementById('btn-to-step2').innerHTML = `<span class="relative z-10 flex items-center gap-2">Next: Record Video <i class="fa-solid fa-video"></i></span>`;
                 document.getElementById('btn-to-step2').setAttribute('onclick', 'switchStep(3)');
+                document.getElementById('btn-to-step2').className = "btn-shine bg-gradient-to-r from-emerald-500 to-teal-500 text-white px-10 py-4 rounded-full font-black text-lg hover:shadow-[0_10px_20px_-10px_rgba(16,185,129,0.8)] transition-all active:scale-95 flex items-center justify-center gap-3 border border-emerald-400/30 ml-auto";
+                
                 document.getElementById('btn-back-from-3').innerHTML = `<i class="fa-solid fa-arrow-left mr-2"></i> Back to Slides`;
                 document.getElementById('btn-back-from-3').setAttribute('onclick', 'switchStep(1)');
                 document.getElementById('script-reader-container').classList.add('hidden');
@@ -735,10 +802,22 @@
             if (synth.speaking) synth.cancel();
             if (!text || text.trim() === '') return;
             
-            let processedText = text.replace(/20K/gi, '20 thousand')
-                                    .replace(/\bpm\b/gi, 'P M')
-                                    .replace(/\bam\b/gi, 'A M')
-                                    .replace(/&/g, ' and ');
+            // 增強版時間與數字預處理
+            let processedText = text
+                // 1. 處理整點 (例如 10:00 -> 10 o'clock)
+                .replace(/(\d{1,2}):00/g, "$1 o'clock")
+                // 2. 處理零幾分 (例如 10:05 -> 10 oh 5)
+                .replace(/(\d{1,2}):0(\d)/g, "$1 oh $2")
+                // 3. 處理普通分鐘 (例如 10:30 -> 10 30)
+                .replace(/(\d{1,2}):([1-5]\d)/g, "$1 $2")
+                // 4. 處理連住嘅 am/pm/a.m./p.m. (例如 10a.m. -> 10 a.m.)
+                .replace(/(\d)\s*(am|pm|a\.m\.|p\.m\.)/gi, '$1 $2')
+                // 5. 將 am/pm 拆開讀字母
+                .replace(/\b(pm|p\.m\.)\b/gi, 'P M')
+                .replace(/\b(am|a\.m\.)\b/gi, 'A M')
+                // 6. 其他特殊字眼
+                .replace(/20K/gi, '20 thousand')
+                .replace(/&/g, ' and ');
                                     
             const utterThis = new SpeechSynthesisUtterance(processedText);
             const selectedAccent = document.getElementById(accentId).value;
@@ -806,11 +885,8 @@
 
                     assessAudioRecorder.start();
                     isAssessRecording = true;
-                    btn.innerHTML = '<i class="fa-solid fa-stop"></i> Stop Recording';
-                    btn.classList.replace('bg-rose-500', 'bg-gray-800');
-                    btn.classList.replace('hover:bg-rose-600', 'hover:bg-gray-900');
-                    btn.classList.replace('shadow-rose-200', 'shadow-gray-300');
-                    btn.classList.add('animate-pulse');
+                    btn.innerHTML = '<span class="relative z-10 flex items-center gap-2"><i class="fa-solid fa-stop"></i> Stop Recording</span>';
+                    btn.className = "btn-shine bg-gradient-to-r from-gray-700 to-gray-800 text-white px-10 py-4 rounded-full font-bold transition-all active:scale-95 flex items-center justify-center gap-3 shadow-lg text-lg w-full max-w-sm border border-gray-600 animate-pulse";
                     document.getElementById('assess-audio-result').classList.add('hidden');
                 } catch (err) {
                     alert("Error accessing microphone. Please ensure you have granted microphone permissions.");
@@ -819,11 +895,8 @@
             } else {
                 assessAudioRecorder.stop();
                 isAssessRecording = false;
-                btn.innerHTML = '<i class="fa-solid fa-microphone"></i> Start Recording';
-                btn.classList.replace('bg-gray-800', 'bg-rose-500');
-                btn.classList.replace('hover:bg-gray-900', 'hover:bg-rose-600');
-                btn.classList.replace('shadow-gray-300', 'shadow-rose-200');
-                btn.classList.remove('animate-pulse');
+                btn.innerHTML = '<span class="relative z-10 flex items-center gap-2"><i class="fa-solid fa-microphone"></i> Start Recording</span>';
+                btn.className = "btn-shine bg-gradient-to-r from-rose-500 to-pink-600 hover:from-rose-600 hover:to-pink-700 text-white px-10 py-4 rounded-full font-bold transition-all active:scale-95 flex items-center justify-center gap-3 shadow-[0_10px_20px_-10px_rgba(244,63,94,0.6)] text-lg w-full max-w-sm border border-rose-400/30";
             }
         }
 
@@ -858,7 +931,7 @@
                     el.style.transform = 'translateY(0)';
                 } else {
                     el.style.opacity = '0';
-                    el.style.transform = 'translateY(15px)';
+                    el.style.transform = 'translateY(20px)';
                     setTimeout(() => el.classList.add('hidden'), 300);
                 }
             });
@@ -921,7 +994,8 @@
             '30000': 'thirty thousand',
             '20000': 'twenty thousand',
             '2025': 'twenty twenty five', '2026': 'twenty twenty six', '20xx': 'twenty twenty',
-            '1207': 'twelve oh seven', 'pm': 'P M', 'am': 'A M',
+            '1207': 'twelve oh seven', 
+            'pm': 'P M', 'am': 'A M', 'p.m.': 'P M', 'a.m.': 'A M',
             'no': 'number', '&': 'and'
         };
 
@@ -962,13 +1036,19 @@
             '30000': 'thir-ty thou-sand',
             '20000': 'twen-ty thou-sand',
             '2025': 'twen-ty twen-ty-five', '2026': 'twen-ty twen-ty-six', '20xx': 'twen-ty twen-ty',
-            '1207': 'twelve oh se-ven', 'pm': 'p-m', 'am': 'a-m',
+            '1207': 'twelve oh se-ven', 
+            'pm': 'p.m.', 'am': 'a.m.', 'p.m.': 'p.m.', 'a.m.': 'a.m.',
             'no': 'num-ber', '&': 'and'
         };
 
         function showSyllable(word) {
-            const cleanWord = word.replace(/[.,;:!?()\-]/g, '').trim();
+            // 移除前後標點符號，但保留 a.m. 同 p.m. 嘅點
+            let cleanWord = word.replace(/^[.,;:!?()\-]+|[.,;:!?()\-]+$/g, '').trim();
             if (cleanWord === '') return;
+            
+            // 處理 a.m. 同 p.m. 格式
+            if (cleanWord.toLowerCase() === 'a.m' || cleanWord.toLowerCase() === 'am') cleanWord = 'a.m.';
+            if (cleanWord.toLowerCase() === 'p.m' || cleanWord.toLowerCase() === 'pm') cleanWord = 'p.m.';
             
             const lowerWord = cleanWord.toLowerCase();
             const wordToSpeak = specialPronunciations[lowerWord] || cleanWord;
@@ -976,7 +1056,12 @@
 
             let syllableStr = syllableDict[lowerWord];
             if (!syllableStr) {
-                syllableStr = estimateSyllables(cleanWord);
+                if (/\d/.test(cleanWord)) {
+                    // 如果係數字或者時間（例如 10:30a.m.），將 am/pm 轉做 a.m./p.m.
+                    syllableStr = cleanWord.replace(/(\d)(am|a\.m\.?)$/i, '$1 a.m.').replace(/(\d)(pm|p\.m\.?)$/i, '$1 p.m.');
+                } else {
+                    syllableStr = estimateSyllables(cleanWord.replace(/[^a-zA-Z]/g, ''));
+                }
             }
             
             if (!syllableStr || syllableStr.trim() === '') {
@@ -1168,6 +1253,7 @@
             const btn = document.getElementById('btn-record');
             const timerDisplay = document.getElementById('timer');
             const container = document.getElementById('record-container');
+            const indicator = document.getElementById('recording-indicator');
             
             if (!isRecording) {
                 try {
@@ -1210,13 +1296,12 @@
 
                     mediaRecorder.start();
                     isRecording = true;
-                    btn.innerHTML = '<i class="fa-solid fa-stop"></i> Stop Recording';
-                    btn.classList.replace('bg-rose-500', 'bg-gray-800');
-                    btn.classList.replace('hover:bg-rose-600', 'hover:bg-gray-900');
-                    btn.classList.replace('shadow-[0_10px_20px_-10px_rgba(244,63,94,0.6)]', 'shadow-lg');
-                    btn.classList.add('animate-pulse');
-                    container.classList.add('border-rose-300', 'bg-rose-50/30');
+                    btn.innerHTML = '<span class="relative z-10 flex items-center gap-2"><i class="fa-solid fa-stop"></i> Stop Recording</span>';
+                    btn.className = "btn-shine bg-gradient-to-r from-gray-700 to-gray-800 text-white px-10 py-4 rounded-full font-black text-xl transition-all active:scale-95 shadow-lg mb-2 w-full max-w-sm flex items-center justify-center gap-3 z-10 border border-gray-600 animate-pulse";
+                    
+                    container.classList.add('border-rose-300', 'bg-rose-50/20');
                     document.getElementById('download-area').classList.add('hidden');
+                    indicator.classList.remove('hidden');
                     
                     seconds = 0;
                     timerDisplay.innerText = "00:00";
@@ -1237,13 +1322,12 @@
                 mediaRecorder.stop();
                 isRecording = false;
                 clearInterval(timerInterval);
-                btn.innerHTML = '<i class="fa-solid fa-video"></i> Start Recording';
-                btn.classList.replace('bg-gray-800', 'bg-rose-500');
-                btn.classList.replace('hover:bg-gray-900', 'hover:bg-rose-600');
-                btn.classList.replace('shadow-lg', 'shadow-[0_10px_20px_-10px_rgba(244,63,94,0.6)]');
-                btn.classList.remove('animate-pulse');
-                container.classList.remove('border-rose-300', 'bg-rose-50/30');
+                btn.innerHTML = '<span class="relative z-10 flex items-center gap-2"><i class="fa-solid fa-video"></i> Start Recording</span>';
+                btn.className = "btn-shine bg-gradient-to-r from-rose-500 to-pink-600 text-white px-10 py-4 rounded-full font-black text-xl hover:from-rose-600 hover:to-pink-700 transition-all active:scale-95 shadow-[0_10px_20px_-10px_rgba(244,63,94,0.6)] mb-2 w-full max-w-sm flex items-center justify-center gap-3 z-10 border border-rose-400/30";
+                
+                container.classList.remove('border-rose-300', 'bg-rose-50/20');
                 timerDisplay.classList.remove('text-rose-500', 'font-bold');
+                indicator.classList.add('hidden');
             }
         }
 
