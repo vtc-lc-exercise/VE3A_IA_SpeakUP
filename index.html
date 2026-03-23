@@ -196,7 +196,7 @@
                             Vocab Hub 
                             <span class="bg-gradient-to-r from-red-500 to-orange-500 text-white text-[10px] md:text-xs px-2.5 py-0.5 rounded-full font-bold uppercase tracking-wider animate-pulse shadow-sm">Hot 🔥</span>
                         </h2>
-                        <p class="text-amber-700/80 text-xs md:text-base font-medium leading-snug">Master dates, months, and official vocabulary with interactive games.</p>
+                        <p class="text-amber-700/80 text-xs md:text-base font-medium leading-snug">Master dates, months, and advanced workplace vocabulary.</p>
                     </div>
                     <div class="hidden sm:flex bg-white w-10 h-10 rounded-full items-center justify-center shadow-md group-hover:bg-amber-500 transition-colors shrink-0 z-10">
                         <i class="fa-solid fa-chevron-right text-amber-500 group-hover:text-white group-hover:translate-x-0.5 transition-all text-lg"></i>
@@ -225,10 +225,13 @@
 
                 <!-- Game 2: Advanced Vocab -->
                 <div onclick="nav('vocab-review')" class="group bg-white rounded-3xl p-6 md:p-8 cursor-pointer transform transition-all duration-300 hover:-translate-y-1 hover:shadow-xl border border-gray-100 hover:border-purple-300 text-center relative overflow-hidden flex flex-col h-full">
-                    <div class="absolute top-0 right-0 bg-purple-100 text-purple-600 text-[10px] md:text-xs font-bold px-3 py-1 rounded-bl-xl">Official Bank</div>
+                    <div class="absolute top-0 right-0 bg-purple-100 text-purple-600 text-[10px] md:text-xs font-bold px-3 py-1 rounded-bl-xl">Official Word Bank</div>
                     <div class="text-5xl md:text-6xl mb-4 drop-shadow-md group-hover:scale-110 transition-transform mt-2">💎</div>
-                    <h3 class="text-xl md:text-2xl font-bold text-gray-800 mb-2 group-hover:text-purple-600">Word Master</h3>
-                    <p class="text-gray-500 text-xs md:text-sm flex-grow">Gamified practice for all 140+ official vocabulary words. Fill in the blanks!</p>
+                    <div class="flex flex-col items-center gap-1.5 mb-2">
+                        <h3 class="text-xl md:text-2xl font-bold text-gray-800 group-hover:text-purple-600 leading-none">Word Master</h3>
+                        <span class="bg-gradient-to-r from-purple-500 to-pink-500 text-white text-[10px] px-2 py-0.5 rounded-full uppercase tracking-wider shadow-sm">Advanced</span>
+                    </div>
+                    <p class="text-gray-500 text-xs md:text-sm flex-grow">Review advanced workplace vocabulary from your TLP Units. Fill in the blanks!</p>
                     <div class="mt-4 text-purple-500 font-bold text-sm opacity-0 group-hover:opacity-100 transition-opacity">Review & Play <i class="fa-solid fa-arrow-right ml-1"></i></div>
                 </div>
             </div>
@@ -246,12 +249,27 @@
                 <div id="dates-instructions" class="text-center py-6">
                     <div class="w-20 h-20 bg-blue-50 rounded-full flex items-center justify-center mx-auto mb-4 text-4xl text-blue-500 shadow-inner">🎙️</div>
                     <h3 class="text-2xl font-bold text-gray-800 mb-4">How to Play</h3>
-                    <ul class="text-left max-w-md mx-auto space-y-4 mb-8 text-gray-600 text-sm md:text-base bg-white p-6 rounded-2xl border border-gray-100 shadow-sm">
+                    <ul class="text-left max-w-md mx-auto space-y-4 mb-6 text-gray-600 text-sm md:text-base bg-white p-6 rounded-2xl border border-gray-100 shadow-sm">
                         <li class="flex items-start gap-3"><i class="fa-solid fa-eye text-blue-500 mt-1"></i> <span>Look at the date shown on the screen (e.g. Thu, 25 Dec).</span></li>
                         <li class="flex items-start gap-3"><i class="fa-solid fa-volume-high text-blue-500 mt-1"></i> <span>Click the speaker icon to hear the correct pronunciation.</span></li>
                         <li class="flex items-start gap-3"><i class="fa-solid fa-microphone text-rose-500 mt-1"></i> <span>Click the microphone and repeat exactly what you heard!</span></li>
                         <li class="flex items-start gap-3"><i class="fa-solid fa-volume-xmark text-amber-500 mt-1"></i> <span class="font-bold text-amber-700">Important: Make sure you are in a quiet environment for accurate grading!</span></li>
                     </ul>
+
+                    <!-- System Requirements Reminder -->
+                    <div class="max-w-md mx-auto mb-8 bg-amber-50 border border-amber-200 rounded-2xl p-5 text-left shadow-sm">
+                        <h4 class="font-bold text-amber-800 mb-3 flex items-center gap-2">
+                            <i class="fa-solid fa-bullhorn"></i> System Requirements (系統要求)
+                        </h4>
+                        <div class="text-sm text-amber-700 space-y-2.5">
+                            <p><strong class="text-amber-900">💻 Computer (Recommended):</strong> Use Google Chrome or Microsoft Edge.</p>
+                            <p><strong class="text-amber-900">📱 Mobile:</strong> Use Safari for iPhone, and Google Chrome for Android.</p>
+                            <p class="text-xs italic opacity-90">⚠️ Note: Built-in browsers on some phone brands may not support the voice feature.</p>
+                            <hr class="border-amber-200 my-3">
+                            <p class="text-xs leading-relaxed">為了獲得最佳體驗，強烈建議使用電腦 (Chrome/Edge)。手機用戶請使用 Safari (iPhone) 或 Chrome (Android)。部分品牌手機的內置瀏覽器可能無法支援語音功能。</p>
+                        </div>
+                    </div>
+
                     <button onclick="startDatesGameplay()" class="bg-gradient-to-r from-blue-600 to-indigo-600 text-white px-10 py-3.5 rounded-full font-bold text-lg hover:shadow-lg transition-all active:scale-95 w-full sm:w-auto">Got it, Start! <i class="fa-solid fa-play ml-2"></i></button>
                 </div>
 
@@ -307,18 +325,35 @@
         <div id="page-vocab-review" class="page">
             <div class="max-w-3xl mx-auto glass-panel p-5 md:p-8">
                 <div class="flex justify-between items-center mb-6 border-b border-gray-100 pb-4">
-                    <h2 class="text-xl md:text-2xl font-black text-purple-700 flex items-center gap-2"><i class="fa-solid fa-book-open-reader"></i> Word Bank Review</h2>
+                    <h2 class="text-xl md:text-2xl font-black text-purple-700 flex items-center gap-2"><i class="fa-solid fa-book-open-reader"></i> Advanced TLP Word Bank</h2>
                     <button onclick="nav('vocab-menu')" class="text-gray-400 hover:text-gray-600 bg-gray-50 px-3 py-1.5 rounded-full text-xs font-bold border border-gray-200"><i class="fa-solid fa-xmark mr-1"></i> Exit</button>
                 </div>
 
                 <div class="bg-purple-50 border border-purple-100 rounded-xl p-4 mb-6 text-xs md:text-sm text-purple-800 flex items-start gap-3">
                     <i class="fa-solid fa-lightbulb mt-0.5 text-purple-500"></i>
-                    <p>Review the vocabulary below before starting the game. The game will test you on <strong>10 random questions</strong>. If you make mistakes, the system will remember them and prioritize them in your next game!</p>
+                    <p>Review the advanced workplace vocabulary below before starting the game. The game will test you on the <strong>10 words shown below</strong>. If you make mistakes, the system will remember them and prioritise them in your next game!</p>
                 </div>
 
-                <div id="vocab-review-container" class="mb-8 space-y-3">
-                    <!-- Injected via JS -->
+                <!-- Target Words Section -->
+                <div class="mb-8">
+                    <h3 class="text-lg font-bold text-purple-800 mb-3 border-b border-purple-200 pb-2 flex items-center gap-2">
+                        <i class="fa-solid fa-bullseye text-rose-500"></i> Target Words for This Round
+                    </h3>
+                    <div id="vocab-target-container" class="space-y-2">
+                        <!-- Injected via JS -->
+                    </div>
                 </div>
+
+                <!-- Full Word Bank Section (Collapsible) -->
+                <details class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden group mb-8">
+                    <summary class="font-bold text-sm md:text-base p-4 cursor-pointer bg-gray-50 group-open:bg-gray-100 transition-colors flex justify-between items-center select-none">
+                        <span class="flex items-center gap-2 text-gray-700"><i class="fa-solid fa-book text-gray-500"></i> Full Word Bank </span>
+                        <i class="fa-solid fa-chevron-down text-gray-400 group-open:rotate-180 transition-transform"></i>
+                    </summary>
+                    <div class="p-3 md:p-4 border-t border-gray-100 space-y-3 bg-gray-50/50" id="vocab-review-container">
+                        <!-- Injected via JS -->
+                    </div>
+                </details>
 
                 <div class="text-center sticky bottom-4 z-10">
                     <button onclick="startVocabGame()" class="btn-shine bg-gradient-to-r from-purple-600 to-pink-600 text-white px-10 py-4 rounded-full font-black text-lg hover:shadow-lg transition-all active:scale-95 w-full sm:w-auto shadow-[0_10px_20px_-10px_rgba(147,51,234,0.6)] border border-purple-400/30">
@@ -371,7 +406,7 @@
                     <h3 class="text-2xl md:text-3xl font-black text-gray-800 mb-2">Practice Complete!</h3>
                     <p class="text-gray-500 mb-6 text-sm md:text-base">You scored <span id="vocab-final-score" class="font-bold text-purple-600 text-lg"></span> out of <span id="vocab-total-q"></span>.</p>
                     <div class="flex flex-col sm:flex-row justify-center gap-3">
-                        <button onclick="startVocabGame()" class="bg-gray-800 text-white px-8 py-3.5 rounded-full font-bold hover:bg-gray-700 transition-all active:scale-95 w-full sm:w-auto"><i class="fa-solid fa-rotate-right mr-2"></i> Play Again (Reshuffle)</button>
+                        <button onclick="nav('vocab-review')" class="bg-gray-800 text-white px-8 py-3.5 rounded-full font-bold hover:bg-gray-700 transition-all active:scale-95 w-full sm:w-auto"><i class="fa-solid fa-rotate-right mr-2"></i> Play Again (Reshuffle)</button>
                         <button onclick="nav('vocab-menu')" class="bg-white border border-gray-300 text-gray-700 px-8 py-3.5 rounded-full font-bold hover:bg-gray-50 transition-all active:scale-95 w-full sm:w-auto">Exit</button>
                     </div>
                 </div>
@@ -722,8 +757,7 @@
                 transitionTo('page-dates-game');
             }
             else if (pageId === 'vocab-review') {
-                renderVocabReview();
-                transitionTo('page-vocab-review');
+                initVocabReview();
             }
             else if (pageId === 'vocab-game') transitionTo('page-vocab-game');
             else if (pageId === 'mock-login') {
@@ -839,10 +873,7 @@
         }
 
         function checkDateSpeech(transcript) {
-            // Get the raw words from the target sentence
             let rawWords = currentDateSpoken.toLowerCase().replace(/[,]/g, '').split(' ');
-            
-            // Filter out "the" and "of" so we only strictly grade the core elements (Day, Date, Month)
             const targetWords = rawWords.filter(w => w !== 'the' && w !== 'of');
             
             let matchCount = 0;
@@ -850,16 +881,12 @@
 
             targetWords.forEach(word => {
                 let isMatch = false;
-                
-                // 1. Exact match
                 if (transcript.includes(word)) {
                     isMatch = true;
                 } 
-                // 2. Hyphenated match (e.g. "twenty-fifth" -> "twenty fifth")
                 else if (word.includes('-') && transcript.includes(word.replace('-', ' '))) {
                     isMatch = true;
                 }
-                // 3. Digit ordinal match (e.g. "twenty-fifth" -> "25th")
                 else if (ordinalMap[word] && transcript.includes(ordinalMap[word])) {
                     isMatch = true;
                 }
@@ -888,201 +915,201 @@
             }
         }
 
-        // --- 2. Advanced Vocab Game (Full OCR Bank) ---
+        // --- 2. Advanced Vocab Game (Workplace Context & UK Spelling) ---
         const advancedVocabBank = [
-            { word: "ad hoc", pos: "adjective", meaning: "特派的", hint: "Unit 5", example: "My boss suddenly gave me an ad hoc task." },
-            { word: "adequate", pos: "adjective", meaning: "足夠的", hint: "Unit 8", example: "We do not have adequate funding for doing the research." },
-            { word: "adverse", pos: "adjective", meaning: "不利的", hint: "Unit 2", example: "The picnic is cancelled due to the adverse weather conditions." },
-            { word: "attractive", pos: "adjective", meaning: "有吸引力的", hint: "Unit 5", example: "The offer is very attractive. I'll take it." },
-            { word: "cautious", pos: "adjective", meaning: "小心的", hint: "Unit 6", example: "I've always been very cautious about giving my address to strangers." },
-            { word: "competent", pos: "adjective", meaning: "能幹的", hint: "Unit 10", example: "May is able to solve all problems. She is a highly competent staff member." },
-            { word: "complimentary", pos: "adjective", meaning: "贈送的", hint: "Unit 2", example: "There is a complimentary bottle of champagne in the hotel room." },
-            { word: "comprehensive", pos: "adjective", meaning: "全面的", hint: "Unit 3", example: "This comprehensive survey provides a lot of useful data for planning." },
-            { word: "corporate", pos: "adjective", meaning: "公司的", hint: "Unit 4", example: "It is our corporate responsibility to create a green environment." },
-            { word: "dedicated", pos: "adjective", meaning: "專注的", hint: "Unit 3, 5", example: "George is dedicated to his study and thus has good results." },
-            { word: "designated", pos: "adjective", meaning: "指定的", hint: "Unit 10", example: "You can only smoke in the designated smoking areas." },
-            { word: "dilated", pos: "adjective", meaning: "擴大", hint: "Unit 9", example: "The dilated pupils help us see better in the dark." },
-            { word: "eco-friendly", pos: "adjective", meaning: "環保的", hint: "Unit 5, 12", example: "This eco-friendly washing powder does not cause any pollution." },
-            { word: "economical", pos: "adjective", meaning: "經濟的", hint: "Unit 13", example: "This car is more economical because it consumes less gas." },
-            { word: "efficient", pos: "adjective", meaning: "有效率的", hint: "Unit 8, 13", example: "Charles is a very efficient typist. He can type 150 words per minute." },
-            { word: "eligible", pos: "adjective", meaning: "合資格的", hint: "Unit 3", example: "Anyone over the age of 18 is eligible to vote." },
-            { word: "environmental", pos: "adjective", meaning: "自然環境的", hint: "Unit 12", example: "The chemical industry has caused serious environmental damage." },
-            { word: "existing", pos: "adjective", meaning: "現存的", hint: "Unit 10", example: "Changes will be made to the existing laws." },
-            { word: "flexible", pos: "adjective", meaning: "靈活的", hint: "Unit 11", example: "The camera tripod is highly flexible because it can be bent to whatever angles." },
-            { word: "genuine", pos: "adjective", meaning: "真正的", hint: "Unit 13", example: "It's either a genuine diamond or a very good fake." },
-            { word: "hectic", pos: "adjective", meaning: "繁忙的", hint: "Unit 11", example: "I've had a hectic day at the office." },
-            { word: "identical", pos: "adjective", meaning: "完全相同的", hint: "Unit 11", example: "Paul and Peter look exactly the same. They must be identical twins." },
-            { word: "insufficient", pos: "adjective", meaning: "不足的", hint: "Unit 2", example: "Mary's cheque was bounced because of insufficient fund." },
-            { word: "interactive", pos: "adjective", meaning: "互動的", hint: "Unit 4, 8", example: "This interactive educational software helps students improve their speaking skills." },
-            { word: "inter-departmental", pos: "adjective", meaning: "部門之間的", hint: "Unit 5", example: "Our company organizes an inter-departmental football match every year." },
-            { word: "marginal", pos: "adjective", meaning: "邊緣的", hint: "Unit 4", example: "We should reach out and offer help to the marginal youth." },
-            { word: "outstanding", pos: "adjective", meaning: "出色的", hint: "Unit 6", example: "Nicole delivered an outstanding performance. All the judges gave her full marks." },
-            { word: "permanent", pos: "adjective", meaning: "永久的", hint: "Unit 10", example: "The government is building permanent housing estates for the earthquake victims." },
-            { word: "portable", pos: "adjective", meaning: "手提式的", hint: "Unit 6", example: "This portable hard disk is light and small. It's easy to carry it around." },
-            { word: "potential", pos: "adjective", meaning: "有潛力的", hint: "Unit 2, 11", example: "Ken is a potential winner of the competition." },
-            { word: "proactive", pos: "adjective", meaning: "主動的", hint: "Unit 4", example: "The government is taking proactive measures against the flu." },
-            { word: "professional", pos: "adjective", meaning: "專業的", hint: "Unit 5", example: "John's tennis skill is better than some professional players." },
-            { word: "prolonged", pos: "adjective", meaning: "長期的", hint: "Unit 9", example: "Brad is very sick and has taken a prolonged sick leave." },
-            { word: "reliable", pos: "adjective", meaning: "可靠的", hint: "Unit 5, 8, 13", example: "John is a reliable staff. He never misses deadlines." },
-            { word: "renowned", pos: "adjective", meaning: "著名的", hint: "Unit 3", example: "Everybody knows the works of this renowned music composer." },
-            { word: "respective", pos: "adjective", meaning: "各自的", hint: "Unit 12", example: "The two friends said goodbye and went their respective ways." },
-            { word: "restrictive", pos: "adjective", meaning: "限制的", hint: "Unit 10", example: "You cannot enter this restrictive area." },
-            { word: "self-help", pos: "adjective", meaning: "自助的", hint: "Unit 8", example: "This self-help check-out service is welcomed by customers." },
-            { word: "state-of-the-art", pos: "adjective", meaning: "最先進的", hint: "Unit 3", example: "Engineers used the state-of-the-art technology to build the rocket." },
-            { word: "statutory", pos: "adjective", meaning: "法定的", hint: "Unit 10", example: "All employees are entitled to one day statutory holiday every week." },
-            { word: "supplementary", pos: "adjective", meaning: "補充的", hint: "Unit 11", example: "Students do a lot of supplementary exercises for getting good results in the HKDSE." },
-            { word: "technical", pos: "adjective", meaning: "技術的", hint: "Unit 2", example: "There is a short delay due to the technical problem of the fuel supply." },
-            { word: "temporary", pos: "adjective", meaning: "臨時的", hint: "Unit 2, 10", example: "Mary has got a temporary job for 6 months." },
-            { word: "unique", pos: "adjective", meaning: "獨一無二的", hint: "Unit 3, 13", example: "Each person's fingerprints are unique." },
-            { word: "upcoming", pos: "adjective", meaning: "即將來臨的", hint: "Unit 5", example: "Everybody is looking forward to the upcoming lucky draw." },
-            { word: "user-friendly", pos: "adjective", meaning: "容易使用的", hint: "Unit 12", example: "The old version of the software is too difficult to use. The new version is more user-friendly." },
-            { word: "valuable", pos: "adjective", meaning: "有價值的", hint: "Unit 4", example: "I cannot finish this proposal without your valuable comments." },
-            { word: "widespread", pos: "adjective", meaning: "廣泛的", hint: "Unit 4", example: "There is a widespread infection of flu recently." },
-            { word: "worldwide", pos: "adjective", meaning: "遍及全球的", hint: "Unit 12", example: "Whatsapp is a worldwide communication tool nowadays." },
-            { word: "automatically", pos: "adverb", meaning: "自動地", hint: "Unit 8, 13", example: "The doors opened automatically as we approached." },
-            { word: "marginally", pos: "adverb", meaning: "稍微", hint: "Unit 13", example: "Gary's grades have improved marginally since last term." },
-            { word: "markedly", pos: "adverb", meaning: "顯著地", hint: "Unit 12", example: "Jonathan worked hard for the exam and his results improved markedly." },
-            { word: "periodically", pos: "adverb", meaning: "定期地", hint: "Unit 13", example: "I am going to review the new policy periodically, probably in every 3 months." },
-            { word: "properly", pos: "adverb", meaning: "正確地", hint: "Unit 8", example: "Make sure the job is done properly." },
-            { word: "respectively", pos: "adverb", meaning: "各自地", hint: "Unit 12", example: "My two sons, Adam and Alexander, are five and nine respectively." },
-            { word: "satisfactorily", pos: "adverb", meaning: "令人滿意地", hint: "Unit 11", example: "The complaint was satisfactorily settled." },
-            { word: "securely", pos: "adverb", meaning: "安全地", hint: "Unit 8", example: "The important documents are kept securely in the safe." },
-            { word: "sharply", pos: "adverb", meaning: "急劇地", hint: "Unit 12", example: "Prices have risen sharply over the last few months." },
-            { word: "significantly", pos: "adverb", meaning: "重大地", hint: "Unit 11", example: "Our health can be significantly improved by a healthy diet of vegetables and whole grains." },
-            { word: "simultaneously", pos: "adverb", meaning: "同時地", hint: "Unit 3", example: "Tony can play two musical instruments simultaneously." },
-            { word: "slightly", pos: "adverb", meaning: "輕微地", hint: "Unit 12", example: "Mary is slightly older than the others." },
-            { word: "steadily", pos: "adverb", meaning: "平穩地", hint: "Unit 12", example: "Unemployment rate has been dropping steadily." },
-            { word: "tightly", pos: "adverb", meaning: "緊緊地", hint: "Unit 12", example: "Tom screwed the caps tightly onto the bottles to prevent leakage." },
-            { word: "appreciation", pos: "noun", meaning: "欣賞", hint: "Unit 2, 3", example: "We show our appreciation to our mothers with flowers on Mother's Day." },
-            { word: "availability", pos: "noun", meaning: "可用性", hint: "Unit 4, 5", example: "Please check the availability of the room before booking it." },
-            { word: "awareness", pos: "noun", meaning: "意識", hint: "Unit 4", example: "There is a general awareness that smoking is harmful." },
-            { word: "blade", pos: "noun", meaning: "刀片", hint: "Unit 9", example: "Be careful! The blade of this knife is very sharp." },
-            { word: "blood circulation", pos: "noun", meaning: "血液循環", hint: "Unit 9", example: "Walking can improve our blood circulation." },
-            { word: "broadcast", pos: "noun", meaning: "廣播", hint: "Unit 2", example: "We can see a live broadcast of Miss Hong Kong Pageant on TVB tonight." },
-            { word: "category", pos: "noun", meaning: "類別", hint: "Unit 6", example: "Competitors are divided into 2 categories, namely teenagers and adults." },
-            { word: "charity", pos: "noun", meaning: "慈善機構", hint: "Unit 3", example: "Several charities sent food to the flood victims." },
-            { word: "checkpoint", pos: "noun", meaning: "檢查站", hint: "Unit 6", example: "There are 40 checkpoints throughout the marathon route." },
-            { word: "commitment", pos: "noun", meaning: "承擔", hint: "Unit 4, 6", example: "Sally's commitment to work is beyond question." },
-            { word: "companion", pos: "noun", meaning: "同伴", hint: "Unit 3", example: "I don't want to go there alone. I need a companion." },
-            { word: "concern", pos: "noun", meaning: "關注", hint: "Unit 11, 12, 13", example: "There is a growing concern about the effects of pollution on health." },
-            { word: "consideration", pos: "noun", meaning: "考慮", hint: "Unit 12", example: "Your request will be taken into consideration." },
-            { word: "constraint", pos: "noun", meaning: "限制", hint: "Unit 10, 12", example: "There is a time constraint for completing the project." },
-            { word: "consultation", pos: "noun", meaning: "諮詢", hint: "Unit 11", example: "The school counselor is always available for consultation." },
-            { word: "consumption", pos: "noun", meaning: "消耗量", hint: "Unit 12", example: "Fuel consumption has risen dramatically in the last few years." },
-            { word: "contractor", pos: "noun", meaning: "承包商", hint: "Unit 5", example: "The contractor promised to finish the renovation within 10 days." },
-            { word: "coordination", pos: "noun", meaning: "協調", hint: "Unit 4", example: "William did a lot of coordination to make the event a success." },
-            { word: "coordinator", pos: "noun", meaning: "協調者", hint: "Unit 6", example: "The coordinator will oversee the whole project." },
-            { word: "coverage", pos: "noun", meaning: "覆蓋範圍", hint: "Unit 11", example: "PCCW provides a wide coverage of high-speed Internet connection." },
-            { word: "decade", pos: "noun", meaning: "十年", hint: "Unit 5", example: "My father hasn't seen his friends for 2 decades." },
-            { word: "disadvantage", pos: "noun", meaning: "不利條件", hint: "Unit 3, 4", example: "The disadvantage of using printed magazines is the high printing cost." },
-            { word: "disruption", pos: "noun", meaning: "中斷", hint: "Unit 2", example: "The adverse weather caused widespread disruption to train services." },
-            { word: "disturbance", pos: "noun", meaning: "干擾", hint: "Unit 2, 6", example: "The noise is a disturbance to my revision." },
-            { word: "diversion", pos: "noun", meaning: "轉向", hint: "Unit 2", example: "There is a route diversion ahead. Beware of the speed." },
-            { word: "duty roster", pos: "noun", meaning: "值勤表", hint: "Unit 5", example: "A new staff member joins us today. Our supervisor will revise our duty roster." },
-            { word: "early bird discount", pos: "noun", meaning: "早鳥優惠", hint: "Unit 6", example: "You will receive an early bird discount of 10% if you register today." },
-            { word: "effectiveness", pos: "noun", meaning: "效能", hint: "Unit 3", example: "I can't see the effectiveness of the new policy." },
-            { word: "emergency", pos: "noun", meaning: "緊急情況", hint: "Unit 2", example: "In case of emergency, call 999." },
-            { word: "enrolment", pos: "noun", meaning: "登記", hint: "Unit 6", example: "The school has an enrolment of 800 students." },
-            { word: "entertainment", pos: "noun", meaning: "娛樂節目", hint: "Unit 6", example: "Karaoke is a popular entertainment in Japan." },
-            { word: "expenditure", pos: "noun", meaning: "支出", hint: "Unit 12", example: "The total expenditure of running this restaurant is $100,000/month." },
-            { word: "exposure", pos: "noun", meaning: "暴露", hint: "Unit 3, 9", example: "Skin cancer can be caused by prolonged exposure to the sun." },
-            { word: "fatigue", pos: "noun", meaning: "疲勞", hint: "Unit 9", example: "I have severe muscle fatigue after playing tennis for 2 hours." },
-            { word: "feature", pos: "noun", meaning: "特徵", hint: "Unit 13", example: "The main feature of this camera is its high resolution." },
-            { word: "flexibility", pos: "noun", meaning: "靈活性", hint: "Unit 10", example: "The camera tripod has high flexibility because it can be bent to whatever angles." },
-            { word: "fringe benefit", pos: "noun", meaning: "福利", hint: "Unit 10", example: "The pay of his job is bad but the fringe benefits are good." },
-            { word: "fundraising", pos: "noun", meaning: "籌款", hint: "Unit 3", example: "I donated $100 to the charity fundraising event." },
-            { word: "campaign", pos: "noun", meaning: "運動", hint: "Unit 3", example: "This campaign is not only fun to join, but also effective in raising company image." },
-            { word: "grievance", pos: "noun", meaning: "抱怨", hint: "Unit 10, 11", example: "The meeting provides employees with an opportunity to air their grievances." },
-            { word: "hazard", pos: "noun", meaning: "危險", hint: "Unit 9", example: "Ice on the road is a major hazard at this time of the year." },
-            { word: "hospitalisation", pos: "noun", meaning: "住院治療", hint: "Unit 11", example: "I needed 3-day hospitalisation to cure the flu." },
-            { word: "identification", pos: "noun", meaning: "身分證明", hint: "Unit 13", example: "The student card is an identification of a student." },
-            { word: "illustration", pos: "noun", meaning: "圖解", hint: "Unit 13", example: "Children like books with lots of illustrations." },
-            { word: "implementation", pos: "noun", meaning: "實施", hint: "Unit 10", example: "Implementation of flexible working hours is welcomed by most of the staff." },
-            { word: "impression", pos: "noun", meaning: "印象", hint: "Unit 6", example: "Grace made a good impression at the interview." },
-            { word: "inconvenience", pos: "noun", meaning: "不便之處", hint: "Unit 2", example: "We hope the delay has not caused any inconvenience to our customers." },
-            { word: "inflation", pos: "noun", meaning: "通貨膨脹", hint: "Unit 10", example: "Most employees request a pay rise because of the high inflation rate." },
-            { word: "initiative", pos: "noun", meaning: "主動性", hint: "Unit 3, 4", example: "We should take the initiative and voice out what we think." },
-            { word: "intern", pos: "noun", meaning: "實習生", hint: "Unit 8", example: "The interns will finish training in our company soon." },
-            { word: "irritation", pos: "noun", meaning: "過敏", hint: "Unit 9", example: "Stop taking this medicine if there is any sign of irritation." },
-            { word: "limb", pos: "noun", meaning: "四肢", hint: "Unit 9", example: "Leo lost his lower limb because of the car accident." },
-            { word: "logistics", pos: "noun", meaning: "物流", hint: "Unit 5", example: "Without his logistics plan, the arrangements of the event would be chaotic." },
-            { word: "maintenance", pos: "noun", meaning: "維修", hint: "Unit 9", example: "The workman is responsible for the maintenance of the school buildings." },
-            { word: "merit", pos: "noun", meaning: "長處﹐優點", hint: "Unit 13", example: "John was given a merit by his school because he served as Student Helper in the library." },
-            { word: "motivation", pos: "noun", meaning: "動力", hint: "Unit 4", example: "Jack is very clever, but he lacks motivation to work hard." },
-            { word: "notification", pos: "noun", meaning: "通知", hint: "Unit 3", example: "Did you receive any notification of the flight delay?" },
-            { word: "occupational therapist", pos: "noun", meaning: "職業治療師", hint: "Unit 9", example: "The occupational therapist will teach you the correct postures for lifting heavy objects." },
-            { word: "orientation", pos: "noun", meaning: "迎新", hint: "Unit 8", example: "There is an orientation briefing for all new staff members." },
-            { word: "popularity", pos: "noun", meaning: "聲望", hint: "Unit 11, 12", example: "Everybody knows the musician. He has very high popularity." },
-            { word: "positioning", pos: "noun", meaning: "位置", hint: "Unit 13", example: "Make sure the positioning of the battery is correct." },
-            { word: "posture", pos: "noun", meaning: "姿勢", hint: "Unit 9", example: "Poor posture can lead to muscular problems." },
-            { word: "priority", pos: "noun", meaning: "優先考慮的事", hint: "Unit 13", example: "Employee's safety is the top priority. You must observe all the safety instructions." },
-            { word: "provision", pos: "noun", meaning: "供應", hint: "Unit 2, 12", example: "The provision of flu vaccine is sufficient." },
-            { word: "qualification", pos: "noun", meaning: "資格", hint: "Unit 10", example: "Eva had excellent academic qualifications, but no work experience." },
-            { word: "ranking", pos: "noun", meaning: "排行", hint: "Unit 6", example: "In the last two years, Kate has moved steadily up the world rankings." },
-            { word: "rationale", pos: "noun", meaning: "理據", hint: "Unit 10", example: "The rationale behind introducing this technique is that it will save the operating cost." },
-            { word: "recruitment", pos: "noun", meaning: "招聘", hint: "Unit 4, 5", example: "It usually takes more than 2 months for completing the recruitment process." },
-            { word: "refreshment", pos: "noun", meaning: "茶點", hint: "Unit 6", example: "Refreshments will be served during break time." },
-            { word: "registration", pos: "noun", meaning: "登記﹐註冊", hint: "Unit 6, 13", example: "Student registration is done in the first week of September." },
-            { word: "reimbursement", pos: "noun", meaning: "報銷", hint: "Unit 11", example: "After each business trip, I complete a reimbursement form for claiming my expenses." },
-            { word: "representative", pos: "noun", meaning: "代表", hint: "Unit 5", example: "Please send a representative if you cannot attend the meeting." },
-            { word: "reputation", pos: "noun", meaning: "名譽﹐名望", hint: "Unit 4", example: "This restaurant has a very good reputation because of the good food." },
-            { word: "response", pos: "noun", meaning: "反應", hint: "Unit 4, 11", example: "No one gives a response to his question." },
-            { word: "risk", pos: "noun", meaning: "風險", hint: "Unit 13", example: "Investment involves risks and you ought to be careful." },
-            { word: "satisfaction", pos: "noun", meaning: "滿足", hint: "Unit 10", example: "Catherine got great satisfaction from helping people." },
-            { word: "schedule", pos: "noun", meaning: "時間表", hint: "Unit 11", example: "I don't have time for lunch because of the full schedule today." },
-            { word: "sensation", pos: "noun", meaning: "感覺", hint: "Unit 9", example: "It's too cold. I've lost sensations in all my fingers." },
-            { word: "specialist", pos: "noun", meaning: "專科醫生", hint: "Unit 11", example: "I am going to see a heart specialist because of my abnormal heart beat rates." },
-            { word: "stowage", pos: "noun", meaning: "載貨空間", hint: "Unit 2", example: "My bedroom looks like stowage for clothes and shoes." },
-            { word: "strain", pos: "noun", meaning: "勞損", hint: "Unit 9", example: "The tennis player has an arm strain because of the intense practice." },
-            { word: "stuff", pos: "noun", meaning: "物品", hint: "Unit 5", example: "What stuff have you put inside this bag?" },
-            { word: "suspension", pos: "noun", meaning: "暫停", hint: "Unit 2", example: "There is a suspension in train service due to the adverse weather." },
-            { word: "token", pos: "noun", meaning: "象徵", hint: "Unit 2", example: "I sent her a gift as a token of my congratulation." },
-            { word: "transmission", pos: "noun", meaning: "傳送", hint: "Unit 8", example: "We apologize for the break in transmission earlier in the programme." },
-            { word: "trial", pos: "noun", meaning: "試用", hint: "Unit 10", example: "The manufacturer gave me a 3-day trial of the new machine." },
-            { word: "trunk", pos: "noun", meaning: "軀幹", hint: "Unit 9", example: "In order to achieve the best result for doing this exercise, you should not move your trunk." },
-            { word: "turnover", pos: "noun", meaning: "人事變動率", hint: "Unit 10, 11", example: "Low pay is the major reason for the high turnover of staff." },
-            { word: "utilization", pos: "noun", meaning: "使用", hint: "Unit 11", example: "The utilization of wind energy makes the city cleaner." },
-            { word: "verification", pos: "noun", meaning: "確認", hint: "Unit 13", example: "The transaction is not done until verification of your identity is completed." },
-            { word: "access", pos: "verb", meaning: "進入", hint: "Unit 13", example: "You can access this confidential folder with a password." },
-            { word: "adopt", pos: "verb", meaning: "採用", hint: "Unit 13", example: "Our company adopts energy-saving measures to reduce operating costs." },
-            { word: "accommodate", pos: "verb", meaning: "容納", hint: "Unit 5", example: "This room can accommodate up to 30 people." },
-            { word: "address", pos: "verb", meaning: "向…發表演說", hint: "Unit 3", example: "The principal addresses the graduates at the graduation ceremony." },
-            { word: "adjust", pos: "verb", meaning: "調整", hint: "Unit 8", example: "It's too cold here. Can you adjust the temperature, please?" },
-            { word: "align", pos: "verb", meaning: "對齊", hint: "Unit 8", example: "Please align the first word of each sentence with the margin." },
-            { word: "alleviate", pos: "verb", meaning: "減輕", hint: "Unit 9", example: "After taking the new medicine, my flu symptoms are alleviated." },
-            { word: "analyse", pos: "verb", meaning: "分析", hint: "Unit 11", example: "Henry has analysed the problem before making a decision." },
-            { word: "apologize", pos: "verb", meaning: "道歉", hint: "Unit 2", example: "I apologize for the delay in replying to your letter." },
-            { word: "arise", pos: "verb", meaning: "形成", hint: "Unit 8", example: "Security problems arise because of the outdated security system." },
-            { word: "associate", pos: "verb", meaning: "聯想起來", hint: "Unit 9", example: "People usually associate Japan with high-tech products." },
-            { word: "concentrate", pos: "verb", meaning: "專注", hint: "Unit 5", example: "Please keep quiet! I'm trying to concentrate on reading the book." },
-            { word: "co-organise", pos: "verb", meaning: "合辦", hint: "Unit 6", example: "Youth Association co-organises the event with Hong Kong Bank." },
-            { word: "demonstrate", pos: "verb", meaning: "示範", hint: "Unit 5", example: "I am going to demonstrate how to use this copier." },
-            { word: "disqualify", pos: "verb", meaning: "被取消資格", hint: "Unit 6", example: "Peter was disqualified from the exam for being late." },
-            { word: "engage", pos: "verb", meaning: "參加", hint: "Unit 4", example: "Paul doesn't like to make friends with people. He never engages in social activities." },
-            { word: "enhance", pos: "verb", meaning: "促進", hint: "Unit 3", example: "Mary takes an English summer course in the UK to enhance her English speaking skills." },
-            { word: "entitle", pos: "verb", meaning: "享有", hint: "Unit 3", example: "You are entitled to 15 days of annual leave after 3 months' probation." },
-            { word: "erase", pos: "verb", meaning: "刪除", hint: "Unit 8", example: "I erased all the files in my USB flash drive accidentally." },
-            { word: "fake", pos: "verb", meaning: "假裝, 偽造", hint: "Unit 13", example: "Michael faked his father's signature on the cheque." },
-            { word: "familiarise", pos: "verb", meaning: "使….熟悉", hint: "Unit 6", example: "The workers must familiarise themselves with the safety instructions." },
-            { word: "flip", pos: "verb", meaning: "翻動", hint: "Unit 12", example: "We flipped a coin to see who would go first." },
-            { word: "fulfill", pos: "verb", meaning: "滿足", hint: "Unit 6", example: "You have to fulfill 80% attendance requirement in order to get a pass." },
-            { word: "gain", pos: "verb", meaning: "獲得", hint: "Unit 4, 6", example: "Connie gained high grades in English and Maths." },
-            { word: "initiate", pos: "verb", meaning: "發起", hint: "Unit 3, 4", example: "Our company initiated a new campaign called 'Green Monday'." },
-            { word: "insert", pos: "verb", meaning: "放進", hint: "Unit 8, 12", example: "Alex inserted the card into the card reader." },
-            { word: "interfere", pos: "verb", meaning: "干擾", hint: "Unit 2", example: "Don't allow work to interfere with your personal life." },
-            { word: "lay off", pos: "verb", meaning: "解僱", hint: "Unit 10", example: "Harry was laid off because of his poor working attitude." },
-            { word: "lift", pos: "verb", meaning: "舉起, 抬起", hint: "Unit 8", example: "The box is very heavy. Don't try to lift it yourself!" },
-            { word: "minimize", pos: "verb", meaning: "減至最小", hint: "Unit 2", example: "We need to minimize disruptions to the schedule." },
-            { word: "nominate", pos: "verb", meaning: "提名", hint: "Unit 5", example: "Matthew was nominated for the Good Student Award because of his excellent behavior." },
-            { word: "recognise", pos: "verb", meaning: "表揚", hint: "Unit 4", example: "In order to recognise his effort, the company rewarded him a large amount of bonus." },
-            { word: "recruit", pos: "verb", meaning: "招聘", hint: "Unit 4, 5", example: "We have difficulty recruiting enough staff." },
-            { word: "retrieve", pos: "verb", meaning: "取回", hint: "Unit 8", example: "The IT officer successfully retrieved all the files in the broken hard drive." },
-            { word: "reveal", pos: "verb", meaning: "展現﹐顯露", hint: "Unit 9", example: "A detailed inspection revealed the cause for yesterday's pipe leakage." },
-            { word: "simplify", pos: "verb", meaning: "簡化", hint: "Unit 8", example: "You should simplify your explanation when talking to children." },
-            { word: "strengthen", pos: "verb", meaning: "加強", hint: "Unit 4, 10", example: "Doing exercises is an effective way to strengthen our health." },
-            { word: "stretch", pos: "verb", meaning: "伸展", hint: "Unit 9", example: "Stretch before you swim to prevent cramps." },
-            { word: "tap", pos: "verb", meaning: "輕敲", hint: "Unit 8", example: "Jason tapped me on the shoulder." },
-            { word: "waive", pos: "verb", meaning: "豁免", hint: "Unit 3", example: "The annual fee of most credit cards now is waived." }
+            { word: "ad hoc", pos: "adjective", meaning: "特派的", hint: "Unit 5", example: "The manager formed an ad hoc committee to handle the sudden supply chain crisis." },
+            { word: "adequate", pos: "adjective", meaning: "足夠的", hint: "Unit 8", example: "Ensure we have adequate funding before launching the new marketing campaign." },
+            { word: "adverse", pos: "adjective", meaning: "不利的", hint: "Unit 2", example: "The adverse economic conditions have negatively impacted our quarterly sales." },
+            { word: "attractive", pos: "adjective", meaning: "有吸引力的", hint: "Unit 5", example: "The company provides an attractive remuneration package to retain top talent." },
+            { word: "cautious", pos: "adjective", meaning: "小心的", hint: "Unit 6", example: "The board of directors is cautious about investing in unproven technologies." },
+            { word: "competent", pos: "adjective", meaning: "能幹的", hint: "Unit 10", example: "We need a highly competent IT technician to upgrade our server infrastructure." },
+            { word: "complimentary", pos: "adjective", meaning: "贈送的", hint: "Unit 2", example: "We offer complimentary consultation services to all our new corporate clients." },
+            { word: "comprehensive", pos: "adjective", meaning: "全面的", hint: "Unit 3", example: "The HR department has prepared a comprehensive training manual for new recruits." },
+            { word: "corporate", pos: "adjective", meaning: "公司的", hint: "Unit 4", example: "Our corporate strategy focuses on expanding into the European market next year." },
+            { word: "dedicated", pos: "adjective", meaning: "專注的", hint: "Unit 3, 5", example: "We have a dedicated customer service team to handle client enquiries." },
+            { word: "designated", pos: "adjective", meaning: "指定的", hint: "Unit 10", example: "Please park your company vehicle in the designated staff parking area." },
+            { word: "dilated", pos: "adjective", meaning: "擴大", hint: "Unit 9", example: "The occupational health nurse noticed his dilated pupils and suggested immediate medical leave." },
+            { word: "eco-friendly", pos: "adjective", meaning: "環保的", hint: "Unit 5, 12", example: "The office has switched to eco-friendly printing paper to reduce our carbon footprint." },
+            { word: "economical", pos: "adjective", meaning: "經濟的", hint: "Unit 13", example: "We need to find a more economical supplier for our raw materials to maximise profit." },
+            { word: "efficient", pos: "adjective", meaning: "有效率的", hint: "Unit 8, 13", example: "The new inventory software is highly efficient and saves the team hours of manual data entry." },
+            { word: "eligible", pos: "adjective", meaning: "合資格的", hint: "Unit 3", example: "Employees who have completed their probation are eligible for the annual bonus." },
+            { word: "environmental", pos: "adjective", meaning: "自然環境的", hint: "Unit 12", example: "The factory must comply with strict environmental regulations to avoid hefty fines." },
+            { word: "existing", pos: "adjective", meaning: "現存的", hint: "Unit 10", example: "We need to review our existing contracts before negotiating with the new vendors." },
+            { word: "flexible", pos: "adjective", meaning: "靈活的", hint: "Unit 11", example: "Our company offers flexible working hours to promote a better work-life balance." },
+            { word: "genuine", pos: "adjective", meaning: "真正的", hint: "Unit 13", example: "The client expressed a genuine interest in our newly proposed software solutions." },
+            { word: "hectic", pos: "adjective", meaning: "繁忙的", hint: "Unit 11", example: "The finance department always faces a hectic schedule during the end-of-year audit." },
+            { word: "identical", pos: "adjective", meaning: "完全相同的", hint: "Unit 11", example: "The two draft proposals are almost identical, so we only need to submit one to the director." },
+            { word: "insufficient", pos: "adjective", meaning: "不足的", hint: "Unit 2", example: "The project was delayed due to insufficient manpower in the engineering department." },
+            { word: "interactive", pos: "adjective", meaning: "互動的", hint: "Unit 4, 8", example: "The trainer used an interactive presentation to keep the staff engaged during the workshop." },
+            { word: "inter-departmental", pos: "adjective", meaning: "部門之間的", hint: "Unit 5", example: "We have scheduled an inter-departmental meeting to resolve the communication issues." },
+            { word: "marginal", pos: "adjective", meaning: "邊緣的", hint: "Unit 4", example: "The new marketing strategy only resulted in a marginal increase in our quarterly revenue." },
+            { word: "outstanding", pos: "adjective", meaning: "出色的", hint: "Unit 6", example: "The CEO praised the sales team for their outstanding performance this quarter." },
+            { word: "permanent", pos: "adjective", meaning: "永久的", hint: "Unit 10", example: "After a successful six-month probation, Sarah was offered a permanent contract." },
+            { word: "portable", pos: "adjective", meaning: "手提式的", hint: "Unit 6", example: "The sales representatives are equipped with portable projectors for client presentations." },
+            { word: "potential", pos: "adjective", meaning: "有潛力的", hint: "Unit 2, 11", example: "The marketing team is conducting research to identify potential markets in Asia." },
+            { word: "proactive", pos: "adjective", meaning: "主動的", hint: "Unit 4", example: "Managers should take a proactive approach to resolving workplace conflicts." },
+            { word: "professional", pos: "adjective", meaning: "專業的", hint: "Unit 5", example: "Please ensure that all email correspondence with clients maintains a professional tone." },
+            { word: "prolonged", pos: "adjective", meaning: "長期的", hint: "Unit 9", example: "Prolonged use of computer screens can lead to eye strain among office workers." },
+            { word: "reliable", pos: "adjective", meaning: "可靠的", hint: "Unit 5, 8, 13", example: "We need to source a reliable logistics partner to ensure timely delivery of our goods." },
+            { word: "renowned", pos: "adjective", meaning: "著名的", hint: "Unit 3", example: "Our firm hired a renowned consultant to restructure the management system." },
+            { word: "respective", pos: "adjective", meaning: "各自的", hint: "Unit 12", example: "After the general briefing, staff should return to their respective departments." },
+            { word: "restrictive", pos: "adjective", meaning: "限制的", hint: "Unit 10", example: "The new company policy is too restrictive and limits creative problem-solving." },
+            { word: "self-help", pos: "adjective", meaning: "自助的", hint: "Unit 8", example: "We have set up a self-help portal on the intranet for staff to reset their passwords." },
+            { word: "state-of-the-art", pos: "adjective", meaning: "最先進的", hint: "Unit 3", example: "Our new headquarters features a state-of-the-art conference room for global meetings." },
+            { word: "statutory", pos: "adjective", meaning: "法定的", hint: "Unit 10", example: "The HR manager reminded everyone about the statutory requirements for maternity leave." },
+            { word: "supplementary", pos: "adjective", meaning: "補充的", hint: "Unit 11", example: "The finance team provided supplementary documents to support the annual budget request." },
+            { word: "technical", pos: "adjective", meaning: "技術的", hint: "Unit 2", example: "The IT support desk is available 24/7 to resolve any technical issues with your workstation." },
+            { word: "temporary", pos: "adjective", meaning: "臨時的", hint: "Unit 2, 10", example: "We have hired a temporary receptionist to cover the front desk during the summer holidays." },
+            { word: "unique", pos: "adjective", meaning: "獨一無二的", hint: "Unit 3, 13", example: "Our software offers a unique feature that sets us apart from other competitors in the market." },
+            { word: "upcoming", pos: "adjective", meaning: "即將來臨的", hint: "Unit 5", example: "The agenda for the upcoming board meeting has been circulated to all directors." },
+            { word: "user-friendly", pos: "adjective", meaning: "容易使用的", hint: "Unit 12", example: "The new accounting software is highly user-friendly and requires minimal staff training." },
+            { word: "valuable", pos: "adjective", meaning: "有價值的", hint: "Unit 4", example: "The senior analyst provided valuable insights that helped us secure the major contract." },
+            { word: "widespread", pos: "adjective", meaning: "廣泛的", hint: "Unit 4", example: "There is widespread support among the staff for the new flexible working arrangement." },
+            { word: "worldwide", pos: "adjective", meaning: "遍及全球的", hint: "Unit 12", example: "Our logistics network ensures that products can be shipped to clients worldwide." },
+            { word: "automatically", pos: "adverb", meaning: "自動地", hint: "Unit 8, 13", example: "The payroll system automatically calculates the overtime pay for all eligible employees." },
+            { word: "marginally", pos: "adverb", meaning: "稍微", hint: "Unit 13", example: "Our production costs have increased marginally due to the recent rise in fuel prices." },
+            { word: "markedly", pos: "adverb", meaning: "顯著地", hint: "Unit 12", example: "The team's productivity improved markedly after the implementation of the new workflow." },
+            { word: "periodically", pos: "adverb", meaning: "定期地", hint: "Unit 13", example: "The safety equipment in the warehouse must be inspected periodically to ensure compliance." },
+            { word: "properly", pos: "adverb", meaning: "正確地", hint: "Unit 8", example: "Please ensure that all confidential client files are properly shredded before disposal." },
+            { word: "respectively", pos: "adverb", meaning: "各自地", hint: "Unit 12", example: "The CEO and CFO will address the marketing and finance issues respectively." },
+            { word: "satisfactorily", pos: "adverb", meaning: "令人滿意地", hint: "Unit 11", example: "The contractor completed the office renovation satisfactorily and within the agreed timeframe." },
+            { word: "securely", pos: "adverb", meaning: "安全地", hint: "Unit 8", example: "Ensure that all sensitive company data is securely backed up on the cloud server." },
+            { word: "sharply", pos: "adverb", meaning: "急劇地", hint: "Unit 12", example: "Our quarterly profits dropped sharply due to the unexpected supply chain disruptions." },
+            { word: "significantly", pos: "adverb", meaning: "重大地", hint: "Unit 11", example: "The new automated machinery has significantly reduced our manufacturing time." },
+            { word: "simultaneously", pos: "adverb", meaning: "同時地", hint: "Unit 3", example: "The project manager is handling three major client accounts simultaneously." },
+            { word: "slightly", pos: "adverb", meaning: "輕微地", hint: "Unit 12", example: "The launch date of the new product has been slightly delayed due to quality control checks." },
+            { word: "steadily", pos: "adverb", meaning: "平穩地", hint: "Unit 12", example: "Our market share in the Asian region has been growing steadily over the past three years." },
+            { word: "tightly", pos: "adverb", meaning: "緊緊地", hint: "Unit 12", example: "The project schedule is tightly packed, leaving no room for unexpected delays." },
+            { word: "appreciation", pos: "noun", meaning: "欣賞", hint: "Unit 2, 3", example: "The management organised a dinner to show their appreciation for the staff's hard work." },
+            { word: "availability", pos: "noun", meaning: "可用性", hint: "Unit 4, 5", example: "Please check the availability of the conference room before scheduling the client meeting." },
+            { word: "awareness", pos: "noun", meaning: "意識", hint: "Unit 4", example: "The marketing campaign aims to raise brand awareness among young professionals." },
+            { word: "blade", pos: "noun", meaning: "刀片", hint: "Unit 9", example: "The maintenance worker replaced the worn blade on the industrial cutting machine." },
+            { word: "blood circulation", pos: "noun", meaning: "血液循環", hint: "Unit 9", example: "Ergonomic office chairs are designed to promote good posture and healthy blood circulation." },
+            { word: "broadcast", pos: "noun", meaning: "廣播", hint: "Unit 2", example: "The CEO's annual speech will be a live broadcast to all international branch offices." },
+            { word: "category", pos: "noun", meaning: "類別", hint: "Unit 6", example: "The business expenses should be sorted into the correct category for tax purposes." },
+            { word: "charity", pos: "noun", meaning: "慈善機構", hint: "Unit 3", example: "Our corporation donates five percent of its annual profits to a local charity." },
+            { word: "checkpoint", pos: "noun", meaning: "檢查站", hint: "Unit 6", example: "The project manager established several checkpoints to monitor the team's progress." },
+            { word: "commitment", pos: "noun", meaning: "承擔", hint: "Unit 4, 6", example: "The supplier demonstrated a strong commitment to delivering the materials on time." },
+            { word: "companion", pos: "noun", meaning: "同伴", hint: "Unit 3", example: "The senior executive brought a legal companion to advise him during the merger negotiations." },
+            { word: "concern", pos: "noun", meaning: "關注", hint: "Unit 11, 12, 13", example: "The sudden drop in sales is a major concern for the board of directors." },
+            { word: "consideration", pos: "noun", meaning: "考慮", hint: "Unit 12", example: "Your proposal for a budget increase will be taken into consideration at the next meeting." },
+            { word: "constraint", pos: "noun", meaning: "限制", hint: "Unit 10, 12", example: "Due to budget constraints, we cannot hire any additional freelance designers this quarter." },
+            { word: "consultation", pos: "noun", meaning: "諮詢", hint: "Unit 11", example: "The HR department held a consultation with staff regarding the new health insurance policy." },
+            { word: "consumption", pos: "noun", meaning: "消耗量", hint: "Unit 12", example: "The factory aims to reduce its energy consumption by upgrading to efficient machinery." },
+            { word: "contractor", pos: "noun", meaning: "承包商", hint: "Unit 5", example: "We hired an independent contractor to manage the installation of the new server racks." },
+            { word: "coordination", pos: "noun", meaning: "協調", hint: "Unit 4", example: "Successfully launching the product requires close coordination between marketing and sales." },
+            { word: "coordinator", pos: "noun", meaning: "協調者", hint: "Unit 6", example: "The logistics coordinator is responsible for tracking all incoming and outgoing shipments." },
+            { word: "coverage", pos: "noun", meaning: "覆蓋範圍", hint: "Unit 11", example: "Our corporate insurance policy provides comprehensive coverage for all business travel." },
+            { word: "decade", pos: "noun", meaning: "十年", hint: "Unit 5", example: "Our firm has been the leading provider of accounting software for over a decade." },
+            { word: "disadvantage", pos: "noun", meaning: "不利條件", hint: "Unit 3, 4", example: "One major disadvantage of the proposed location is its distance from our main suppliers." },
+            { word: "disruption", pos: "noun", meaning: "中斷", hint: "Unit 2", example: "The IT department scheduled the server maintenance at midnight to minimise business disruption." },
+            { word: "disturbance", pos: "noun", meaning: "干擾", hint: "Unit 2, 6", example: "Please keep your phones on silent to avoid causing a disturbance during the presentation." },
+            { word: "diversion", pos: "noun", meaning: "轉向", hint: "Unit 2", example: "The sudden budget cuts forced a diversion of funds away from the research department." },
+            { word: "duty roster", pos: "noun", meaning: "值勤表", hint: "Unit 5", example: "The shift manager will post the new duty roster on the staff noticeboard every Friday." },
+            { word: "early bird discount", pos: "noun", meaning: "早鳥優惠", hint: "Unit 6", example: "We offer an early bird discount to corporate clients who renew their annual software licences in advance." },
+            { word: "effectiveness", pos: "noun", meaning: "效能", hint: "Unit 3", example: "The management is evaluating the effectiveness of the recent staff training programme." },
+            { word: "emergency", pos: "noun", meaning: "緊急情況", hint: "Unit 2", example: "All employees must know the location of the fire exits in case of a workplace emergency." },
+            { word: "enrolment", pos: "noun", meaning: "登記", hint: "Unit 6", example: "The HR department announced that enrolment for the advanced leadership workshop is now open." },
+            { word: "entertainment", pos: "noun", meaning: "娛樂節目", hint: "Unit 6", example: "The company allocated a specific budget for client entertainment and business dinners." },
+            { word: "expenditure", pos: "noun", meaning: "支出", hint: "Unit 12", example: "We need to reduce our operational expenditure to maintain profitability this quarter." },
+            { word: "exposure", pos: "noun", meaning: "暴露", hint: "Unit 3, 9", example: "Sponsoring the industry conference will give our brand excellent exposure to potential clients." },
+            { word: "fatigue", pos: "noun", meaning: "疲勞", hint: "Unit 9", example: "To prevent driver fatigue, the logistics company strictly limits the driving hours of its staff." },
+            { word: "feature", pos: "noun", meaning: "特徵", hint: "Unit 13", example: "The standout feature of our new software is its seamless integration with existing databases." },
+            { word: "flexibility", pos: "noun", meaning: "靈活性", hint: "Unit 10", example: "The new cloud-based system offers greater flexibility for employees working from home." },
+            { word: "fringe benefit", pos: "noun", meaning: "福利", hint: "Unit 10", example: "Comprehensive medical insurance is a highly valued fringe benefit for our employees." },
+            { word: "fundraising", pos: "noun", meaning: "籌款", hint: "Unit 3", example: "The corporate social responsibility team is organising a fundraising gala for local charities." },
+            { word: "campaign", pos: "noun", meaning: "運動", hint: "Unit 3", example: "The marketing team is launching a new digital campaign to promote our latest product line." },
+            { word: "grievance", pos: "noun", meaning: "抱怨", hint: "Unit 10, 11", example: "The HR department has a formal procedure for handling any workplace grievance." },
+            { word: "hazard", pos: "noun", meaning: "危險", hint: "Unit 9", example: "Exposed electrical wires are a serious safety hazard in the manufacturing plant." },
+            { word: "hospitalisation", pos: "noun", meaning: "住院治療", hint: "Unit 11", example: "The company's health insurance policy covers full hospitalisation costs for all permanent staff." },
+            { word: "identification", pos: "noun", meaning: "身分證明", hint: "Unit 13", example: "All staff must wear their corporate identification badges while on the company premises." },
+            { word: "illustration", pos: "noun", meaning: "圖解", hint: "Unit 13", example: "The consultant provided a clear illustration of how the new workflow would increase efficiency." },
+            { word: "implementation", pos: "noun", meaning: "實施", hint: "Unit 10", example: "The implementation of the new cybersecurity protocols will begin next Monday." },
+            { word: "impression", pos: "noun", meaning: "印象", hint: "Unit 6", example: "Dressing professionally for a client meeting helps to create a positive first impression." },
+            { word: "inconvenience", pos: "noun", meaning: "不便之處", hint: "Unit 2", example: "We apologise for any inconvenience caused by the temporary suspension of our online portal." },
+            { word: "inflation", pos: "noun", meaning: "通貨膨脹", hint: "Unit 10", example: "The company adjusted the annual salary increments to keep pace with the rising rate of inflation." },
+            { word: "initiative", pos: "noun", meaning: "主動性", hint: "Unit 3, 4", example: "The junior analyst took the initiative to streamline the data collection process." },
+            { word: "intern", pos: "noun", meaning: "實習生", hint: "Unit 8", example: "Our marketing department hired a university intern to assist with the social media strategy." },
+            { word: "irritation", pos: "noun", meaning: "過敏", hint: "Unit 9", example: "The harsh cleaning chemicals used in the factory caused skin irritation among the workers." },
+            { word: "limb", pos: "noun", meaning: "四肢", hint: "Unit 9", example: "The factory worker wore protective gear to prevent injuries to his limbs while operating heavy machinery." },
+            { word: "logistics", pos: "noun", meaning: "物流", hint: "Unit 5", example: "The operations manager is reviewing the logistics for distributing products to our overseas branches." },
+            { word: "maintenance", pos: "noun", meaning: "維修", hint: "Unit 9", example: "Routine maintenance of the office printers will be carried out this Friday afternoon." },
+            { word: "merit", pos: "noun", meaning: "長處﹐優點", hint: "Unit 13", example: "The committee will evaluate each vendor's proposal based on its own financial and technical merit." },
+            { word: "motivation", pos: "noun", meaning: "動力", hint: "Unit 4", example: "Offering performance-based bonuses is an effective way to increase staff motivation." },
+            { word: "notification", pos: "noun", meaning: "通知", hint: "Unit 3", example: "Staff will receive an email notification once their annual leave request has been approved." },
+            { word: "occupational therapist", pos: "noun", meaning: "職業治療師", hint: "Unit 9", example: "The company hired an occupational therapist to assess the ergonomics of our office workstations." },
+            { word: "orientation", pos: "noun", meaning: "迎新", hint: "Unit 8", example: "All new hires are required to attend a full-day orientation session on corporate policies." },
+            { word: "popularity", pos: "noun", meaning: "聲望", hint: "Unit 11, 12", example: "The new remote working policy has gained immense popularity among the employees." },
+            { word: "positioning", pos: "noun", meaning: "位置", hint: "Unit 13", example: "The strategic positioning of our brand in the luxury market has significantly boosted our profit margins." },
+            { word: "posture", pos: "noun", meaning: "姿勢", hint: "Unit 9", example: "Maintaining a correct posture at your desk helps prevent back pain during long working hours." },
+            { word: "priority", pos: "noun", meaning: "優先考慮的事", hint: "Unit 13", example: "Securing the contract with the international supplier is our top priority this quarter." },
+            { word: "provision", pos: "noun", meaning: "供應", hint: "Unit 2, 12", example: "The contract includes a provision for early termination if the service standards are not met." },
+            { word: "qualification", pos: "noun", meaning: "資格", hint: "Unit 10", example: "A master's degree in finance is a required qualification for the senior auditor position." },
+            { word: "ranking", pos: "noun", meaning: "排行", hint: "Unit 6", example: "Our firm has achieved a top-tier ranking in the annual corporate sustainability index." },
+            { word: "rationale", pos: "noun", meaning: "理據", hint: "Unit 10", example: "The CEO explained the rationale behind the decision to merge with our biggest competitor." },
+            { word: "recruitment", pos: "noun", meaning: "招聘", hint: "Unit 4, 5", example: "The HR department is launching a new recruitment drive to hire fifty software engineers." },
+            { word: "refreshment", pos: "noun", meaning: "茶點", hint: "Unit 6", example: "Light refreshments will be provided in the boardroom during the afternoon strategy session." },
+            { word: "registration", pos: "noun", meaning: "登記﹐註冊", hint: "Unit 6, 13", example: "Please complete your online registration for the annual industry conference by Friday." },
+            { word: "reimbursement", pos: "noun", meaning: "報銷", hint: "Unit 11", example: "Please submit your taxi receipts to the finance department for travel expense reimbursement." },
+            { word: "representative", pos: "noun", meaning: "代表", hint: "Unit 5", example: "Our sales representative will visit your office next week to demonstrate the new software." },
+            { word: "reputation", pos: "noun", meaning: "名譽﹐名望", hint: "Unit 4", example: "The firm has built a solid reputation for delivering high-quality architectural designs." },
+            { word: "response", pos: "noun", meaning: "反應", hint: "Unit 4, 11", example: "We received a very positive response from clients regarding our newly launched mobile app." },
+            { word: "risk", pos: "noun", meaning: "風險", hint: "Unit 13", example: "The compliance team conducted an audit to minimise the financial risk of the new venture." },
+            { word: "satisfaction", pos: "noun", meaning: "滿足", hint: "Unit 10", example: "Ensuring high customer satisfaction is crucial for maintaining our market leadership." },
+            { word: "schedule", pos: "noun", meaning: "時間表", hint: "Unit 11", example: "The project manager circulated the updated schedule for the upcoming software deployment." },
+            { word: "sensation", pos: "noun", meaning: "感覺", hint: "Unit 9", example: "The worker reported a tingling sensation in his wrist due to repetitive typing tasks." },
+            { word: "specialist", pos: "noun", meaning: "專家", hint: "Unit 11", example: "We need to consult an IT security specialist to protect our corporate network from cyber attacks." },
+            { word: "stowage", pos: "noun", meaning: "載貨空間", hint: "Unit 2", example: "The warehouse supervisor reorganised the stowage area to accommodate the new inventory." },
+            { word: "strain", pos: "noun", meaning: "勞損", hint: "Unit 9", example: "The sudden influx of customer orders put a massive strain on our delivery department." },
+            { word: "stuff", pos: "noun", meaning: "物品", hint: "Unit 5", example: "Please clear your personal stuff from the hot-desking area at the end of your shift." },
+            { word: "suspension", pos: "noun", meaning: "暫停", hint: "Unit 2", example: "The breach of safety protocols resulted in the immediate suspension of the factory worker." },
+            { word: "token", pos: "noun", meaning: "象徵", hint: "Unit 2", example: "The company gave each employee a gift voucher as a token of appreciation for their hard work." },
+            { word: "transmission", pos: "noun", meaning: "傳送", hint: "Unit 8", example: "The IT department uses encrypted channels for the secure transmission of sensitive client data." },
+            { word: "trial", pos: "noun", meaning: "試用", hint: "Unit 10", example: "The software company offered us a free 30-day trial of their premium project management tool." },
+            { word: "trunk", pos: "noun", meaning: "軀幹", hint: "Unit 9", example: "The ergonomics expert advised the warehouse staff to keep their trunk straight when lifting heavy boxes." },
+            { word: "turnover", pos: "noun", meaning: "人事變動率", hint: "Unit 10, 11", example: "Offering better fringe benefits has significantly reduced our staff turnover rate." },
+            { word: "utilisation", pos: "noun", meaning: "使用", hint: "Unit 11", example: "The operations manager aims to maximise the utilisation of our warehouse space." },
+            { word: "verification", pos: "noun", meaning: "確認", hint: "Unit 13", example: "The bank requires strict verification of all corporate documents before approving the business loan." },
+            { word: "access", pos: "verb", meaning: "進入", hint: "Unit 13", example: "Only senior management can access the highly confidential financial records." },
+            { word: "adopt", pos: "verb", meaning: "採用", hint: "Unit 13", example: "The board decided to adopt a more aggressive marketing strategy for the upcoming quarter." },
+            { word: "accommodate", pos: "verb", meaning: "容納", hint: "Unit 5", example: "The new office layout is designed to accommodate our rapidly expanding sales team." },
+            { word: "address", pos: "verb", meaning: "向…發表演說", hint: "Unit 3", example: "The CEO will address the shareholders' concerns during the annual general meeting." },
+            { word: "adjust", pos: "verb", meaning: "調整", hint: "Unit 8", example: "We need to adjust our pricing strategy to remain competitive in the current market." },
+            { word: "align", pos: "verb", meaning: "對齊", hint: "Unit 8", example: "The new marketing campaign must align with our overall corporate objectives." },
+            { word: "alleviate", pos: "verb", meaning: "減輕", hint: "Unit 9", example: "Hiring more customer support staff will help alleviate the heavy workload during peak seasons." },
+            { word: "analyse", pos: "verb", meaning: "分析", hint: "Unit 11", example: "The data team will analyse the latest consumer trends to guide our product development." },
+            { word: "apologise", pos: "verb", meaning: "道歉", hint: "Unit 2", example: "We sincerely apologise for the delay in processing your recent bulk order." },
+            { word: "arise", pos: "verb", meaning: "形成", hint: "Unit 8", example: "Should any technical issues arise during the presentation, the IT team will be on standby." },
+            { word: "associate", pos: "verb", meaning: "聯想起來", hint: "Unit 9", example: "Consumers strongly associate our brand with high-quality customer service." },
+            { word: "concentrate", pos: "verb", meaning: "專注", hint: "Unit 5", example: "The open-plan office can sometimes make it difficult for staff to concentrate on complex tasks." },
+            { word: "co-organise", pos: "verb", meaning: "合辦", hint: "Unit 6", example: "Our firm will co-organise the annual industry trade show with the local commerce chamber." },
+            { word: "demonstrate", pos: "verb", meaning: "示範", hint: "Unit 5", example: "The software engineer will demonstrate the new features of the application to the client." },
+            { word: "disqualify", pos: "verb", meaning: "被取消資格", hint: "Unit 6", example: "Failing to submit the tender documents on time will automatically disqualify your company from the bidding process." },
+            { word: "engage", pos: "verb", meaning: "參加", hint: "Unit 4", example: "We need to engage a professional PR firm to handle the upcoming product launch." },
+            { word: "enhance", pos: "verb", meaning: "促進", hint: "Unit 3", example: "Upgrading our server infrastructure will significantly enhance our network security." },
+            { word: "entitle", pos: "verb", meaning: "享有", hint: "Unit 3", example: "Senior executives are entitled to fly business class for all overseas corporate travel." },
+            { word: "erase", pos: "verb", meaning: "刪除", hint: "Unit 8", example: "Please ensure you securely erase all client data from the hard drives before disposing of the old computers." },
+            { word: "fake", pos: "verb", meaning: "假裝, 偽造", hint: "Unit 13", example: "The auditor discovered that the supplier had submitted fake invoices to inflate their expenses." },
+            { word: "familiarise", pos: "verb", meaning: "使….熟悉", hint: "Unit 6", example: "New employees should familiarise themselves with the company's internal communication software." },
+            { word: "flip", pos: "verb", meaning: "翻動", hint: "Unit 12", example: "The presenter flipped through the slides quickly to leave more time for the Q&A session." },
+            { word: "fulfil", pos: "verb", meaning: "滿足", hint: "Unit 6", example: "The logistics team worked overtime to fulfil the massive surge in online orders." },
+            { word: "gain", pos: "verb", meaning: "獲得", hint: "Unit 4, 6", example: "The start-up managed to gain a significant market share within its first year of operation." },
+            { word: "initiate", pos: "verb", meaning: "發起", hint: "Unit 3, 4", example: "The HR manager will initiate a review of the current employee benefits package." },
+            { word: "insert", pos: "verb", meaning: "放進", hint: "Unit 8, 12", example: "Please insert your corporate security card into the terminal to access the server room." },
+            { word: "interfere", pos: "verb", meaning: "干擾", hint: "Unit 2", example: "The ongoing construction noise is starting to interfere with our daily office operations." },
+            { word: "lay off", pos: "verb", meaning: "解僱", hint: "Unit 10", example: "Due to the economic downturn, the company was forced to lay off twenty percent of its workforce." },
+            { word: "lift", pos: "verb", meaning: "舉起, 抬起", hint: "Unit 8", example: "Warehouse staff are trained to use mechanical hoists to lift heavy pallets safely." },
+            { word: "minimise", pos: "verb", meaning: "減至最小", hint: "Unit 2", example: "We must implement strict quality control to minimise the risk of defective products." },
+            { word: "nominate", pos: "verb", meaning: "提名", hint: "Unit 5", example: "The department head decided to nominate Sarah for the Employee of the Year award." },
+            { word: "recognise", pos: "verb", meaning: "表揚", hint: "Unit 4", example: "The management held a special ceremony to recognise the outstanding achievements of the sales team." },
+            { word: "recruit", pos: "verb", meaning: "招聘", hint: "Unit 4, 5", example: "Our agency was hired to recruit top-tier software developers for the tech giant." },
+            { word: "retrieve", pos: "verb", meaning: "取回", hint: "Unit 8", example: "The archivist was able to retrieve the original signed contracts from the off-site storage facility." },
+            { word: "reveal", pos: "verb", meaning: "展現﹐顯露", hint: "Unit 9", example: "The financial audit revealed several discrepancies in the quarterly expense reports." },
+            { word: "simplify", pos: "verb", meaning: "簡化", hint: "Unit 8", example: "We need to simplify the online checkout process to reduce the cart abandonment rate." },
+            { word: "strengthen", pos: "verb", meaning: "加強", hint: "Unit 4, 10", example: "The merger will significantly strengthen our position in the global telecommunications market." },
+            { word: "stretch", pos: "verb", meaning: "伸展", hint: "Unit 9", example: "The marketing budget will not stretch far enough to cover a national television campaign." },
+            { word: "tap", pos: "verb", meaning: "輕敲", hint: "Unit 8", example: "We plan to tap into the emerging markets in Southeast Asia to boost our export sales." },
+            { word: "waive", pos: "verb", meaning: "豁免", hint: "Unit 3", example: "The supplier agreed to waive the delivery charges for our bulk order of office furniture." }
         ];
 
         let vocabQuestions = [];
@@ -1145,7 +1172,7 @@
             let pool = [...advancedVocabBank];
             let selected = [];
             
-            // Prioritize error words (up to 5)
+            // Prioritise error words (up to 5)
             let errorPool = pool.filter(w => errorWords.includes(w.word));
             errorPool = shuffleArray(errorPool);
             
@@ -1165,8 +1192,31 @@
             return shuffleArray(selected); // Reshuffle the final 10 questions
         }
 
+        function renderTargetWords() {
+            const container = document.getElementById('vocab-target-container');
+            container.innerHTML = vocabQuestions.map(item => `
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between p-3 bg-gradient-to-r from-purple-50 to-white rounded-lg border border-purple-100 shadow-sm gap-2">
+                    <div>
+                        <div class="font-bold text-purple-900 text-base flex items-center gap-2">
+                            ${item.word} 
+                            ${errorWords.includes(item.word) ? '<span class="bg-rose-100 text-rose-600 text-[10px] px-2 py-0.5 rounded-full uppercase tracking-wider">Needs Practice</span>' : ''}
+                        </div>
+                        <div class="text-[10px] text-purple-600/80 font-bold uppercase tracking-wider mb-0.5">${item.pos}</div>
+                        <div class="text-sm text-gray-700 font-medium">${item.meaning}</div>
+                    </div>
+                    <button onclick="speakWord('${item.word}')" class="text-purple-500 hover:bg-purple-100 hover:text-purple-700 w-10 h-10 rounded-full flex items-center justify-center transition-colors shrink-0 self-end sm:self-auto shadow-sm bg-white border border-purple-100"><i class="fa-solid fa-volume-high"></i></button>
+                </div>
+            `).join('');
+        }
+
+        function initVocabReview() {
+            vocabQuestions = generateVocabQuestions(); // Pre-draw 10 words for the upcoming game
+            renderTargetWords();
+            renderVocabReview(); // Render the full dictionary
+            transitionTo('page-vocab-review');
+        }
+
         function startVocabGame() {
-            vocabQuestions = generateVocabQuestions(); 
             currentVocabIndex = 0;
             vocabScore = 0;
             
