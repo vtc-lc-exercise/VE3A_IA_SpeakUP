@@ -2,13 +2,22 @@
 <html lang="en-GB">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="format-detection" content="telephone=no, date=no, address=no, email=no, url=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, interactive-widget=resizes-content">
     <title>SpeakUp! Vocational English 3A: Integrated Assessment</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/mp4-muxer@5.1.3/build/mp4-muxer.js"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap');
         body { font-family: 'Poppins', sans-serif; overflow-x: hidden; background-color: #f8fafc; -webkit-tap-highlight-color: transparent; }
+        /* iOS keyboard: prevent page jump */
+        input, textarea, select { font-size: 16px !important; } /* prevent iOS auto-zoom */
+        /* iOS: disable ALL auto-detected data links (phone, address, date, etc.) */
+        a[x-apple-data-detectors], [x-apple-data-detectors] a {
+            color: inherit !important; text-decoration: none !important;
+            font-size: inherit !important; pointer-events: none !important;
+        }
         
         /* Ambient Background Orbs */
         .bg-orb-1 { position: fixed; top: -10%; left: -10%; width: 50vw; height: 50vw; background: radial-gradient(circle, rgba(99,102,241,0.18) 0%, rgba(0,0,0,0) 70%); border-radius: 50%; z-index: -2; animation: floatOrb 15s infinite alternate ease-in-out; filter: blur(40px); }
@@ -92,25 +101,13 @@
         details > summary { list-style: none; }
         details > summary::-webkit-details-marker { display: none; }
 
-        /* FIX: Ultimate iOS Safari Canvas Fix */
-        /* Use transform scale instead of opacity to keep it fully rendered but invisible */
-        #recording-canvas { 
-            position: fixed; 
-            top: 0; 
-            left: 0; 
-            pointer-events: none; 
-            z-index: -9999;
-            opacity: 1; 
-            transform: scale(0.001);
-            transform-origin: top left;
-        }
+        
     </style>
 </head>
 <body class="bg-[#f8fafc] min-h-screen text-gray-800 selection:bg-indigo-200 selection:text-indigo-900">
 
     <div class="bg-orb-1"></div>
     <div class="bg-orb-2"></div>
-    <canvas id="recording-canvas" width="1280" height="720"></canvas>
 
     <!-- Syllable Toast -->
     <div id="syllable-toast" class="fixed top-20 left-1/2 transform -translate-x-1/2 bg-white/95 backdrop-blur-xl text-gray-800 px-5 py-3 md:px-8 md:py-4 rounded-full shadow-[0_20px_50px_rgba(79,70,229,0.15)] z-[100] hidden transition-all duration-400 opacity-0 border border-indigo-100/50 flex items-center gap-3 md:gap-4 max-w-[90vw]">
@@ -121,6 +118,7 @@
         </div>
     </div>
 
+    <canvas id="recording-canvas" width="1280" height="720" style="position:fixed;top:0;left:0;pointer-events:none;z-index:-9999;opacity:0.01;transform:scale(0.001);transform-origin:top left;"></canvas>
     <div class="floating-bg" id="emoji-container"></div>
 
     <!-- 1. Intro Landing Page -->
@@ -230,7 +228,7 @@
                     <div class="absolute top-0 right-0 bg-blue-100 text-blue-600 text-[10px] md:text-xs font-bold px-3 py-1 rounded-bl-xl">Pronunciation</div>
                     <div class="text-5xl md:text-6xl mb-4 drop-shadow-md group-hover:scale-110 transition-transform mt-2">🗓️</div>
                     <h3 class="text-xl md:text-2xl font-bold text-gray-800 mb-2 group-hover:text-blue-600">Dates & Months Echo</h3>
-                    <p class="text-gray-500 text-xs md:text-sm flex-grow">Listen to the correct pronunciation and mimic it using your microphone! </p>
+                    <p class="text-gray-500 text-xs md:text-sm flex-grow">Listen to the correct pronunciation and mimic it using your microphone! (Strict Grading)</p>
                     <div class="mt-4 text-blue-500 font-bold text-sm opacity-0 group-hover:opacity-100 transition-opacity">Play Now <i class="fa-solid fa-arrow-right ml-1"></i></div>
                 </div>
 
@@ -275,9 +273,9 @@
                         <div class="text-sm text-amber-700 space-y-2.5">
                             <p><strong class="text-amber-900">💻 Computer (Recommended):</strong> Use Google Chrome or Microsoft Edge.</p>
                             <p><strong class="text-amber-900">📱 Mobile:</strong> Use Safari for iPhone, and Google Chrome for Android.</p>
-                            <p class="text-xs italic opacity-90">⚠️ Note: Built-in browsers on some mainland Chinese phone brands may not support the voice feature.</p>
+                            <p class="text-xs italic opacity-90">⚠️ Note: Built-in browsers on some phone brands may not support the voice feature.</p>
                             <hr class="border-amber-200 my-3">
-                            <p class="text-xs leading-relaxed">為了獲得最佳體驗，強烈建議使用電腦 (Chrome/Edge)。手機用戶請使用 Safari (iPhone) 或 Chrome (Android)。部分內地品牌手機的內置瀏覽器可能無法支援語音功能。</p>
+                            <p class="text-xs leading-relaxed">為了獲得最佳體驗，強烈建議使用電腦 (Chrome/Edge)。手機用戶請使用 Safari (iPhone) 或 Chrome (Android)。部分品牌手機的內置瀏覽器可能無法支援語音功能。</p>
                         </div>
                     </div>
 
@@ -491,7 +489,7 @@
                 </div>
                 <p class="text-gray-500 mb-4 md:mb-6 text-sm md:text-base">Paste your own script below to practise text-to-speech and record your audio.</p>
                 
-                <textarea id="assessment-script" class="w-full h-48 md:h-64 p-4 md:p-6 bg-white border border-gray-200 rounded-2xl focus:ring-4 focus:ring-purple-50 focus:border-purple-400 focus:outline-none resize-y mb-6 text-gray-700 text-base md:text-lg leading-relaxed shadow-inner transition-all script-scroll" placeholder="Paste your script here..."></textarea>
+                <textarea autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" id="assessment-script" class="w-full h-48 md:h-64 p-4 md:p-6 bg-white border border-gray-200 rounded-2xl focus:ring-4 focus:ring-purple-50 focus:border-purple-400 focus:outline-none resize-y mb-6 text-gray-700 text-base md:text-lg leading-relaxed shadow-inner transition-all script-scroll" placeholder="Paste your script here..."></textarea>
                 
                 <div class="bg-gradient-to-r from-white to-purple-50/30 border border-gray-100 shadow-sm rounded-2xl p-4 md:p-6 mb-8 md:mb-10 flex flex-col md:flex-row gap-4 md:gap-6 items-start md:items-end">
                     <div class="w-full md:w-auto">
@@ -646,7 +644,7 @@
                     <ul class="space-y-2 md:space-y-3 text-blue-800/80 font-bold text-xs md:text-sm ml-1">
                         <li class="flex items-center gap-2 md:gap-3"><i class="fa-solid fa-circle-dot text-red-500 w-4 text-center"></i> <span><span class="text-blue-900">Click 'Start Recording'</span> to start</span></li>
                         <li class="flex items-center gap-2 md:gap-3"><i class="fa-solid fa-microphone text-blue-500 w-4 text-center"></i> <span><span class="text-blue-900">Allow microphone</span> access</span></li>
-                        <li class="flex items-center gap-2 md:gap-3"><i class="fa-solid fa-mobile-screen text-blue-500 w-4 text-center"></i> <span><span class="text-blue-900">Keep screen ON</span> and stay on this page</span></li>
+                        <li class="flex items-center gap-2 md:gap-3"><i class="fa-solid fa-arrow-right text-blue-500 w-4 text-center"></i> <span><span class="text-blue-900">Click 'Next'</span> to switch slides</span></li>
                         <li class="flex items-center gap-2 md:gap-3"><i class="fa-solid fa-download text-blue-500 w-4 text-center"></i> <span><span class="text-blue-900">Download or share</span> your video!</span></li>
                     </ul>
                 </div>
@@ -710,6 +708,46 @@
     </div>
 
     <script>
+        // iOS keyboard: scroll focused element into view & prevent zoom
+        document.addEventListener('focusin', function(e) {
+            var tag = e.target.tagName;
+            if (tag === 'TEXTAREA' || tag === 'INPUT' || tag === 'SELECT') {
+                setTimeout(function() { e.target.scrollIntoView({ behavior: 'smooth', block: 'center' }); }, 400);
+            }
+        });
+        // iOS: fix '彈app' - prevent any link/data-detector from opening apps
+        document.addEventListener('click', function(e) {
+            var el = e.target;
+            if (el.tagName === 'A' && (el.href.startsWith('tel:') || el.href.startsWith('mailto:') || el.href.startsWith('maps:'))) {
+                e.preventDefault(); e.stopPropagation();
+            }
+        }, true);
+        // Detect in-app browser OR Quick Look and prompt to open in Safari
+        (function() {
+            var isFile = window.location.protocol === 'file:';
+            var ua = navigator.userAgent;
+            var isIOS = /iphone|ipad|ipod/i.test(ua);
+            // In-app browser: has Safari in UA but also has another app identifier
+            var isInAppBrowser = isIOS && (
+                /Perplexity|GSA|FBiOS|Instagram|Twitter|Line|FBAV/i.test(ua) || 
+                (!/Safari\//.test(ua) && !/CriOS/.test(ua))
+            );
+            if (isIOS && (isFile || isInAppBrowser)) {
+                // File opened via Quick Look - interactive features may not work
+                // Add a persistent banner
+                var banner = document.createElement('div');
+                banner.id = 'ql-banner';
+                banner.style.cssText = 'position:fixed;bottom:0;left:0;right:0;background:#1e40af;color:#fff;padding:12px 16px;z-index:9999;font-family:sans-serif;font-size:14px;text-align:center;display:flex;align-items:center;justify-content:space-between;gap:8px;';
+                var btn = document.createElement('button');
+                btn.textContent = 'Open in Safari';
+                btn.style.cssText = 'background:#3b82f6;color:#fff;border:none;padding:6px 12px;border-radius:20px;font-size:13px;font-weight:bold;white-space:nowrap;';
+                btn.onclick = function(){ window.open(window.location.href); banner.remove(); };
+                var msg = document.createElement('span');
+                msg.textContent = '⚠️ For full functionality, please open in Safari';
+                banner.appendChild(msg); banner.appendChild(btn);
+                document.body.appendChild(banner);
+            }
+        })();
         // --- Navigation & Emojis ---
         const emojis = ['🎙️', '🗣️', '📝', '💡', '🎯', '📊', '🎤'];
         const container = document.getElementById('emoji-container');
@@ -822,7 +860,12 @@
 
             speechRecog.onresult = function(event) {
                 const transcript = event.results[0][0].transcript.toLowerCase().replace(/[.,!?]/g, '').trim();
-                document.getElementById('date-speech-result').innerText = `You said: "${transcript}"`;
+                // Capitalise day and month names for display
+                var displayTranscript = transcript.replace(
+                    /\b(monday|tuesday|wednesday|thursday|friday|saturday|sunday|january|february|march|april|may|june|july|august|september|october|november|december)\b/gi,
+                    function(w){ return w.charAt(0).toUpperCase() + w.slice(1).toLowerCase(); }
+                ).replace(/^\w/, function(c){ return c.toUpperCase(); });
+                document.getElementById('date-speech-result').innerText = 'You said: "' + displayTranscript + '"';
                 checkDateSpeech(transcript);
             };
 
@@ -930,7 +973,7 @@
 
         // --- 2. Advanced Vocab Game (Workplace Context & UK Spelling) ---
         const advancedVocabBank = [
-            { word: "ad hoc", pos: "adjective", meaning: "特派的", hint: "Unit 5", example: "The manager formed an ad hoc committee to handle the sudden supply chain crisis." },
+            { word: "ad hoc", pos: "adjective", meaning: "臨時安排的", hint: "Unit 5", example: "The manager formed an ad hoc committee to handle the sudden supply chain crisis." },
             { word: "adequate", pos: "adjective", meaning: "足夠的", hint: "Unit 8", example: "Ensure we have adequate funding before launching the new marketing campaign." },
             { word: "adverse", pos: "adjective", meaning: "不利的", hint: "Unit 2", example: "The adverse economic conditions have negatively impacted our quarterly sales." },
             { word: "attractive", pos: "adjective", meaning: "有吸引力的", hint: "Unit 5", example: "The company provides an attractive remuneration package to retain top talent." },
@@ -943,7 +986,7 @@
             { word: "designated", pos: "adjective", meaning: "指定的", hint: "Unit 10", example: "Please park your company vehicle in the designated staff parking area." },
             { word: "dilated", pos: "adjective", meaning: "擴大", hint: "Unit 9", example: "The occupational health nurse noticed his dilated pupils and suggested immediate medical leave." },
             { word: "eco-friendly", pos: "adjective", meaning: "環保的", hint: "Unit 5, 12", example: "The office has switched to eco-friendly printing paper to reduce our carbon footprint." },
-            { word: "economical", pos: "adjective", meaning: "經濟的", hint: "Unit 13", example: "We need to find a more economical supplier for our raw materials to maximise profit." },
+            { word: "economical", pos: "adjective", meaning: "省錢的，節約的", hint: "Unit 13", example: "We need to find a more economical supplier for our raw materials to maximise profit." },
             { word: "efficient", pos: "adjective", meaning: "有效率的", hint: "Unit 8, 13", example: "The new inventory software is highly efficient and saves the team hours of manual data entry." },
             { word: "eligible", pos: "adjective", meaning: "合資格的", hint: "Unit 3", example: "Employees who have completed their probation are eligible for the annual bonus." },
             { word: "environmental", pos: "adjective", meaning: "自然環境的", hint: "Unit 12", example: "The factory must comply with strict environmental regulations to avoid hefty fines." },
@@ -1553,6 +1596,7 @@
 
             transitionTo('page-practice');
             switchStep(1, true);
+            preRenderSlides();
         }
 
         // --- TTS Engine ---
@@ -1574,7 +1618,13 @@
                 .replace(/\b(pm|p\.m\.)\b/gi, 'P M')
                 .replace(/\b(am|a\.m\.)\b/gi, 'A M')
                 .replace(/20K/gi, '20 thousand')
-                .replace(/&/g, ' and ');
+                .replace(/&/g, ' and ')
+                .replace(/→|->|-->/g, ' ')
+                .replace(/[↑↓▲▼]/g, '')
+                .replace(/\bJanuary\b/gi, 'Janyouary')
+                .replace(/\bFebruary\b/gi, 'Febyouary')
+                .replace(/\bWednesday\b/gi, 'Wensday')
+                .replace(/\bThursday\b/gi, 'Thurrzday');
                                     
             const utterThis = new SpeechSynthesisUtterance(processedText);
             
@@ -1592,9 +1642,11 @@
             
             let voice = voices.find(v => v.lang.includes(langCode) && (v.name.includes('Female') || v.name.includes('Google') || v.name.includes('Natural')));
             if(!voice) voice = voices.find(v => v.lang.includes(langCode));
+            if(!voice) voice = voices.find(v => v.lang.startsWith('en'));
             if(voice) utterThis.voice = voice;
-            utterThis.rate = speed; 
-            
+            utterThis.lang = langCode;
+            utterThis.rate = speed;
+
             synth.speak(utterThis);
         }
 
@@ -1697,7 +1749,7 @@
                 document.getElementById('tts-controls').classList.remove('hidden');
             }
 
-            if(stepNum === 1 || stepNum === 3) {
+            if(stepNum === 1 || stepNum === 2 || stepNum === 3) {
                 currentSlide = 0;
                 updateSlideView();
             }
@@ -1830,267 +1882,331 @@
         }
 
         function drawSlideToCanvas(slideIndex) {
-            const canvas = document.getElementById('recording-canvas');
-            const ctx = canvas.getContext('2d');
-            
-            ctx.fillStyle = '#ffffff';
-            ctx.fillRect(0, 0, 1280, 720);
-            ctx.lineWidth = 10;
-            ctx.strokeStyle = '#eff6ff';
-            ctx.strokeRect(5, 5, 1270, 710);
-
-            function drawBadge(text, x, y) {
-                ctx.fillStyle = '#bfdbfe';
-                ctx.fillRect(x, y - 30, ctx.measureText(text).width + 40, 45);
-                ctx.fillStyle = '#1e40af';
-                ctx.font = 'bold 20px sans-serif';
-                ctx.textAlign = 'left';
-                ctx.fillText(text.toUpperCase(), x + 20, y);
-            }
-
-            function wrapText(context, text, x, y, maxWidth, lineHeight) {
-                let cleanText = text.replace(/<[^>]*>?/gm, '');
-                let words = cleanText.split(' ');
-                let line = '';
-                let currentY = y;
-                for(let n = 0; n < words.length; n++) {
-                    let testLine = line + words[n] + ' ';
-                    let metrics = context.measureText(testLine);
-                    let testWidth = metrics.width;
-                    if (testWidth > maxWidth && n > 0) {
-                        context.fillText(line, x, currentY);
-                        line = words[n] + ' ';
-                        currentY += lineHeight;
-                    } else { line = testLine; }
-                }
-                context.fillText(line, x, currentY);
-                return currentY + lineHeight;
-            }
-
-            ctx.fillStyle = '#1f2937';
-            
-            if (slideIndex === 0) {
-                drawBadge('Presentation Topic', 100, 150);
-                ctx.font = 'bold 60px sans-serif';
-                ctx.textAlign = 'center';
-                ctx.fillText(currentData.topic, 640, 350);
-                
-                ctx.textAlign = 'left';
-                drawBadge('Presentation Outline', 100, 500);
-                
-                ctx.font = 'bold 24px sans-serif';
-                ctx.fillStyle = '#0d9488';
-                ctx.textAlign = 'center';
-                ctx.fillText('1. Background', 160, 600);
-                ctx.fillText('2. Proposal Details', 480, 600);
-                ctx.fillText('3. Benefit(s) & Concern(s)', 800, 600);
-                ctx.fillText('4. Suggestion', 1120, 600);
-                
-            } else if (slideIndex === 1) {
-                drawBadge('Background', 80, 100);
-                ctx.font = 'bold 30px sans-serif';
-                ctx.fillStyle = '#1f2937';
-                ctx.textAlign = 'left';
-                ctx.fillText('Problem:', 120, 180);
-                ctx.font = '30px sans-serif';
-                wrapText(ctx, '• ' + currentData.bgProblem, 150, 230, 1000, 40);
-                
-                ctx.font = 'bold 30px sans-serif';
-                ctx.fillText('Objective:', 120, 310);
-                ctx.font = '30px sans-serif';
-                wrapText(ctx, '• ' + currentData.bgObjective, 150, 360, 1000, 40);
-                
-                drawBadge('Proposal', 80, 460);
-                ctx.font = '30px sans-serif';
-                let currentY = 530;
-                currentData.proposal.forEach((p, i) => {
-                    currentY = wrapText(ctx, (i+1) + '. ' + p, 120, currentY, 1000, 40);
-                });
-                
-            } else if (slideIndex === 2) {
-                drawBadge('Benefit(s)', 80, 100);
-                ctx.fillStyle = '#e5e7eb'; ctx.fillRect(80, 130, 1040, 40);
-                
-                drawBadge('Concern(s)', 80, 260);
-                ctx.fillStyle = '#e5e7eb'; ctx.fillRect(80, 290, 740, 60);
-                ctx.strokeStyle = '#000'; ctx.lineWidth = 3; ctx.strokeRect(820, 290, 300, 60);
-                ctx.fillStyle = '#000'; ctx.font = 'bold 24px sans-serif'; ctx.textAlign = 'center';
-                ctx.fillText('Possible Solution(s)', 970, 330);
-                
-                ctx.textAlign = 'left';
-                drawBadge('Suggestion', 80, 440);
-                ctx.fillStyle = '#f9fafb'; ctx.fillRect(80, 460, 1040, 60);
-                ctx.fillStyle = '#374151'; ctx.font = '26px sans-serif';
-                wrapText(ctx, '• ' + currentData.suggestion, 100, 500, 1000, 35);
-                
-                drawBadge('Invitation', 80, 580);
-                ctx.fillStyle = '#f9fafb'; ctx.fillRect(80, 600, 1040, 90);
-                ctx.fillStyle = '#374151';
-                let invY = 635;
-                currentData.invitation.forEach((inv, i) => {
-                    invY = wrapText(ctx, '• ' + inv, 100, invY, 1000, 35);
-                });
-            }
+            // Pre-render to offscreen slide canvas - DOM canvas not needed
+            // slideCanvases[] are ready for VideoFrame encoding
         }
 
-        function updateSlideView() {
-            const htmlSlides = generateSlidesHTML(currentData);
-            const containerStudy = document.getElementById('slide-display-study');
-            const containerRecord = document.getElementById('slide-display-record');
-            
-            if(containerStudy) {
-                containerStudy.innerHTML = htmlSlides[currentSlide].html;
-                makeTextClickable(containerStudy);
+        let slideCanvases = [];
+
+        if (!CanvasRenderingContext2D.prototype.roundRect) {
+            CanvasRenderingContext2D.prototype.roundRect = function(x,y,w,h,r){
+                if(!r)r=0; if(Array.isArray(r))r=r[0];
+                this.beginPath(); this.moveTo(x+r,y); this.lineTo(x+w-r,y);
+                this.quadraticCurveTo(x+w,y,x+w,y+r); this.lineTo(x+w,y+h-r);
+                this.quadraticCurveTo(x+w,y+h,x+w-r,y+h); this.lineTo(x+r,y+h);
+                this.quadraticCurveTo(x,y+h,x,y+h-r); this.lineTo(x,y+r);
+                this.quadraticCurveTo(x,y,x+r,y); this.closePath();
+            };
+        }
+
+        function ct(t){ return (t||'').replace(/<[^>]+>/g,'').replace(/→/g,' → ').replace(/↑/g,' ▲ ').replace(/↓/g,' ▼ '); }
+
+        function wrapText(ctx,text,x,y,maxW,lh){
+            const words=ct(text).split(' '); let line='',cy=y;
+            for(let n=0;n<words.length;n++){
+                const test=line+words[n]+' ';
+                if(ctx.measureText(test).width>maxW&&n>0){ctx.fillText(line.trim(),x,cy);line=words[n]+' ';cy+=lh;}
+                else line=test;
             }
-            if(containerRecord) {
-                containerRecord.innerHTML = htmlSlides[currentSlide].html;
-                makeTextClickable(containerRecord);
+            ctx.fillText(line.trim(),x,cy); return cy+lh; // return AFTER last line for clean stacking
+        }
+
+        function pill(ctx,text,x,y,bg){
+            bg=bg||'#3b82f6'; ctx.save(); ctx.font='bold 20px Arial,sans-serif'; ctx.textAlign='left';
+            const pw=ctx.measureText(text).width+24;
+            ctx.fillStyle=bg; ctx.beginPath(); ctx.roundRect(x,y-22,pw,30,5); ctx.fill();
+            ctx.fillStyle='#fff'; ctx.fillText(text,x+12,y); ctx.restore();
+        }
+
+        function drawSlide1(ctx,data){
+            const W=1280,H=720,g=ctx.createLinearGradient(0,0,W,H);
+            g.addColorStop(0,'#eff6ff'); g.addColorStop(1,'#eef2ff');
+            ctx.fillStyle=g; ctx.fillRect(0,0,W,H);
+            ctx.strokeStyle='#bfdbfe'; ctx.lineWidth=8;
+            ctx.beginPath(); ctx.roundRect(14,14,W-28,H-28,18); ctx.stroke();
+            pill(ctx,'PRESENTATION TOPIC',56,90);
+            ctx.fillStyle='#1e293b'; ctx.font='bold 60px Arial,sans-serif'; ctx.textAlign='center';
+            wrapText(ctx,data.topic,W/2,220,W-160,76);
+            pill(ctx,'PRESENTATION OUTLINE',56,340);
+            const cols=['1. Background','2. Proposal\nDetails','3. Benefit(s) &\nConcern(s)','4. Suggestion'];
+            const cw=(W-100)/4;
+            cols.forEach(function(lbl,i){
+                const cx=50+cw*i+cw/2;
+                ctx.fillStyle='#0d9488'; ctx.beginPath(); ctx.arc(cx,450,44,0,Math.PI*2); ctx.fill();
+                ctx.fillStyle='#fff'; ctx.font='bold 32px Arial,sans-serif'; ctx.textAlign='center';
+                ctx.fillText(i+1,cx,464);
+                ctx.fillStyle='#374151'; ctx.font='bold 22px Arial,sans-serif';
+                lbl.split('\n').forEach(function(l,li){ctx.fillText(l,cx,532+li*28);});
+            });
+        }
+
+        function drawSlide2(ctx,data){
+            const W=1280,H=720,PAD=56,MID=W*0.5;
+            ctx.fillStyle='#fff'; ctx.fillRect(0,0,W,H);
+            ctx.strokeStyle='#dbeafe'; ctx.lineWidth=8;
+            ctx.beginPath(); ctx.roundRect(14,14,W-28,H-28,18); ctx.stroke();
+            ctx.strokeStyle='#e2e8f0'; ctx.lineWidth=2;
+            ctx.beginPath(); ctx.moveTo(MID,40); ctx.lineTo(MID,H-40); ctx.stroke();
+            const LW=MID-PAD-20,RW=W-MID-PAD-20,FS=24,FLH=34;
+            var y=66;
+            pill(ctx,'BACKGROUND',PAD,y); y+=44;
+            ctx.textAlign='left'; ctx.fillStyle='#1e293b'; ctx.font='bold '+FS+'px Arial,sans-serif';
+            ctx.fillText('Problem:',PAD,y); y+=FLH;
+            ctx.fillStyle='#374151'; ctx.font=FS+'px Arial,sans-serif';
+            y=wrapText(ctx,'• '+data.bgProblem,PAD+14,y,LW,FLH)+8;
+            ctx.fillStyle='#1e293b'; ctx.font='bold '+FS+'px Arial,sans-serif';
+            ctx.fillText('Objective:',PAD,y); y+=FLH;
+            ctx.fillStyle='#374151'; ctx.font=FS+'px Arial,sans-serif';
+            wrapText(ctx,'• '+data.bgObjective,PAD+14,y,LW,FLH);
+            var y2=66;
+            pill(ctx,'PROPOSAL',MID+20,y2); y2+=44;
+            ctx.fillStyle='#374151'; ctx.font=FS+'px Arial,sans-serif';
+            (data.proposal||[]).forEach(function(p,i){y2=wrapText(ctx,(i+1)+'. '+p,MID+20,y2,RW,FLH)+8;});
+        }
+
+        function drawSlide3(ctx,data){
+            const W=1280,H=720,PAD=56,BH=56,GAP=26;
+            ctx.fillStyle='#fff'; ctx.fillRect(0,0,W,H);
+            ctx.strokeStyle='#dbeafe'; ctx.lineWidth=8;
+            ctx.beginPath(); ctx.roundRect(14,14,W-28,H-28,18); ctx.stroke();
+            var y=60;
+            pill(ctx,'BENEFIT(S)',PAD,y); y+=40;
+            ctx.fillStyle='#f1f5f9'; ctx.beginPath(); ctx.roundRect(PAD,y,W-PAD*2,BH,8); ctx.fill(); y+=BH+GAP;
+            pill(ctx,'CONCERN(S)',PAD,y); y+=40;
+            ctx.fillStyle='#f1f5f9'; ctx.beginPath(); ctx.roundRect(PAD,y,W-PAD*2-130,BH,8); ctx.fill();
+            ctx.strokeStyle='#374151'; ctx.lineWidth=2.5;
+            ctx.beginPath(); ctx.roundRect(W-PAD-124,y,120,BH,8); ctx.stroke();
+            ctx.fillStyle='#374151'; ctx.font='bold 18px Arial,sans-serif'; ctx.textAlign='center';
+            ctx.fillText('Possible',W-PAD-64,y+21); ctx.fillText('Solution(s)',W-PAD-64,y+43);
+            y+=BH+GAP;
+            pill(ctx,'SUGGESTION',PAD,y); y+=40;
+            ctx.fillStyle='#f8fafc'; ctx.beginPath(); ctx.roundRect(PAD,y,W-PAD*2,BH,8); ctx.fill();
+            ctx.strokeStyle='#e2e8f0'; ctx.lineWidth=2; ctx.beginPath(); ctx.roundRect(PAD,y,W-PAD*2,BH,8); ctx.stroke();
+            ctx.fillStyle='#374151'; ctx.font='24px Arial,sans-serif'; ctx.textAlign='left';
+            wrapText(ctx,'• '+(data.suggestion||''),PAD+14,y+36,W-PAD*2-28,30);
+            y+=BH+GAP;
+            pill(ctx,'INVITATION',PAD,y); y+=40;
+            var IH=BH+((data.invitation||[]).length>1?34:0);
+            ctx.fillStyle='#f8fafc'; ctx.beginPath(); ctx.roundRect(PAD,y,W-PAD*2,IH,8); ctx.fill();
+            ctx.strokeStyle='#e2e8f0'; ctx.lineWidth=2; ctx.beginPath(); ctx.roundRect(PAD,y,W-PAD*2,IH,8); ctx.stroke();
+            ctx.fillStyle='#374151'; ctx.font='24px Arial,sans-serif';
+            (data.invitation||[]).forEach(function(inv,i){wrapText(ctx,'• '+inv,PAD+14,y+30+i*34,W-PAD*2-28,30);});
+        }
+
+        function preRenderSlides(){
+            if(!currentData) return; slideCanvases=[];
+            for(var i=0;i<3;i++){
+                var oc=document.createElement('canvas'); oc.width=1280; oc.height=720;
+                var ctx=oc.getContext('2d');
+                if(i===0) drawSlide1(ctx,currentData);
+                else if(i===1) drawSlide2(ctx,currentData);
+                else drawSlide3(ctx,currentData);
+                slideCanvases[i]=oc;
             }
-            
-            document.getElementById('slide-counter-study').innerText = `Slide ${currentSlide + 1} / 3`;
-            document.getElementById('slide-counter-record').innerText = `Slide ${currentSlide + 1} / 3`;
-            
             drawSlideToCanvas(currentSlide);
         }
 
-        function changeSlide(dir) {
-            currentSlide += dir;
-            if (currentSlide < 0) currentSlide = 0;
-            if (currentSlide > 2) currentSlide = 2;
+        function updateSlideView(){
+            var htmlSlides=generateSlidesHTML(currentData);
+            var cs=document.getElementById('slide-display-study');
+            if(cs){cs.innerHTML=htmlSlides[currentSlide].html; makeTextClickable(cs);}
+            var cr=document.getElementById('slide-display-record');
+            if(cr){cr.innerHTML=htmlSlides[currentSlide].html; makeTextClickable(cr);}
+            var cntS=document.getElementById('slide-counter-study');
+            if(cntS) cntS.innerText='Slide '+(currentSlide+1)+' / 3';
+            var cntR=document.getElementById('slide-counter-record');
+            if(cntR) cntR.innerText='Slide '+(currentSlide+1)+' / 3';
+            drawSlideToCanvas(currentSlide);
+        }
+
+        function changeSlide(dir){
+            currentSlide+=dir;
+            if(currentSlide<0) currentSlide=0;
+            if(currentSlide>2) currentSlide=2;
+            if(isRecording) slideTimestamps.push({slide:currentSlide,time:performance.now()-recordingStartTime});
             updateSlideView();
         }
 
-        // --- Video Recording Logic ---
-        let mediaRecorder;
-        let recordedChunks = [];
-        let isRecording = false;
-        let timerInterval;
-        let isCanvasDrawing = false; // 用於控制 requestAnimationFrame 迴圈
-        let seconds = 0;
-        let audioStream;
-        let globalRecordedBlob = null;
-        let currentExt = 'mp4';
-        let globalCanvasStream = null; // 全域變數，方便強制抽幀
 
-        // 使用 requestAnimationFrame 取代 setInterval，避免 iOS Safari 降速
-        function canvasDrawLoop() {
-            if (!isCanvasDrawing) return;
-            
-            drawSlideToCanvas(currentSlide);
-            const canvas = document.getElementById('recording-canvas');
-            const ctx = canvas.getContext('2d');
-            
-            // 畫一粒閃爍嘅紅點，確保每一格畫面都有「實質變化」，逼 Safari 錄影
-            if (Math.floor(Date.now() / 500) % 2 === 0) {
-                ctx.fillStyle = 'red';
-                ctx.beginPath();
-                ctx.arc(1250, 30, 10, 0, Math.PI * 2);
-                ctx.fill();
-            }
+        // --- Video Recording Logic (Audio-first + WebCodecs synthesis) ---
+        var mediaRecorder, audioStream;
+        var recordedChunks=[], isRecording=false;
+        var timerInterval, seconds=0;
+        var globalRecordedBlob=null, currentExt='mp4';
+        var slideTimestamps=[], recordingStartTime=0;
 
-            // iOS Safari 終極絕招：強制要求 Video Track 抽取當前畫面
-            if (globalCanvasStream) {
-                const videoTrack = globalCanvasStream.getVideoTracks()[0];
-                if (videoTrack && typeof videoTrack.requestFrame === 'function') {
-                    videoTrack.requestFrame();
-                }
-            }
-            
-            requestAnimationFrame(canvasDrawLoop);
-        }
-
-        async function toggleRecording() {
-            const btn = document.getElementById('btn-record');
-            const timerDisplay = document.getElementById('timer');
-            const container = document.getElementById('record-container');
-            const indicator = document.getElementById('recording-indicator');
-            
-            if (!isRecording) {
-                try {
-                    audioStream = await navigator.mediaDevices.getUserMedia({ audio: true });
-                    const canvas = document.getElementById('recording-canvas');
-                    
-                    // 錄影前強制畫一次，確保 Canvas 唔係空白
-                    drawSlideToCanvas(currentSlide);
-                    globalCanvasStream = canvas.captureStream(30); 
-                    
-                    const combinedStream = new MediaStream([
-                        ...globalCanvasStream.getVideoTracks(),
-                        ...audioStream.getAudioTracks()
-                    ]);
-                    
-                    const types = ['video/mp4', 'video/webm;codecs=h264,mp4a.40.2', 'video/webm;codecs=h264', 'video/webm'];
-                    let mimeType = '';
-                    for (let type of types) {
-                        if (MediaRecorder.isTypeSupported(type)) { mimeType = type; break; }
-                    }
-
-                    const options = mimeType ? { mimeType: mimeType } : {};
-                    try { mediaRecorder = new MediaRecorder(combinedStream, options); } 
-                    catch (e) { mediaRecorder = new MediaRecorder(combinedStream); }
-
-                    currentExt = (mimeType && mimeType.includes('mp4')) ? 'mp4' : 'webm';
-                    recordedChunks = [];
-
-                    mediaRecorder.ondataavailable = e => { if (e.data.size > 0) recordedChunks.push(e.data); };
-                    mediaRecorder.onstop = () => {
-                        globalRecordedBlob = new Blob(recordedChunks, { type: mimeType || 'video/mp4' });
-                        const url = URL.createObjectURL(globalRecordedBlob);
-                        
-                        document.getElementById('presentation-video-player').src = url;
-                        
-                        const downloadLink = document.getElementById('download-link');
-                        downloadLink.href = url;
-                        downloadLink.download = `SpeakUp_Presentation.${currentExt}`;
-                        
-                        document.getElementById('download-area').classList.remove('hidden');
-                        
-                        audioStream.getTracks().forEach(track => track.stop());
-                        if(globalCanvasStream) globalCanvasStream.getTracks().forEach(track => track.stop());
-                    };
-
-                    mediaRecorder.start();
-                    isRecording = true;
-                    btn.innerHTML = '<span class="relative z-10 flex items-center gap-2"><i class="fa-solid fa-stop"></i> Stop Recording</span>';
-                    btn.className = "btn-shine bg-gradient-to-r from-gray-700 to-gray-800 text-white px-6 py-3.5 md:px-10 md:py-4 rounded-full font-black text-base md:text-xl transition-all active:scale-95 shadow-lg mb-2 w-full max-w-sm flex items-center justify-center gap-2 md:gap-3 z-10 border border-gray-600 animate-pulse";
-                    
-                    container.classList.add('border-rose-300', 'bg-rose-50/20');
+        async function toggleRecording(){
+            var btn=document.getElementById('btn-record');
+            var timerDisplay=document.getElementById('timer');
+            var container=document.getElementById('record-container');
+            var indicator=document.getElementById('recording-indicator');
+            if(!isRecording){
+                try{
+                    audioStream=await navigator.mediaDevices.getUserMedia({audio:true});
+                    var mts=['audio/mp4','audio/aac','audio/webm;codecs=opus','audio/webm'];
+                    var mt=mts.find(function(t){return MediaRecorder.isTypeSupported(t);})||'';
+                    mediaRecorder=mt?new MediaRecorder(audioStream,{mimeType:mt}):new MediaRecorder(audioStream);
+                    recordedChunks=[];
+                    mediaRecorder.ondataavailable=function(e){if(e.data.size>0)recordedChunks.push(e.data);};
+                    mediaRecorder.onstop=synthesizeVideo;
+                    recordingStartTime=performance.now();
+                    slideTimestamps=[{slide:currentSlide,time:0}];
+                    mediaRecorder.start(100);
+                    isRecording=true;
+                    btn.innerHTML='<span class="relative z-10 flex items-center gap-2"><i class="fa-solid fa-stop"></i> Stop Recording</span>';
+                    btn.className='btn-shine bg-gradient-to-r from-gray-700 to-gray-800 text-white px-6 py-3.5 md:px-10 md:py-4 rounded-full font-black text-base md:text-xl transition-all active:scale-95 shadow-lg mb-2 w-full max-w-sm flex items-center justify-center gap-2 z-10 border border-gray-600 animate-pulse';
+                    container.classList.add('border-rose-300','bg-rose-50/20');
                     document.getElementById('download-area').classList.add('hidden');
                     indicator.classList.remove('hidden');
-                    
-                    seconds = 0;
-                    timerDisplay.innerText = "00:00";
-                    timerDisplay.classList.add('text-rose-500', 'font-bold');
-                    
-                    timerInterval = setInterval(() => {
+                    seconds=0; timerDisplay.innerText='00:00';
+                    timerDisplay.classList.add('text-rose-500','font-bold');
+                    timerInterval=setInterval(function(){
                         seconds++;
-                        const mins = String(Math.floor(seconds / 60)).padStart(2, '0');
-                        const secs = String(seconds % 60).padStart(2, '0');
-                        timerDisplay.innerText = `${mins}:${secs}`;
-                    }, 1000);
-
-                    // 啟動繪圖迴圈
-                    isCanvasDrawing = true;
-                    canvasDrawLoop();
-
-                } catch (err) {
-                    alert("Error accessing microphone. Please ensure you have granted microphone permissions in your settings.");
-                }
+                        timerDisplay.innerText=String(Math.floor(seconds/60)).padStart(2,'0')+':'+String(seconds%60).padStart(2,'0');
+                    },1000);
+                }catch(err){alert('Microphone error: '+err.message);}
             } else {
-                mediaRecorder.stop();
-                isRecording = false;
-                
-                clearInterval(timerInterval);
-                isCanvasDrawing = false; // 停止繪圖迴圈
-                globalCanvasStream = null; // 清除 Stream 參考
-                
-                btn.innerHTML = '<span class="relative z-10 flex items-center gap-2"><i class="fa-solid fa-video"></i> Start Recording</span>';
-                btn.className = "btn-shine bg-gradient-to-r from-rose-500 to-pink-600 text-white px-6 py-3.5 md:px-10 md:py-4 rounded-full font-black text-base md:text-xl hover:from-rose-600 hover:to-pink-700 transition-all active:scale-95 shadow-[0_10px_20px_-10px_rgba(244,63,94,0.6)] mb-2 w-full max-w-sm flex items-center justify-center gap-2 md:gap-3 z-10 border border-rose-400/30";
-                
-                container.classList.remove('border-rose-300', 'bg-rose-50/20');
-                timerDisplay.classList.remove('text-rose-500', 'font-bold');
+                clearInterval(timerInterval); isRecording=false;
+                mediaRecorder.stop(); audioStream.getTracks().forEach(function(t){t.stop();});
                 indicator.classList.add('hidden');
+                btn.innerHTML='<span class="relative z-10 flex items-center gap-2"><i class="fa-solid fa-video"></i> Start Recording</span>';
+                btn.className='btn-shine bg-gradient-to-r from-rose-500 to-pink-600 text-white px-6 py-3.5 md:px-10 md:py-4 rounded-full font-black text-base md:text-xl hover:from-rose-600 hover:to-pink-700 transition-all active:scale-95 shadow-[0_10px_20px_-10px_rgba(244,63,94,0.6)] mb-2 w-full max-w-sm flex items-center justify-center gap-2 z-10 border border-rose-400/30';
+                container.classList.remove('border-rose-300','bg-rose-50/20');
+                var dl=document.getElementById('download-area');
+                dl.classList.remove('hidden');
+                dl.innerHTML='<div class="text-center py-6"><i class="fa-solid fa-spinner animate-spin text-indigo-500 text-2xl mb-3 block"></i><p class="font-bold text-gray-700">Generating video…<br><span class="text-sm font-normal text-gray-400">Please wait, this takes a few seconds</span></p></div>';
             }
+        }
+
+        async function synthesizeVideo(){
+            var totalMs=seconds*1000;
+            var audioBlob=new Blob(recordedChunks,{type:'audio/mp4'});
+            var dlArea=document.getElementById('download-area');
+            function setP(pct,msg){
+                dlArea.innerHTML='<div class="text-center py-4"><div class="w-full bg-gray-100 rounded-full h-3 mb-2 overflow-hidden"><div class="bg-indigo-500 h-3 rounded-full transition-all duration-300" style="width:'+pct+'%"></div></div><p class="text-xs text-gray-400">'+msg+'</p></div>';
+            }
+            function showResult(url){
+                globalRecordedBlob=new Blob(recordedChunks,{type:'audio/mp4'});
+                dlArea.innerHTML='<div class="w-12 h-12 bg-gradient-to-br from-emerald-100 to-teal-100 text-emerald-500 rounded-full flex items-center justify-center mx-auto mb-3 text-xl shadow-inner"><i class="fa-solid fa-check"></i></div>'
+                    +'<h4 class="font-black text-gray-800 mb-3 text-base">Video Ready!</h4>'
+                    +'<video playsinline webkit-playsinline controls class="w-full mb-4 rounded-xl border border-gray-200 bg-black shadow-sm" src="'+url+'"></video>'
+                    +'<div class="flex flex-col gap-2">'
+                    +'<button onclick="shareVideoBlob()" class="flex items-center justify-center gap-2 w-full bg-[#25D366] text-white px-4 py-2.5 rounded-xl font-bold text-sm"><i class="fa-brands fa-whatsapp"></i> Share</button>'
+                    +'<a href="'+url+'" download="SpeakUp_Presentation.mp4" class="flex items-center justify-center gap-2 w-full bg-gradient-to-r from-gray-800 to-gray-900 text-white px-4 py-2.5 rounded-xl font-bold text-sm"><i class="fa-solid fa-download"></i> Save to Device</a>'
+                    +'</div>';
+            }
+            try{
+                // Check WebCodecs support
+                if(typeof VideoEncoder==='undefined'||typeof AudioEncoder==='undefined'||typeof window.Mp4Muxer==='undefined'){
+                    throw new Error('WebCodecs or Mp4Muxer not available, using fallback');
+                }
+                setP(5,'Preparing audio…');
+                var audioCtx=new (window.AudioContext||window.webkitAudioContext)();
+                await audioCtx.resume();
+                var arrayBuf=await audioBlob.arrayBuffer();
+                var audioBuffer=await audioCtx.decodeAudioData(arrayBuf);
+                var sampleRate=audioBuffer.sampleRate;
+                var numCh=audioBuffer.numberOfChannels;
+
+                setP(10,'Setting up encoder…');
+                var muxer=new window.Mp4Muxer.Muxer({
+                    target:new window.Mp4Muxer.ArrayBufferTarget(),
+                    video:{codec:'avc',width:1280,height:720},
+                    audio:{codec:'aac',numberOfChannels:numCh,sampleRate:sampleRate},
+                    fastStart:'in-memory',
+                    firstTimestampBehavior:'offset'
+                });
+
+                // VIDEO: Portrait 720x1280 for phone screen, direct canvas draw + I420
+                // Draw slide directly to a temp canvas each frame - no hidden canvas issues
+                var numFrames=Math.ceil(totalMs/1000)+1;
+                var VW=1280,VH=720;
+                var videoEncoder=new VideoEncoder({
+                    output:function(chunk,meta){muxer.addVideoChunk(chunk,meta);},
+                    error:function(e){throw new Error('VideoEncoder: '+e.message);}
+                });
+                videoEncoder.configure({codec:'avc1.42001f',width:VW,height:VH,bitrate:2000000,framerate:1});
+
+                if(!slideCanvases||!slideCanvases[0]) preRenderSlides();
+
+                for(var f=0;f<numFrames;f++){
+                    var timeMs=f*1000;
+                    var tUs=timeMs*1000;
+                    var curSlide=slideTimestamps[0]?slideTimestamps[0].slide:0;
+                    for(var i=slideTimestamps.length-1;i>=0;i--){
+                        if(timeMs>=slideTimestamps[i].time){curSlide=slideTimestamps[i].slide;break;}
+                    }
+                    // Create a fresh 720x1280 canvas for each frame
+                    var fc=document.createElement('canvas'); fc.width=VW; fc.height=VH;
+                    var fctx=fc.getContext('2d');
+                    // Gradient background
+                    // Landscape: slide fills full 1280x720, tiny header overlay
+                    fctx.fillStyle='#fff'; fctx.fillRect(0,0,VW,VH);
+                    if(slideCanvases[curSlide]) fctx.drawImage(slideCanvases[curSlide],0,0,VW,VH);
+                    // Slim header bar overlay at top
+                    fctx.fillStyle='rgba(79,70,229,0.92)'; fctx.fillRect(0,0,VW,44);
+                    fctx.fillStyle='#fff'; fctx.font='bold 22px Arial,sans-serif'; fctx.textAlign='center';
+                    fctx.fillText('SpeakUp! Vocational English  |  Slide '+(curSlide+1)+'/3',VW/2,30);
+                    // Get raw pixels and convert RGBA→I420 for VideoFrame
+                    var px=fctx.getImageData(0,0,VW,VH).data;
+                    var ySize=VW*VH, i420=new Uint8Array(ySize+(ySize>>1));
+                    for(var row=0;row<VH;row++){for(var col=0;col<VW;col++){
+                        var s=(row*VW+col)*4, R=px[s],G=px[s+1],B=px[s+2];
+                        i420[row*VW+col]=((66*R+129*G+25*B+128)>>8)+16;
+                        if((row&1)===0&&(col&1)===0){
+                            var ui=ySize+((row>>1)*(VW>>1))+(col>>1);
+                            i420[ui]=((-38*R-74*G+112*B+128)>>8)+128;
+                            i420[ui+(ySize>>2)]=((112*R-94*G-18*B+128)>>8)+128;
+                        }
+                    }}
+                    var vf=new VideoFrame(i420,{format:'I420',codedWidth:VW,codedHeight:VH,timestamp:tUs,duration:1000000,
+                        layout:[{offset:0,stride:VW},{offset:ySize,stride:VW>>1},{offset:ySize+(ySize>>2),stride:VW>>1}]});
+                    videoEncoder.encode(vf,{keyFrame:f%30===0});
+                    vf.close();
+                    if(f%5===0){setP(10+Math.round(f/numFrames*40),'Encoding slides… '+f+'/'+numFrames);await new Promise(function(r){setTimeout(r,0);});}
+                }
+                await videoEncoder.flush(); videoEncoder.close();
+                setP(55,'Encoding audio…');
+
+                // AUDIO
+                var audioEncoder=new AudioEncoder({
+                    output:function(chunk,meta){muxer.addAudioChunk(chunk,meta);},
+                    error:function(e){throw new Error('AudioEncoder: '+e.message);}
+                });
+                audioEncoder.configure({codec:'mp4a.40.2',sampleRate:sampleRate,numberOfChannels:numCh,bitrate:128000});
+                var CHUNK=4096, total=audioBuffer.length;
+                for(var offset=0;offset<total;offset+=CHUNK){
+                    var len=Math.min(CHUNK,total-offset);
+                    var tsUs=Math.round((offset/sampleRate)*1000000);
+                    var planar=new Float32Array(len*numCh);
+                    for(var ch=0;ch<numCh;ch++){
+                        planar.set(audioBuffer.getChannelData(ch).subarray(offset,offset+len),ch*len);
+                    }
+                    var ad=new AudioData({format:'f32-planar',sampleRate:sampleRate,numberOfFrames:len,numberOfChannels:numCh,timestamp:tsUs,data:planar});
+                    audioEncoder.encode(ad); ad.close();
+                    if(offset%(CHUNK*10)===0){setP(55+Math.round(offset/total*35),'Encoding audio…');await new Promise(function(r){setTimeout(r,0);});}
+                }
+                await audioEncoder.flush(); audioEncoder.close();
+                await audioCtx.close();
+
+                setP(95,'Finalising…');
+                muxer.finalize();
+                var blob=new Blob([muxer.target.buffer],{type:'video/mp4'});
+                currentExt='mp4';
+                globalRecordedBlob=blob;
+                showResult(URL.createObjectURL(blob));
+
+            }catch(err){
+                console.error('Synthesis error:',err);
+                dlArea.innerHTML='<p class="text-red-500 text-sm font-bold p-4 text-center">Error: '+err.message+'</p>';
+            }
+        }
+
+        function shareVideoBlob(){
+            if(globalRecordedBlob&&navigator.share){
+                var file=new File([globalRecordedBlob],'SpeakUp_Presentation.'+currentExt,{type:globalRecordedBlob.type});
+                navigator.share({title:'My SpeakUp Presentation',files:[file]}).catch(function(){});
+            } else { alert('Please use Save to Device button.'); }
         }
 
         async function shareVideo() {
