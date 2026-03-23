@@ -273,9 +273,9 @@
                         <div class="text-sm text-amber-700 space-y-2.5">
                             <p><strong class="text-amber-900">💻 Computer (Recommended):</strong> Use Google Chrome or Microsoft Edge.</p>
                             <p><strong class="text-amber-900">📱 Mobile:</strong> Use Safari for iPhone, and Google Chrome for Android.</p>
-                            <p class="text-xs italic opacity-90">⚠️ Note: Built-in browsers on some phone brands may not support the voice feature.</p>
+                            <p class="text-xs italic opacity-90">⚠️ Note: Built-in browsers on some mainland Chinese phone brands may not support the voice feature.</p>
                             <hr class="border-amber-200 my-3">
-                            <p class="text-xs leading-relaxed">為了獲得最佳體驗，強烈建議使用電腦 (Chrome/Edge)。手機用戶請使用 Safari (iPhone) 或 Chrome (Android)。部分品牌手機的內置瀏覽器可能無法支援語音功能。</p>
+                            <p class="text-xs leading-relaxed">為了獲得最佳體驗，強烈建議使用電腦 (Chrome/Edge)。手機用戶請使用 Safari (iPhone) 或 Chrome (Android)。部分內地品牌手機的內置瀏覽器可能無法支援語音功能。</p>
                         </div>
                     </div>
 
@@ -728,10 +728,12 @@
             var ua = navigator.userAgent;
             var isIOS = /iphone|ipad|ipod/i.test(ua);
             // In-app browser: has Safari in UA but also has another app identifier
+            var isAndroid=/android/i.test(ua);
             var isInAppBrowser = isIOS && (
                 /Perplexity|GSA|FBiOS|Instagram|Twitter|Line|FBAV/i.test(ua) || 
                 (!/Safari\//.test(ua) && !/CriOS/.test(ua))
             );
+            var isAndroidNonChrome = isAndroid && (/SamsungBrowser|Firefox/i.test(ua) || (!/Chrome\//.test(ua)));
             if (isIOS && (isFile || isInAppBrowser)) {
                 // File opened via Quick Look - interactive features may not work
                 // Add a persistent banner
@@ -973,7 +975,7 @@
 
         // --- 2. Advanced Vocab Game (Workplace Context & UK Spelling) ---
         const advancedVocabBank = [
-            { word: "ad hoc", pos: "adjective", meaning: "臨時安排的", hint: "Unit 5", example: "The manager formed an ad hoc committee to handle the sudden supply chain crisis." },
+            { word: "ad hoc", pos: "adjective", meaning: "特派的", hint: "Unit 5", example: "The manager formed an ad hoc committee to handle the sudden supply chain crisis." },
             { word: "adequate", pos: "adjective", meaning: "足夠的", hint: "Unit 8", example: "Ensure we have adequate funding before launching the new marketing campaign." },
             { word: "adverse", pos: "adjective", meaning: "不利的", hint: "Unit 2", example: "The adverse economic conditions have negatively impacted our quarterly sales." },
             { word: "attractive", pos: "adjective", meaning: "有吸引力的", hint: "Unit 5", example: "The company provides an attractive remuneration package to retain top talent." },
@@ -986,7 +988,7 @@
             { word: "designated", pos: "adjective", meaning: "指定的", hint: "Unit 10", example: "Please park your company vehicle in the designated staff parking area." },
             { word: "dilated", pos: "adjective", meaning: "擴大", hint: "Unit 9", example: "The occupational health nurse noticed his dilated pupils and suggested immediate medical leave." },
             { word: "eco-friendly", pos: "adjective", meaning: "環保的", hint: "Unit 5, 12", example: "The office has switched to eco-friendly printing paper to reduce our carbon footprint." },
-            { word: "economical", pos: "adjective", meaning: "省錢的，節約的", hint: "Unit 13", example: "We need to find a more economical supplier for our raw materials to maximise profit." },
+            { word: "economical", pos: "adjective", meaning: "經濟的", hint: "Unit 13", example: "We need to find a more economical supplier for our raw materials to maximise profit." },
             { word: "efficient", pos: "adjective", meaning: "有效率的", hint: "Unit 8, 13", example: "The new inventory software is highly efficient and saves the team hours of manual data entry." },
             { word: "eligible", pos: "adjective", meaning: "合資格的", hint: "Unit 3", example: "Employees who have completed their probation are eligible for the annual bonus." },
             { word: "environmental", pos: "adjective", meaning: "自然環境的", hint: "Unit 12", example: "The factory must comply with strict environmental regulations to avoid hefty fines." },
@@ -1621,8 +1623,8 @@
                 .replace(/&/g, ' and ')
                 .replace(/→|->|-->/g, ' ')
                 .replace(/[↑↓▲▼]/g, '')
-                .replace(/\bJanuary\b/gi, 'Janyouary')
-                .replace(/\bFebruary\b/gi, 'Febyouary')
+                .replace(/\bJanuary\b/gi, 'Jan you airy')
+                .replace(/\bFebruary\b/gi, 'Feb you airy')
                 .replace(/\bWednesday\b/gi, 'Wensday')
                 .replace(/\bThursday\b/gi, 'Thurrzday');
                                     
@@ -1997,7 +1999,7 @@
             if(!currentData) return; slideCanvases=[];
             for(var i=0;i<3;i++){
                 var oc=document.createElement('canvas'); oc.width=1280; oc.height=720;
-                var ctx=oc.getContext('2d');
+                var ctx=oc.getContext('2d',{alpha:false});
                 if(i===0) drawSlide1(ctx,currentData);
                 else if(i===1) drawSlide2(ctx,currentData);
                 else drawSlide3(ctx,currentData);
@@ -2030,7 +2032,7 @@
 
         // --- Video Recording Logic (Audio-first + WebCodecs synthesis) ---
         var mediaRecorder, audioStream;
-        var recordedChunks=[], isRecording=false;
+        var recordedChunks=[], isRecording=false; var recordedMimeType="audio/mp4";
         var timerInterval, seconds=0;
         var globalRecordedBlob=null, currentExt='mp4';
         var slideTimestamps=[], recordingStartTime=0;
@@ -2046,6 +2048,7 @@
                     var mts=['audio/mp4','audio/aac','audio/webm;codecs=opus','audio/webm'];
                     var mt=mts.find(function(t){return MediaRecorder.isTypeSupported(t);})||'';
                     mediaRecorder=mt?new MediaRecorder(audioStream,{mimeType:mt}):new MediaRecorder(audioStream);
+                    recordedMimeType=mediaRecorder.mimeType||mt||'audio/mp4';
                     recordedChunks=[];
                     mediaRecorder.ondataavailable=function(e){if(e.data.size>0)recordedChunks.push(e.data);};
                     mediaRecorder.onstop=synthesizeVideo;
@@ -2078,147 +2081,280 @@
             }
         }
 
-        async function synthesizeVideo(){
+        function showResult(url){
+            var dlArea=document.getElementById('download-area');
+            var htmlStr='';
+            htmlStr+='<div class="text-center space-y-4 py-4">';
+            htmlStr+='<video id="preview-video" controls playsinline class="w-full max-w-md mx-auto rounded-2xl shadow-lg bg-black" src="'+url+'"></video>';
+            htmlStr+='<div class="flex flex-col sm:flex-row justify-center gap-3 mt-2">';
+            htmlStr+='<a href="'+url+'" download="SpeakUp_Presentation.mp4" class="px-5 py-2.5 rounded-full bg-indigo-600 text-white text-sm font-bold shadow hover:bg-indigo-700">Download MP4</a>';
+            htmlStr+='<button onclick="shareVideoBlob()" class="px-5 py-2.5 rounded-full bg-emerald-500 text-white text-sm font-bold shadow hover:bg-emerald-600">Share / WhatsApp</button>';
+            htmlStr+='</div>';
+            htmlStr+='</div>';
+            dlArea.innerHTML=htmlStr;
+        }
+
+        function openInSafari(){
+            var u=encodeURIComponent(window.location.href);
+            window.location.href='x-web-search://?url='+u;
+        }
+                async function synthesizeVideo(){
             var totalMs=seconds*1000;
-            var audioBlob=new Blob(recordedChunks,{type:'audio/mp4'});
+            var audioBlob=new Blob(recordedChunks,{type:recordedMimeType||'audio/mp4'});
             var dlArea=document.getElementById('download-area');
             function setP(pct,msg){
-                dlArea.innerHTML='<div class="text-center py-4"><div class="w-full bg-gray-100 rounded-full h-3 mb-2 overflow-hidden"><div class="bg-indigo-500 h-3 rounded-full transition-all duration-300" style="width:'+pct+'%"></div></div><p class="text-xs text-gray-400">'+msg+'</p></div>';
+                dlArea.innerHTML='<div class="text-center py-4"><div class="w-full bg-gray-100 rounded-full h-3 mb-2 overflow-hidden"><div class="bg-indigo-500 h-3 rounded-full transition-all duration-300" style="width:'+pct+'%"></div></div><p class="text-sm text-gray-500">'+msg+'</p></div>';
             }
-            function showResult(url){
-                globalRecordedBlob=new Blob(recordedChunks,{type:'audio/mp4'});
-                dlArea.innerHTML='<div class="w-12 h-12 bg-gradient-to-br from-emerald-100 to-teal-100 text-emerald-500 rounded-full flex items-center justify-center mx-auto mb-3 text-xl shadow-inner"><i class="fa-solid fa-check"></i></div>'
-                    +'<h4 class="font-black text-gray-800 mb-3 text-base">Video Ready!</h4>'
-                    +'<video playsinline webkit-playsinline controls class="w-full mb-4 rounded-xl border border-gray-200 bg-black shadow-sm" src="'+url+'"></video>'
-                    +'<div class="flex flex-col gap-2">'
-                    +'<button onclick="shareVideoBlob()" class="flex items-center justify-center gap-2 w-full bg-[#25D366] text-white px-4 py-2.5 rounded-xl font-bold text-sm"><i class="fa-brands fa-whatsapp"></i> Share</button>'
-                    +'<a href="'+url+'" download="SpeakUp_Presentation.mp4" class="flex items-center justify-center gap-2 w-full bg-gradient-to-r from-gray-800 to-gray-900 text-white px-4 py-2.5 rounded-xl font-bold text-sm"><i class="fa-solid fa-download"></i> Save to Device</a>'
-                    +'</div>';
-            }
-            try{
-                // Check WebCodecs support
-                if(typeof VideoEncoder==='undefined'||typeof AudioEncoder==='undefined'||typeof window.Mp4Muxer==='undefined'){
-                    throw new Error('WebCodecs or Mp4Muxer not available, using fallback');
-                }
-                setP(5,'Preparing audio…');
-                var audioCtx=new (window.AudioContext||window.webkitAudioContext)();
-                await audioCtx.resume();
+            try {
+                setP(5,'Decoding audio…');
+                var audioCtx=new AudioContext();
                 var arrayBuf=await audioBlob.arrayBuffer();
-                var audioBuffer=await audioCtx.decodeAudioData(arrayBuf);
-                var sampleRate=audioBuffer.sampleRate;
-                var numCh=audioBuffer.numberOfChannels;
+                var audioBuffer;
+                try { audioBuffer=await audioCtx.decodeAudioData(arrayBuf.slice(0)); }
+                catch(e1){
+                    var fbs=['audio/mp4','audio/webm','audio/ogg'];
+                    for(var fi=0;fi<fbs.length;fi++){
+                        try{ var fb=new Blob(recordedChunks,{type:fbs[fi]}); audioBuffer=await audioCtx.decodeAudioData((await fb.arrayBuffer()).slice(0)); break; }catch(e2){}
+                    }
+                }
+                if(!audioBuffer) throw new Error('Could not decode recorded audio.');
+                setP(10,'Audio decoded: '+audioBuffer.duration.toFixed(1)+'s');
 
-                setP(10,'Setting up encoder…');
+                var ua=navigator.userAgent;
+                var isIOS=/iphone|ipad|ipod/i.test(ua);
+                var isAndroid=/android/i.test(ua);
+                var isChrome=/Chrome\//.test(ua)&&!/Edg\//.test(ua);
+                var isSamsungBrowser=/SamsungBrowser/i.test(ua);
+                var isFirefox=/Firefox\//i.test(ua);
+
+                // Android: only Chrome supports WebCodecs reliably
+                if(isAndroid && (isSamsungBrowser || isFirefox || (!isChrome))){
+                    throw new Error('ANDROID_NEEDS_CHROME');
+                }
+                if(isIOS){ await synthesizeIOS(audioBuffer,totalMs,setP); return; }
+
+                // ── DESKTOP: WebCodecs path ──────────────────────────────
+                var sampleRate=audioBuffer.sampleRate, numCh=audioBuffer.numberOfChannels;
                 var muxer=new window.Mp4Muxer.Muxer({
                     target:new window.Mp4Muxer.ArrayBufferTarget(),
-                    video:{codec:'avc',width:1280,height:720},
-                    audio:{codec:'aac',numberOfChannels:numCh,sampleRate:sampleRate},
-                    fastStart:'in-memory',
-                    firstTimestampBehavior:'offset'
+                    video:{codec:'avc',width:720,height:1280},
+                    audio:{codec:'aac',numberOfChannels:1,sampleRate:sampleRate},
+                    fastStart:'in-memory',firstTimestampBehavior:'offset'
                 });
-
-                // VIDEO: Portrait 720x1280 for phone screen, direct canvas draw + I420
-                // Draw slide directly to a temp canvas each frame - no hidden canvas issues
-                var numFrames=Math.ceil(totalMs/1000)+1;
-                var VW=1280,VH=720;
-                var videoEncoder=new VideoEncoder({
-                    output:function(chunk,meta){muxer.addVideoChunk(chunk,meta);},
-                    error:function(e){throw new Error('VideoEncoder: '+e.message);}
-                });
-                
-                // --- 修改處：使用 WhatsApp 支援度最高的 H.264 Baseline Profile ---
-                videoEncoder.configure({
-                    codec: 'avc1.42E01E', 
-                    width: VW,
-                    height: VH,
-                    bitrate: 2000000,
-                    framerate: 1,
-                    avc: { format: 'avc' }
-                });
-                // -----------------------------------------------------------
-
+                var numFrames=Math.ceil(totalMs/1000)+1, VW=720, VH=1280;
+                // Detect supported H.264 codec (iOS needs specific profile strings)
+                var h264codecs=['avc1.42E01E','avc1.4D401E','avc1.42001f','avc1.640028'];
+                var supportedCodec='avc1.42001f';
+                for(var ci=0;ci<h264codecs.length;ci++){
+                    try{var cs=await VideoEncoder.isConfigSupported({codec:h264codecs[ci],width:VW,height:VH,bitrate:2000000,framerate:1});if(cs.supported){supportedCodec=h264codecs[ci];break;}}catch(e){}
+                }
+                var videoEncoder=new VideoEncoder({output:function(c,m){muxer.addVideoChunk(c,m);},error:function(e){throw new Error('VideoEncoder: '+e.message);}});
+                videoEncoder.configure({codec:supportedCodec,width:VW,height:VH,bitrate:2000000,framerate:1});
                 if(!slideCanvases||!slideCanvases[0]) preRenderSlides();
-
+                var fc=document.createElement('canvas'); fc.width=VW; fc.height=VH;
+                var fctx=fc.getContext('2d',{alpha:false});
                 for(var f=0;f<numFrames;f++){
-                    var timeMs=f*1000;
-                    var tUs=timeMs*1000;
-                    var curSlide=slideTimestamps[0]?slideTimestamps[0].slide:0;
-                    for(var i=slideTimestamps.length-1;i>=0;i--){
-                        if(timeMs>=slideTimestamps[i].time){curSlide=slideTimestamps[i].slide;break;}
-                    }
-                    // Create a fresh 720x1280 canvas for each frame
-                    var fc=document.createElement('canvas'); fc.width=VW; fc.height=VH;
-                    var fctx=fc.getContext('2d');
+                    var timeMs=f*1000,tUs=timeMs*1000,curSlide=0;
+                    for(var i=slideTimestamps.length-1;i>=0;i--){if(timeMs>=slideTimestamps[i].time){curSlide=slideTimestamps[i].slide;break;}}
                     // Gradient background
-                    // Landscape: slide fills full 1280x720, tiny header overlay
-                    fctx.fillStyle='#fff'; fctx.fillRect(0,0,VW,VH);
-                    if(slideCanvases[curSlide]) fctx.drawImage(slideCanvases[curSlide],0,0,VW,VH);
-                    // Slim header bar overlay at top
-                    fctx.fillStyle='rgba(79,70,229,0.92)'; fctx.fillRect(0,0,VW,44);
-                    fctx.fillStyle='#fff'; fctx.font='bold 22px Arial,sans-serif'; fctx.textAlign='center';
-                    fctx.fillText('SpeakUp! Vocational English  |  Slide '+(curSlide+1)+'/3',VW/2,30);
-                    // Get raw pixels and convert RGBA→I420 for VideoFrame
-                    var px=fctx.getImageData(0,0,VW,VH).data;
-                    var ySize=VW*VH, i420=new Uint8Array(ySize+(ySize>>1));
-                    for(var row=0;row<VH;row++){for(var col=0;col<VW;col++){
-                        var s=(row*VW+col)*4, R=px[s],G=px[s+1],B=px[s+2];
-                        i420[row*VW+col]=((66*R+129*G+25*B+128)>>8)+16;
-                        if((row&1)===0&&(col&1)===0){
-                            var ui=ySize+((row>>1)*(VW>>1))+(col>>1);
-                            i420[ui]=((-38*R-74*G+112*B+128)>>8)+128;
-                            i420[ui+(ySize>>2)]=((112*R-94*G-18*B+128)>>8)+128;
-                        }
-                    }}
-                    var vf=new VideoFrame(i420,{format:'I420',codedWidth:VW,codedHeight:VH,timestamp:tUs,duration:1000000,
-                        layout:[{offset:0,stride:VW},{offset:ySize,stride:VW>>1},{offset:ySize+(ySize>>2),stride:VW>>1}]});
-                    videoEncoder.encode(vf,{keyFrame:f%30===0});
-                    vf.close();
-                    if(f%5===0){setP(10+Math.round(f/numFrames*40),'Encoding slides… '+f+'/'+numFrames);await new Promise(function(r){setTimeout(r,0);});}
+                    var gbg=fctx.createLinearGradient(0,0,0,VH);
+                    gbg.addColorStop(0,'#eef2ff'); gbg.addColorStop(1,'#f0fdf4');
+                    fctx.fillStyle=gbg; fctx.fillRect(0,0,VW,VH);
+                    // Header
+                    fctx.fillStyle='#4f46e5'; fctx.fillRect(0,0,VW,64);
+                    fctx.fillStyle='#fff'; fctx.font='bold 24px Arial,sans-serif'; fctx.textAlign='center';
+                    fctx.fillText('SpeakUp! Vocational English',VW/2,42);
+                    // Slide drawn at proper 16:9 ratio (720×405), centred vertically
+                    var slideH=Math.round(VW*9/16); // 405px
+                    var slideY=Math.round((VH-slideH)/2); // centred
+                    fctx.fillStyle='#fff'; fctx.fillRect(0,slideY,VW,slideH);
+                    if(slideCanvases[curSlide]) fctx.drawImage(slideCanvases[curSlide],0,slideY,VW,slideH);
+                    // Slide label
+                    fctx.fillStyle='rgba(79,70,229,0.9)'; fctx.fillRect(0,slideY+slideH,VW,44);
+                    fctx.fillStyle='#fff'; fctx.font='bold 20px Arial,sans-serif'; fctx.textAlign='center';
+                    fctx.fillText('Slide '+(curSlide+1)+' / 3',VW/2,slideY+slideH+28);
+                    var vf=new VideoFrame(fc,{timestamp:tUs,duration:1000000});
+                    videoEncoder.encode(vf,{keyFrame:f%30===0}); vf.close();
+                    if(f%5===0){setP(10+Math.round(f/numFrames*45),'Encoding video… '+f+'/'+numFrames);await new Promise(function(r){setTimeout(r,0);});}
                 }
                 await videoEncoder.flush(); videoEncoder.close();
                 setP(55,'Encoding audio…');
-
-                // AUDIO
-                var audioEncoder=new AudioEncoder({
-                    output:function(chunk,meta){muxer.addAudioChunk(chunk,meta);},
-                    error:function(e){throw new Error('AudioEncoder: '+e.message);}
-                });
-                audioEncoder.configure({codec:'mp4a.40.2',sampleRate:sampleRate,numberOfChannels:numCh,bitrate:128000});
-                var CHUNK=4096, total=audioBuffer.length;
-                for(var offset=0;offset<total;offset+=CHUNK){
-                    var len=Math.min(CHUNK,total-offset);
-                    var tsUs=Math.round((offset/sampleRate)*1000000);
-                    var planar=new Float32Array(len*numCh);
-                    for(var ch=0;ch<numCh;ch++){
-                        planar.set(audioBuffer.getChannelData(ch).subarray(offset,offset+len),ch*len);
-                    }
-                    var ad=new AudioData({format:'f32-planar',sampleRate:sampleRate,numberOfFrames:len,numberOfChannels:numCh,timestamp:tsUs,data:planar});
+                var monoData=new Float32Array(audioBuffer.length);
+                for(var ch=0;ch<numCh;ch++){var src=audioBuffer.getChannelData(ch);for(var si=0;si<audioBuffer.length;si++) monoData[si]+=src[si]/numCh;}
+                var audioChunksOut=[];
+                var audioEncoder=new AudioEncoder({output:function(c,m){audioChunksOut.push({chunk:c,meta:m});},error:function(e){console.error('AEnc:',e);}});
+                audioEncoder.configure({codec:'mp4a.40.2',sampleRate:sampleRate,numberOfChannels:1,bitrate:96000});
+                var CHUNK=4096;
+                for(var offset=0;offset<monoData.length;offset+=CHUNK){
+                    var len=Math.min(CHUNK,monoData.length-offset),tsUs=Math.round((offset/sampleRate)*1000000);
+                    var ad=new AudioData({format:'f32-planar',sampleRate:sampleRate,numberOfFrames:len,numberOfChannels:1,timestamp:tsUs,data:monoData.subarray(offset,offset+len)});
                     audioEncoder.encode(ad); ad.close();
-                    if(offset%(CHUNK*10)===0){setP(55+Math.round(offset/total*35),'Encoding audio…');await new Promise(function(r){setTimeout(r,0);});}
                 }
-                await audioEncoder.flush(); audioEncoder.close();
+                await audioEncoder.flush(); await new Promise(function(r){setTimeout(r,500);}); audioEncoder.close();
+                for(var ai=0;ai<audioChunksOut.length;ai++) muxer.addAudioChunk(audioChunksOut[ai].chunk,audioChunksOut[ai].meta);
                 await audioCtx.close();
-
-                setP(95,'Finalising…');
-                muxer.finalize();
+                setP(95,'Finalising…'); muxer.finalize();
                 var blob=new Blob([muxer.target.buffer],{type:'video/mp4'});
-                currentExt='mp4';
-                globalRecordedBlob=blob;
+                currentExt='mp4'; globalRecordedBlob=blob;
                 showResult(URL.createObjectURL(blob));
-
-            }catch(err){
-                console.error('Synthesis error:',err);
-                dlArea.innerHTML='<p class="text-red-500 text-sm font-bold p-4 text-center">Error: '+err.message+'</p>';
+            } catch(err){
+                var errDetail='Error: '+err.message;
+                if(err.stack) errDetail+='<br><small class="opacity-60">'+err.stack.split('\n')[0]+'</small>';
+                if(err.message==='VIDEO_NEEDS_SAFARI'){
+                    var d=document.createElement('div');
+                    d.className='bg-amber-50 border-2 border-amber-300 rounded-2xl p-5 text-center';
+                    d.innerHTML='<div style="font-size:2rem">🦁</div><h3 style="font-weight:900;color:#92400e;font-size:1.1rem;margin:8px 0">Open in Safari</h3><p style="color:#b45309;font-size:.85rem;margin-bottom:12px">Video encoding only works in Safari on iPhone.</p><p style="color:#78350f;font-size:.75rem">Tap Share ↑ then "Open in Safari"</p>';
+                    var btn=document.createElement('button');
+                    btn.textContent='Open in Safari 🧭';
+                    btn.className='bg-amber-500 text-white px-5 py-2 rounded-full font-bold text-sm';
+                    btn.style.margin='8px 0';
+                    btn.onclick=openInSafari;
+                    d.insertBefore(btn, d.lastChild);
+                    dlArea.innerHTML=''; dlArea.appendChild(d);
+                } else if(err.message==='ANDROID_NEEDS_CHROME'){
+                    var d2=document.createElement('div');
+                    d2.className='bg-green-50 border-2 border-green-300 rounded-2xl p-5 text-center';
+                    d2.innerHTML='<div style="font-size:2rem">🤖</div>'
+                        +'<h3 style="font-weight:900;color:#14532d;font-size:1.1rem;margin:8px 0">Please Use Chrome</h3>'
+                        +'<p style="color:#166534;font-size:.85rem;margin-bottom:8px">Video encoding on Android requires <strong>Google Chrome</strong>.</p>'
+                        +'<p style="color:#15803d;font-size:.75rem">Samsung Internet, Firefox, and other Android browsers are not supported.</p>'
+                        +'<a href="https://play.google.com/store/apps/details?id=com.android.chrome" target="_blank" style="display:inline-block;background:#16a34a;color:white;padding:8px 20px;border-radius:999px;font-weight:bold;font-size:.85rem;margin-top:10px;text-decoration:none">Get Chrome 🟢</a>';
+                    dlArea.innerHTML=''; dlArea.appendChild(d2);
+                } else {
+                    dlArea.innerHTML='<div style="color:red;text-align:center;padding:16px;font-size:.9rem">Error: '+err.message+'<br><button onclick="synthesizeVideo()" style="background:red;color:white;padding:6px 16px;border-radius:999px;font-weight:bold;margin-top:8px">Retry</button></div>';
+                    console.error('synthesizeVideo error:',err);
+                }
             }
         }
 
-        function shareVideoBlob(){
-            if(globalRecordedBlob&&navigator.share){
-                var file=new File([globalRecordedBlob],'SpeakUp_Presentation.'+currentExt,{type:globalRecordedBlob.type});
-                navigator.share({title:'My SpeakUp Presentation',files:[file]}).catch(function(){});
-            } else { alert('Please use Save to Device button.'); }
+        // M4A → raw AAC extractor (bypasses AudioEncoder completely)
+        function extractAACFromM4A(buf){
+            var dv=new DataView(buf);
+            var u32=function(o){return dv.getUint32(o);};
+            var u16=function(o){return dv.getUint16(o);};
+            var u8=function(o){return dv.getUint8(o);};
+            var s4=function(o){return String.fromCharCode(u8(o),u8(o+1),u8(o+2),u8(o+3));};
+            var moovOff=-1,mdatOff=-1;
+            var pos=0;
+            while(pos<buf.byteLength-8){var bs=u32(pos),bt=s4(pos+4);if(bt==='moov')moovOff=pos;if(bt==='mdat')mdatOff=pos+8;pos+=Math.max(bs,8);if(bs===0)break;}
+            if(moovOff<0)return null;
+            function findBox(start,end,type){var p=start;while(p<end-8){var s=u32(p),t=s4(p+4);if(t===type)return{o:p,s:s};p+=Math.max(s,8);}return null;}
+            function findAll(start,end,type){var r=[],p=start;while(p<end-8){var s=u32(p),t=s4(p+4);if(t===type)r.push({o:p,s:s});p+=Math.max(s,8);}return r;}
+            var moovEnd=moovOff+u32(moovOff),moovD=moovOff+8;
+            var traks=findAll(moovD,moovEnd,'trak');
+            var sampleRate=44100,numCh=1,esdsData=null;
+            var sttsArr=[],stszArr=[],stcoArr=[],stscArr=[];
+            for(var ti=0;ti<traks.length;ti++){
+                var tk=traks[ti],tkD=tk.o+8,tkE=tk.o+tk.s;
+                var mdia=findBox(tkD,tkE,'mdia');if(!mdia)continue;
+                var mdD=mdia.o+8,mdE=mdia.o+mdia.s;
+                var hdlr=findBox(mdD,mdE,'hdlr');if(!hdlr)continue;
+                if(s4(hdlr.o+16)!=='soun')continue;
+                // audio track found
+                var mdhd=findBox(mdD,mdE,'mdhd');
+                if(mdhd){var v=u8(mdhd.o+8);sampleRate=v===0?u32(mdhd.o+20):u32(mdhd.o+28);}
+                var minf=findBox(mdD,mdE,'minf');if(!minf)continue;
+                var stbl=findBox(minf.o+8,minf.o+minf.s,'stbl');if(!stbl)continue;
+                var sbD=stbl.o+8,sbE=stbl.o+stbl.s;
+                var stts=findBox(sbD,sbE,'stts');
+                if(stts){var p=stts.o+12,cnt=u32(p);p+=4;for(var i=0;i<cnt;i++){sttsArr.push({c:u32(p),d:u32(p+4)});p+=8;}}
+                var stsz=findBox(sbD,sbE,'stsz');
+                if(stsz){var p=stsz.o+12,def=u32(p),sc=u32(p+4);p+=8;for(var i=0;i<sc;i++){stszArr.push(def||u32(p));if(!def)p+=4;}}
+                var stco=findBox(sbD,sbE,'stco');
+                if(stco){var p=stco.o+12,ec=u32(p);p+=4;for(var i=0;i<ec;i++){stcoArr.push(u32(p));p+=4;}}
+                var stsc=findBox(sbD,sbE,'stsc');
+                if(stsc){var p=stsc.o+12,ec=u32(p);p+=4;for(var i=0;i<ec;i++){stscArr.push({fc:u32(p),spc:u32(p+4)});p+=12;}}
+                var stsd=findBox(sbD,sbE,'stsd');
+                if(stsd){var mp4a=findBox(stsd.o+16,stsd.o+stsd.s,'mp4a');
+                    if(mp4a){numCh=u16(mp4a.o+24);var esds=findBox(mp4a.o+36,mp4a.o+mp4a.s,'esds');
+                        if(esds){for(var ep=esds.o+12;ep<esds.o+esds.s-2;ep++){if(u8(ep)===0x05){var dl=u8(ep+1);esdsData=buf.slice(ep+2,ep+2+dl);break;}}}}}
+                break;
+            }
+            if(!stszArr.length||!stcoArr.length)return null;
+            var timings=[];
+            for(var i=0;i<sttsArr.length;i++)for(var j=0;j<sttsArr[i].c;j++)timings.push(sttsArr[i].d);
+            var samples=[],si=0,ts=0;
+            for(var ci=0;ci<stcoArr.length;ci++){
+                var spc=stscArr[0]?stscArr[0].spc:1;
+                for(var si2=stscArr.length-1;si2>=0;si2--){if(ci+1>=stscArr[si2].fc){spc=stscArr[si2].spc;break;}}
+                var coff=stcoArr[ci],inOff=0;
+                for(var s=0;s<spc&&si<stszArr.length;s++){
+                    var sz=stszArr[si],delta=timings[si]||1024;
+                    samples.push({data:buf.slice(coff+inOff,coff+inOff+sz),ts:Math.round(ts/sampleRate*1e6),dur:Math.round(delta/sampleRate*1e6)});
+                    inOff+=sz;ts+=delta;si++;
+                }
+            }
+            return{samples:samples,sampleRate:sampleRate,numChannels:numCh,esdsData:esdsData};
         }
 
+        async function synthesizeIOS(audioBuffer,totalMs,setP){
+            // Test if VideoEncoder actually works (fails in Chrome iOS / in-app browsers)
+            try{
+                var te=new VideoEncoder({output:function(){},error:function(){}});
+                var tc=await VideoEncoder.isConfigSupported({codec:'avc1.42001f',width:320,height:240,bitrate:500000,framerate:1});
+                if(!tc.supported){throw new Error('x');}
+                te.configure({codec:'avc1.42001f',width:320,height:240,bitrate:500000,framerate:1});
+                te.close();
+            }catch(e2){ throw new Error('VIDEO_NEEDS_SAFARI'); }
+            // iOS: extract raw AAC from recorded M4A
+            setP(15,'Extracting audio from recording…');
+            var audioBlobRaw=new Blob(recordedChunks,{type:recordedMimeType||'audio/mp4'});
+            var m4aBuf=await audioBlobRaw.arrayBuffer();
+            var audioInfo=extractAACFromM4A(m4aBuf);
+            var sampleRate=audioInfo?audioInfo.sampleRate:44100;
+            var numCh=audioInfo?audioInfo.numChannels:1;
+            var VW=720,VH=1280;
+            if(!slideCanvases||!slideCanvases[0]) preRenderSlides();
+            setP(20,'Setting up encoder…');
+            var muxer=new window.Mp4Muxer.Muxer({
+                target:new window.Mp4Muxer.ArrayBufferTarget(),
+                video:{codec:'avc',width:VW,height:VH},
+                audio:{codec:'aac',numberOfChannels:numCh,sampleRate:sampleRate},
+                fastStart:'in-memory',firstTimestampBehavior:'offset'
+            });
+            var numFrames=Math.ceil(totalMs/1000)+1;
+            var h264list=['avc1.42E01E','avc1.4D401E','avc1.42001f'];
+            var iosCodec='avc1.42001f';
+            for(var ci=0;ci<h264list.length;ci++){try{var cs=await VideoEncoder.isConfigSupported({codec:h264list[ci],width:VW,height:VH,bitrate:2000000,framerate:1});if(cs.supported){iosCodec=h264list[ci];break;}}catch(e){}}
+            var videoEncoder=new VideoEncoder({output:function(c,m){muxer.addVideoChunk(c,m);},error:function(e){throw new Error('VideoEncoder: '+e.message);}});
+            videoEncoder.configure({codec:iosCodec,width:VW,height:VH,bitrate:2000000,framerate:1});
+            var fc=document.createElement('canvas'); fc.width=VW; fc.height=VH;
+            fc.style.cssText='position:fixed;left:-9999px;top:0;width:1px;height:1px;'; // iOS: must be in DOM
+            document.body.appendChild(fc);
+            var fctx=fc.getContext('2d',{alpha:false});
+            for(var f=0;f<numFrames;f++){
+                var timeMs=f*1000,tUs=timeMs*1000,curSlide=0;
+                for(var i=slideTimestamps.length-1;i>=0;i--){if(timeMs>=slideTimestamps[i].time){curSlide=slideTimestamps[i].slide;break;}}
+                fctx.fillStyle='#ffffff'; fctx.fillRect(0,0,VW,VH);
+                if(slideCanvases[curSlide]) fctx.drawImage(slideCanvases[curSlide],0,0,VW,VH);
+                fctx.fillStyle='rgba(79,70,229,0.92)'; fctx.fillRect(0,0,VW,60);
+                fctx.fillStyle='#fff'; fctx.font='bold 22px Arial,sans-serif'; fctx.textAlign='center';
+                fctx.fillText('SpeakUp! Vocational English',VW/2,40);
+                fctx.fillStyle='#c7d2fe'; fctx.fillRect(0,VH-40,VW,40);
+                fctx.fillStyle='#3730a3'; fctx.font='bold 18px Arial,sans-serif';
+                fctx.fillText('Slide '+(curSlide+1)+' / 3',VW/2,VH-15);
+                    var vf=new VideoFrame(fc,{timestamp:tUs,duration:1000000});
+                videoEncoder.encode(vf,{keyFrame:f%30===0}); vf.close();
+                if(f%5===0){setP(20+Math.round(f/numFrames*55),'Encoding video… '+f+'/'+numFrames);await new Promise(function(r){setTimeout(r,0);});}
+            }
+            await videoEncoder.flush(); videoEncoder.close();
+            document.body.removeChild(fc); // remove encoding canvas
+            // Inject raw AAC frames directly - NO AudioEncoder needed
+            setP(78,'Adding audio… ('+(audioInfo?audioInfo.samples.length:0)+' frames)');
+            if(audioInfo&&audioInfo.samples.length>0){
+                var meta={decoderConfig:{codec:'mp4a.40.2',sampleRate:sampleRate,numberOfChannels:numCh}};
+                if(audioInfo.esdsData) meta.decoderConfig.description=new Uint8Array(audioInfo.esdsData);
+                for(var ai=0;ai<audioInfo.samples.length;ai++){
+                    var smp=audioInfo.samples[ai];
+                    var ac=new EncodedAudioChunk({type:'key',timestamp:smp.ts,duration:smp.dur,data:new Uint8Array(smp.data)});
+                    muxer.addAudioChunk(ac,ai===0?meta:undefined);
+                }
+            }
+            setP(95,'Finalising…'); muxer.finalize();
+            var blob=new Blob([muxer.target.buffer],{type:'video/mp4'});
+            currentExt='mp4'; globalRecordedBlob=blob;
+            showResult(URL.createObjectURL(blob));
+        }
         async function shareVideo() {
             if (!globalRecordedBlob) return;
             const file = new File([globalRecordedBlob], `SpeakUp_Presentation.${currentExt}`, { type: globalRecordedBlob.type });
