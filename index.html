@@ -92,7 +92,15 @@
         details > summary { list-style: none; }
         details > summary::-webkit-details-marker { display: none; }
 
-        #recording-canvas { position: fixed; top: -9999px; left: -9999px; pointer-events: none; opacity: 0; }
+        /* FIX: Prevent browser from throttling the canvas by keeping it in viewport but practically invisible */
+        #recording-canvas { 
+            position: fixed; 
+            top: 0; 
+            left: 0; 
+            pointer-events: none; 
+            opacity: 0.01; 
+            z-index: -9999;
+        }
     </style>
 </head>
 <body class="bg-[#f8fafc] min-h-screen text-gray-800 selection:bg-indigo-200 selection:text-indigo-900">
@@ -219,7 +227,7 @@
                     <div class="absolute top-0 right-0 bg-blue-100 text-blue-600 text-[10px] md:text-xs font-bold px-3 py-1 rounded-bl-xl">Pronunciation</div>
                     <div class="text-5xl md:text-6xl mb-4 drop-shadow-md group-hover:scale-110 transition-transform mt-2">🗓️</div>
                     <h3 class="text-xl md:text-2xl font-bold text-gray-800 mb-2 group-hover:text-blue-600">Dates & Months Echo</h3>
-                    <p class="text-gray-500 text-xs md:text-sm flex-grow">Listen to the correct pronunciation and mimic it using your microphone! </p>
+                    <p class="text-gray-500 text-xs md:text-sm flex-grow">Listen to the correct pronunciation and mimic it using your microphone! (Strict Grading)</p>
                     <div class="mt-4 text-blue-500 font-bold text-sm opacity-0 group-hover:opacity-100 transition-opacity">Play Now <i class="fa-solid fa-arrow-right ml-1"></i></div>
                 </div>
 
@@ -264,9 +272,9 @@
                         <div class="text-sm text-amber-700 space-y-2.5">
                             <p><strong class="text-amber-900">💻 Computer (Recommended):</strong> Use Google Chrome or Microsoft Edge.</p>
                             <p><strong class="text-amber-900">📱 Mobile:</strong> Use Safari for iPhone, and Google Chrome for Android.</p>
-                            <p class="text-xs italic opacity-90">⚠️ Note: Built-in browsers on some phone brands may not support the voice feature.</p>
+                            <p class="text-xs italic opacity-90">⚠️ Note: Built-in browsers on some mainland Chinese phone brands may not support the voice feature.</p>
                             <hr class="border-amber-200 my-3">
-                            <p class="text-xs leading-relaxed">為了獲得最佳體驗，強烈建議使用電腦 (Chrome/Edge)。手機用戶請使用 Safari (iPhone) 或 Chrome (Android)。部分品牌手機的內置瀏覽器可能無法支援語音功能。</p>
+                            <p class="text-xs leading-relaxed">為了獲得最佳體驗，強烈建議使用電腦 (Chrome/Edge)。手機用戶請使用 Safari (iPhone) 或 Chrome (Android)。部分內地品牌手機的內置瀏覽器可能無法支援語音功能。</p>
                         </div>
                     </div>
 
@@ -347,7 +355,7 @@
                 <!-- Full Word Bank Section (Collapsible) -->
                 <details class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden group mb-8">
                     <summary class="font-bold text-sm md:text-base p-4 cursor-pointer bg-gray-50 group-open:bg-gray-100 transition-colors flex justify-between items-center select-none">
-                        <span class="flex items-center gap-2 text-gray-700"><i class="fa-solid fa-book text-gray-500"></i> Full Word Bank </span>
+                        <span class="flex items-center gap-2 text-gray-700"><i class="fa-solid fa-book text-gray-500"></i> Full Word Bank (Dictionary)</span>
                         <i class="fa-solid fa-chevron-down text-gray-400 group-open:rotate-180 transition-transform"></i>
                     </summary>
                     <div class="p-3 md:p-4 border-t border-gray-100 space-y-3 bg-gray-50/50" id="vocab-review-container">
@@ -917,7 +925,7 @@
 
         // --- 2. Advanced Vocab Game (Workplace Context & UK Spelling) ---
         const advancedVocabBank = [
-            { word: "ad hoc", pos: "adjective", meaning: "臨時安排的", hint: "Unit 5", example: "The manager formed an ad hoc committee to handle the sudden supply chain crisis." },
+            { word: "ad hoc", pos: "adjective", meaning: "特派的", hint: "Unit 5", example: "The manager formed an ad hoc committee to handle the sudden supply chain crisis." },
             { word: "adequate", pos: "adjective", meaning: "足夠的", hint: "Unit 8", example: "Ensure we have adequate funding before launching the new marketing campaign." },
             { word: "adverse", pos: "adjective", meaning: "不利的", hint: "Unit 2", example: "The adverse economic conditions have negatively impacted our quarterly sales." },
             { word: "attractive", pos: "adjective", meaning: "有吸引力的", hint: "Unit 5", example: "The company provides an attractive remuneration package to retain top talent." },
@@ -979,7 +987,7 @@
             { word: "simultaneously", pos: "adverb", meaning: "同時地", hint: "Unit 3", example: "The project manager is handling three major client accounts simultaneously." },
             { word: "slightly", pos: "adverb", meaning: "輕微地", hint: "Unit 12", example: "The launch date of the new product has been slightly delayed due to quality control checks." },
             { word: "steadily", pos: "adverb", meaning: "平穩地", hint: "Unit 12", example: "Our market share in the Asian region has been growing steadily over the past three years." },
-            { word: "tightly", pos: "adverb", meaning: "緊湊地", hint: "Unit 12", example: "The project schedule is tightly packed, leaving no room for unexpected delays." },
+            { word: "tightly", pos: "adverb", meaning: "緊緊地", hint: "Unit 12", example: "The project schedule is tightly packed, leaving no room for unexpected delays." },
             { word: "appreciation", pos: "noun", meaning: "欣賞", hint: "Unit 2, 3", example: "The management organised a dinner to show their appreciation for the staff's hard work." },
             { word: "availability", pos: "noun", meaning: "可用性", hint: "Unit 4, 5", example: "Please check the availability of the conference room before scheduling the client meeting." },
             { word: "awareness", pos: "noun", meaning: "意識", hint: "Unit 4", example: "The marketing campaign aims to raise brand awareness among young professionals." },
@@ -1058,7 +1066,7 @@
             { word: "satisfaction", pos: "noun", meaning: "滿足", hint: "Unit 10", example: "Ensuring high customer satisfaction is crucial for maintaining our market leadership." },
             { word: "schedule", pos: "noun", meaning: "時間表", hint: "Unit 11", example: "The project manager circulated the updated schedule for the upcoming software deployment." },
             { word: "sensation", pos: "noun", meaning: "感覺", hint: "Unit 9", example: "The worker reported a tingling sensation in his wrist due to repetitive typing tasks." },
-            { word: "specialist", pos: "noun", meaning: "專家", hint: "Unit 11", example: "We need to consult an IT security specialist to protect our corporate network from cyber attacks." },
+            { word: "specialist", pos: "noun", meaning: "專科醫生", hint: "Unit 11", example: "We need to consult an IT security specialist to protect our corporate network from cyber attacks." },
             { word: "stowage", pos: "noun", meaning: "載貨空間", hint: "Unit 2", example: "The warehouse supervisor reorganised the stowage area to accommodate the new inventory." },
             { word: "strain", pos: "noun", meaning: "勞損", hint: "Unit 9", example: "The sudden influx of customer orders put a massive strain on our delivery department." },
             { word: "stuff", pos: "noun", meaning: "物品", hint: "Unit 5", example: "Please clear your personal stuff from the hot-desking area at the end of your shift." },
