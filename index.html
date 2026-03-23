@@ -92,17 +92,17 @@
         details > summary { list-style: none; }
         details > summary::-webkit-details-marker { display: none; }
 
-        /* FIX: Prevent browser from throttling the canvas by keeping it in viewport but practically invisible */
-        /* iOS Safari will stop rendering if opacity is too low. We use clip-path instead to hide it visually. */
+        /* FIX: Ultimate iOS Safari Canvas Fix */
+        /* Use transform scale instead of opacity to keep it fully rendered but invisible */
         #recording-canvas { 
             position: fixed; 
             top: 0; 
             left: 0; 
             pointer-events: none; 
-            opacity: 1; /* Changed from 0.01 */
             z-index: -9999;
-            clip-path: inset(100%); /* Hides the element visually without stopping rendering */
-            -webkit-clip-path: inset(100%);
+            opacity: 1; 
+            transform: scale(0.001);
+            transform-origin: top left;
         }
     </style>
 </head>
@@ -646,7 +646,7 @@
                     <ul class="space-y-2 md:space-y-3 text-blue-800/80 font-bold text-xs md:text-sm ml-1">
                         <li class="flex items-center gap-2 md:gap-3"><i class="fa-solid fa-circle-dot text-red-500 w-4 text-center"></i> <span><span class="text-blue-900">Click 'Start Recording'</span> to start</span></li>
                         <li class="flex items-center gap-2 md:gap-3"><i class="fa-solid fa-microphone text-blue-500 w-4 text-center"></i> <span><span class="text-blue-900">Allow microphone</span> access</span></li>
-                        <li class="flex items-center gap-2 md:gap-3"><i class="fa-solid fa-arrow-right text-blue-500 w-4 text-center"></i> <span><span class="text-blue-900">Click 'Next'</span> to switch slides</span></li>
+                        <li class="flex items-center gap-2 md:gap-3"><i class="fa-solid fa-mobile-screen text-blue-500 w-4 text-center"></i> <span><span class="text-blue-900">Keep screen ON</span> and stay on this page</span></li>
                         <li class="flex items-center gap-2 md:gap-3"><i class="fa-solid fa-download text-blue-500 w-4 text-center"></i> <span><span class="text-blue-900">Download or share</span> your video!</span></li>
                     </ul>
                 </div>
@@ -1965,13 +1965,14 @@
         let recordedChunks = [];
         let isRecording = false;
         let timerInterval;
-        let isCanvasDrawing = false; // ADDED: For requestAnimationFrame loop
+        let isCanvasDrawing = false; // 用於控制 requestAnimationFrame 迴圈
         let seconds = 0;
         let audioStream;
         let globalRecordedBlob = null;
         let currentExt = 'mp4';
+        let globalCanvasStream = null; // 全域變數，方便強制抽幀
 
-        // ADDED: requestAnimationFrame loop to replace setInterval for iOS Safari compatibility
+        // 使用 requestAnimationFrame 取代 setInterval，避免 iOS Safari 降速
         function canvasDrawLoop() {
             if (!isCanvasDrawing) return;
             
@@ -1979,12 +1980,20 @@
             const canvas = document.getElementById('recording-canvas');
             const ctx = canvas.getContext('2d');
             
-            // Draw a blinking red dot to force continuous visual updates
+            // 畫一粒閃爍嘅紅點，確保每一格畫面都有「實質變化」，逼 Safari 錄影
             if (Math.floor(Date.now() / 500) % 2 === 0) {
                 ctx.fillStyle = 'red';
                 ctx.beginPath();
                 ctx.arc(1250, 30, 10, 0, Math.PI * 2);
                 ctx.fill();
+            }
+
+            // iOS Safari 終極絕招：強制要求 Video Track 抽取當前畫面
+            if (globalCanvasStream) {
+                const videoTrack = globalCanvasStream.getVideoTracks()[0];
+                if (videoTrack && typeof videoTrack.requestFrame === 'function') {
+                    videoTrack.requestFrame();
+                }
             }
             
             requestAnimationFrame(canvasDrawLoop);
@@ -2000,10 +2009,13 @@
                 try {
                     audioStream = await navigator.mediaDevices.getUserMedia({ audio: true });
                     const canvas = document.getElementById('recording-canvas');
-                    const canvasStream = canvas.captureStream(30); 
+                    
+                    // 錄影前強制畫一次，確保 Canvas 唔係空白
+                    drawSlideToCanvas(currentSlide);
+                    globalCanvasStream = canvas.captureStream(30); 
                     
                     const combinedStream = new MediaStream([
-                        ...canvasStream.getVideoTracks(),
+                        ...globalCanvasStream.getVideoTracks(),
                         ...audioStream.getAudioTracks()
                     ]);
                     
@@ -2034,7 +2046,7 @@
                         document.getElementById('download-area').classList.remove('hidden');
                         
                         audioStream.getTracks().forEach(track => track.stop());
-                        canvasStream.getTracks().forEach(track => track.stop());
+                        if(globalCanvasStream) globalCanvasStream.getTracks().forEach(track => track.stop());
                     };
 
                     mediaRecorder.start();
@@ -2057,7 +2069,7 @@
                         timerDisplay.innerText = `${mins}:${secs}`;
                     }, 1000);
 
-                    // CHANGED: Use requestAnimationFrame instead of setInterval for iOS Safari
+                    // 啟動繪圖迴圈
                     isCanvasDrawing = true;
                     canvasDrawLoop();
 
@@ -2069,7 +2081,8 @@
                 isRecording = false;
                 
                 clearInterval(timerInterval);
-                isCanvasDrawing = false; // Stop the requestAnimationFrame loop
+                isCanvasDrawing = false; // 停止繪圖迴圈
+                globalCanvasStream = null; // 清除 Stream 參考
                 
                 btn.innerHTML = '<span class="relative z-10 flex items-center gap-2"><i class="fa-solid fa-video"></i> Start Recording</span>';
                 btn.className = "btn-shine bg-gradient-to-r from-rose-500 to-pink-600 text-white px-6 py-3.5 md:px-10 md:py-4 rounded-full font-black text-base md:text-xl hover:from-rose-600 hover:to-pink-700 transition-all active:scale-95 shadow-[0_10px_20px_-10px_rgba(244,63,94,0.6)] mb-2 w-full max-w-sm flex items-center justify-center gap-2 md:gap-3 z-10 border border-rose-400/30";
