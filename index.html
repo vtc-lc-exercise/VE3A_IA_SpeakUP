@@ -2173,7 +2173,14 @@
                     fctx.fillStyle='rgba(79,70,229,0.9)'; fctx.fillRect(0,slideY+slideH,VW,44);
                     fctx.fillStyle='#fff'; fctx.font='bold 20px Arial,sans-serif'; fctx.textAlign='center';
                     fctx.fillText('Slide '+(curSlide+1)+' / 3',VW/2,slideY+slideH+28);
-                    var vf=new VideoFrame(fc,{timestamp:tUs,duration:1000000});
+                    var px=fctx.getImageData(0,0,VW,VH).data;
+                    var yS=VW*VH,i4=new Uint8Array(yS+(yS>>1));
+                    for(var r2=0;r2<VH;r2++){for(var c2=0;c2<VW;c2++){
+                        var s2=(r2*VW+c2)*4,R2=px[s2],G2=px[s2+1],B2=px[s2+2];
+                        i4[r2*VW+c2]=((77*R2+150*G2+29*B2)>>8);
+                        if((r2&1)===0&&(c2&1)===0){var u2=yS+((r2>>1)*(VW>>1))+(c2>>1);i4[u2]=((-43*R2-85*G2+128*B2)>>8)+128;i4[u2+(yS>>2)]=((128*R2-107*G2-21*B2)>>8)+128;}
+                    }}
+                    var vf=new VideoFrame(i4,{format:'I420',codedWidth:VW,codedHeight:VH,timestamp:tUs,duration:1000000,layout:[{offset:0,stride:VW},{offset:yS,stride:VW>>1},{offset:yS+(yS>>2),stride:VW>>1}]});
                     videoEncoder.encode(vf,{keyFrame:f%30===0}); vf.close();
                     if(f%5===0){setP(10+Math.round(f/numFrames*45),'Encoding video… '+f+'/'+numFrames);await new Promise(function(r){setTimeout(r,0);});}
                 }
@@ -2308,37 +2315,49 @@
             setP(20,'Setting up encoder…');
             var muxer=new window.Mp4Muxer.Muxer({
                 target:new window.Mp4Muxer.ArrayBufferTarget(),
-                video:{codec:'avc',width:VW,height:VH},
+                video:{codec:'avc',width:1280,height:720},
                 audio:{codec:'aac',numberOfChannels:numCh,sampleRate:sampleRate},
                 fastStart:'in-memory',firstTimestampBehavior:'offset'
             });
             var numFrames=Math.ceil(totalMs/1000)+1;
-            var h264list=['avc1.42E01E','avc1.4D401E','avc1.42001f'];
+            // iOS: use standard 1280×720 landscape (hardware encoder won't reject)
+            var VW=1280, VH=720;
             var iosCodec='avc1.42001f';
-            for(var ci=0;ci<h264list.length;ci++){try{var cs=await VideoEncoder.isConfigSupported({codec:h264list[ci],width:VW,height:VH,bitrate:2000000,framerate:1});if(cs.supported){iosCodec=h264list[ci];break;}}catch(e){}}
+            try{var cs=await VideoEncoder.isConfigSupported({codec:'avc1.42E01E',width:1280,height:720,bitrate:2000000,framerate:1});if(cs.supported)iosCodec='avc1.42E01E';}catch(e){}
             var videoEncoder=new VideoEncoder({output:function(c,m){muxer.addVideoChunk(c,m);},error:function(e){throw new Error('VideoEncoder: '+e.message);}});
             videoEncoder.configure({codec:iosCodec,width:VW,height:VH,bitrate:2000000,framerate:1});
-            var fc=document.createElement('canvas'); fc.width=VW; fc.height=VH;
-            fc.style.cssText='position:fixed;left:-9999px;top:0;width:1px;height:1px;'; // iOS: must be in DOM
-            document.body.appendChild(fc);
+            // OffscreenCanvas: designed for WebCodecs, no DOM needed, always renders
+            var fc=(typeof OffscreenCanvas!=='undefined')?new OffscreenCanvas(VW,VH):document.createElement('canvas');
+            if(fc.width!==undefined&&!fc.style){fc.width=VW;fc.height=VH;}
             var fctx=fc.getContext('2d',{alpha:false});
             for(var f=0;f<numFrames;f++){
                 var timeMs=f*1000,tUs=timeMs*1000,curSlide=0;
                 for(var i=slideTimestamps.length-1;i>=0;i--){if(timeMs>=slideTimestamps[i].time){curSlide=slideTimestamps[i].slide;break;}}
-                fctx.fillStyle='#ffffff'; fctx.fillRect(0,0,VW,VH);
-                if(slideCanvases[curSlide]) fctx.drawImage(slideCanvases[curSlide],0,0,VW,VH);
-                fctx.fillStyle='rgba(79,70,229,0.92)'; fctx.fillRect(0,0,VW,60);
-                fctx.fillStyle='#fff'; fctx.font='bold 22px Arial,sans-serif'; fctx.textAlign='center';
-                fctx.fillText('SpeakUp! Vocational English',VW/2,40);
-                fctx.fillStyle='#c7d2fe'; fctx.fillRect(0,VH-40,VW,40);
-                fctx.fillStyle='#3730a3'; fctx.font='bold 18px Arial,sans-serif';
-                fctx.fillText('Slide '+(curSlide+1)+' / 3',VW/2,VH-15);
-                    var vf=new VideoFrame(fc,{timestamp:tUs,duration:1000000});
+                var gbg3=fctx.createLinearGradient(0,0,0,VH);
+                gbg3.addColorStop(0,'#eef2ff'); gbg3.addColorStop(1,'#f0fdf4');
+                fctx.fillStyle=gbg3; fctx.fillRect(0,0,VW,VH);
+                fctx.fillStyle='#4f46e5'; fctx.fillRect(0,0,VW,64);
+                fctx.fillStyle='#fff'; fctx.font='bold 24px Arial,sans-serif'; fctx.textAlign='center';
+                fctx.fillText('SpeakUp! Vocational English',VW/2,42);
+                var sH3=Math.round(VW*9/16), sY3=Math.round((VH-sH3)/2);
+                fctx.fillStyle='#fff'; fctx.fillRect(0,sY3,VW,sH3);
+                if(slideCanvases[curSlide]) fctx.drawImage(slideCanvases[curSlide],0,sY3,VW,sH3);
+                fctx.fillStyle='rgba(79,70,229,0.9)'; fctx.fillRect(0,sY3+sH3,VW,44);
+                fctx.fillStyle='#fff'; fctx.font='bold 20px Arial,sans-serif'; fctx.textAlign='center';
+                fctx.fillText('Slide '+(curSlide+1)+' / 3',VW/2,sY3+sH3+28);
+                    var px=fctx.getImageData(0,0,VW,VH).data;
+                    var yS=VW*VH,i4=new Uint8Array(yS+(yS>>1));
+                    for(var r2=0;r2<VH;r2++){for(var c2=0;c2<VW;c2++){
+                        var s2=(r2*VW+c2)*4,R2=px[s2],G2=px[s2+1],B2=px[s2+2];
+                        i4[r2*VW+c2]=((77*R2+150*G2+29*B2)>>8);
+                        if((r2&1)===0&&(c2&1)===0){var u2=yS+((r2>>1)*(VW>>1))+(c2>>1);i4[u2]=((-43*R2-85*G2+128*B2)>>8)+128;i4[u2+(yS>>2)]=((128*R2-107*G2-21*B2)>>8)+128;}
+                    }}
+                    var vf=new VideoFrame(i4,{format:'I420',codedWidth:VW,codedHeight:VH,timestamp:tUs,duration:1000000,layout:[{offset:0,stride:VW},{offset:yS,stride:VW>>1},{offset:yS+(yS>>2),stride:VW>>1}]});
                 videoEncoder.encode(vf,{keyFrame:f%30===0}); vf.close();
                 if(f%5===0){setP(20+Math.round(f/numFrames*55),'Encoding video… '+f+'/'+numFrames);await new Promise(function(r){setTimeout(r,0);});}
             }
             await videoEncoder.flush(); videoEncoder.close();
-            document.body.removeChild(fc); // remove encoding canvas
+            // canvas cleanup (OffscreenCanvas GC'd automatically)
             // Inject raw AAC frames directly - NO AudioEncoder needed
             setP(78,'Adding audio… ('+(audioInfo?audioInfo.samples.length:0)+' frames)');
             if(audioInfo&&audioInfo.samples.length>0){
