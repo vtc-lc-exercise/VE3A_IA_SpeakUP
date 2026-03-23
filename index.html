@@ -2025,6 +2025,7 @@
             currentSlide+=dir;
             if(currentSlide<0) currentSlide=0;
             if(currentSlide>2) currentSlide=2;
+            if(window._drawRecordSlide) window._drawRecordSlide(); // update recording canvas
             if(isRecording) slideTimestamps.push({slide:currentSlide,time:performance.now()-recordingStartTime});
             updateSlideView();
         }
@@ -2045,13 +2046,49 @@
             if(!isRecording){
                 try{
                     audioStream=await navigator.mediaDevices.getUserMedia({audio:true});
-                    var mts=['audio/mp4','audio/aac','audio/webm;codecs=opus','audio/webm'];
-                    var mt=mts.find(function(t){return MediaRecorder.isTypeSupported(t);})||'';
-                    mediaRecorder=mt?new MediaRecorder(audioStream,{mimeType:mt}):new MediaRecorder(audioStream);
-                    recordedMimeType=mediaRecorder.mimeType||mt||'audio/mp4';
-                    recordedChunks=[];
-                    mediaRecorder.ondataavailable=function(e){if(e.data.size>0)recordedChunks.push(e.data);};
-                    mediaRecorder.onstop=synthesizeVideo;
+                    var ua2=navigator.userAgent;
+                    var isIOS2=/iphone|ipad|ipod/i.test(ua2);
+                    // iOS: capture slides + audio simultaneously (no WebCodecs needed)
+                    if(isIOS2){
+                        var rc=document.createElement('canvas');
+                        rc.width=1280; rc.height=720;
+                        rc.style.cssText='position:fixed;left:0;bottom:0;width:160px;height:90px;z-index:999;border-radius:8px;border:2px solid #6366f1;box-shadow:0 4px 12px rgba(0,0,0,0.3);pointer-events:none;';
+                        document.body.appendChild(rc);
+                        var rctx=rc.getContext('2d');
+                        if(!slideCanvases||!slideCanvases[0]) preRenderSlides();
+                        function drawRecordSlide(){
+                            if(!rctx) return;
+                            rctx.fillStyle='#eef2ff'; rctx.fillRect(0,0,1280,720);
+                            if(slideCanvases[currentSlide]) rctx.drawImage(slideCanvases[currentSlide],0,0,1280,720);
+                        }
+                        drawRecordSlide();
+                        window._drawRecordSlide=drawRecordSlide;
+                        var vidStream=rc.captureStream(1);
+                        var combStream=new MediaStream([...vidStream.getVideoTracks(),...audioStream.getAudioTracks()]);
+                        var vmts=['video/mp4','video/webm;codecs=vp8,opus','video/webm'];
+                        var vmt=vmts.find(function(t){return MediaRecorder.isTypeSupported(t);})||'';
+                        mediaRecorder=vmt?new MediaRecorder(combStream,{mimeType:vmt}):new MediaRecorder(combStream);
+                        recordedMimeType=mediaRecorder.mimeType||vmt||'video/mp4';
+                        recordedChunks=[];
+                        mediaRecorder.ondataavailable=function(e){if(e.data.size>0)recordedChunks.push(e.data);};
+                        mediaRecorder.onstop=function(){
+                            document.body.removeChild(rc);
+                            window._drawRecordSlide=null;
+                            var ext=recordedMimeType.includes('webm')?'webm':'mp4';
+                            currentExt=ext;
+                            var blob=new Blob(recordedChunks,{type:recordedMimeType});
+                            globalRecordedBlob=blob;
+                            showResult(URL.createObjectURL(blob));
+                        };
+                    } else {
+                        var mts=['audio/mp4','audio/aac','audio/webm;codecs=opus','audio/webm'];
+                        var mt=mts.find(function(t){return MediaRecorder.isTypeSupported(t);})||'';
+                        mediaRecorder=mt?new MediaRecorder(audioStream,{mimeType:mt}):new MediaRecorder(audioStream);
+                        recordedMimeType=mediaRecorder.mimeType||mt||'audio/mp4';
+                        recordedChunks=[];
+                        mediaRecorder.ondataavailable=function(e){if(e.data.size>0)recordedChunks.push(e.data);};
+                        mediaRecorder.onstop=synthesizeVideo;
+                    }
                     recordingStartTime=performance.now();
                     slideTimestamps=[{slide:currentSlide,time:0}];
                     mediaRecorder.start(100);
