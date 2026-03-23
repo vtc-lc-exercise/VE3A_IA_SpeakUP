@@ -93,13 +93,16 @@
         details > summary::-webkit-details-marker { display: none; }
 
         /* FIX: Prevent browser from throttling the canvas by keeping it in viewport but practically invisible */
+        /* iOS Safari will stop rendering if opacity is too low. We use clip-path instead to hide it visually. */
         #recording-canvas { 
             position: fixed; 
             top: 0; 
             left: 0; 
             pointer-events: none; 
-            opacity: 0.01; 
+            opacity: 1; /* Changed from 0.01 */
             z-index: -9999;
+            clip-path: inset(100%); /* Hides the element visually without stopping rendering */
+            -webkit-clip-path: inset(100%);
         }
     </style>
 </head>
@@ -527,7 +530,8 @@
                         </button>
                         
                         <div id="assess-audio-result" class="hidden w-full max-w-sm mt-4 bg-white p-4 md:p-5 rounded-2xl shadow-lg border border-gray-100">
-                            <audio id="assess-audio-player" controls class="w-full mb-4 rounded-lg h-10"></audio>
+                            <!-- ADDED playsinline to audio just in case -->
+                            <audio id="assess-audio-player" playsinline webkit-playsinline controls class="w-full mb-4 rounded-lg h-10"></audio>
                             <div class="flex flex-col gap-2 md:gap-3">
                                 <button onclick="shareAudio()" class="flex items-center justify-center gap-2 w-full bg-[#25D366] text-white px-4 py-2.5 md:py-3 rounded-xl hover:bg-[#128C7E] transition-all active:scale-95 font-bold shadow-sm text-sm md:text-base">
                                     <i class="fa-brands fa-whatsapp text-lg md:text-xl"></i> Share
@@ -683,7 +687,8 @@
                         <div id="download-area" class="mt-4 md:mt-6 hidden w-full max-w-md bg-white p-5 md:p-6 rounded-2xl border border-emerald-100 shadow-xl text-center z-10">
                             <div class="w-12 h-12 md:w-14 md:h-14 bg-gradient-to-br from-emerald-100 to-teal-100 text-emerald-500 rounded-full flex items-center justify-center mx-auto mb-3 md:mb-4 text-xl md:text-2xl shadow-inner border border-emerald-50"><i class="fa-solid fa-check"></i></div>
                             <h4 class="font-black text-gray-800 mb-3 md:mb-4 text-base md:text-lg">Video Saved Successfully!</h4>
-                            <video id="presentation-video-player" controls class="w-full mb-4 md:mb-5 rounded-xl border border-gray-200 bg-black shadow-sm"></video>
+                            <!-- ADDED playsinline to video player -->
+                            <video id="presentation-video-player" playsinline webkit-playsinline controls class="w-full mb-4 md:mb-5 rounded-xl border border-gray-200 bg-black shadow-sm"></video>
                             
                             <div class="flex flex-col gap-2 md:gap-3">
                                 <button onclick="shareVideo()" class="flex items-center justify-center gap-2 w-full bg-[#25D366] text-white px-4 py-2.5 md:py-3.5 rounded-xl hover:bg-[#128C7E] transition-all active:scale-95 font-bold shadow-sm text-sm md:text-base">
@@ -1960,11 +1965,30 @@
         let recordedChunks = [];
         let isRecording = false;
         let timerInterval;
-        let drawInterval; 
+        let isCanvasDrawing = false; // ADDED: For requestAnimationFrame loop
         let seconds = 0;
         let audioStream;
         let globalRecordedBlob = null;
         let currentExt = 'mp4';
+
+        // ADDED: requestAnimationFrame loop to replace setInterval for iOS Safari compatibility
+        function canvasDrawLoop() {
+            if (!isCanvasDrawing) return;
+            
+            drawSlideToCanvas(currentSlide);
+            const canvas = document.getElementById('recording-canvas');
+            const ctx = canvas.getContext('2d');
+            
+            // Draw a blinking red dot to force continuous visual updates
+            if (Math.floor(Date.now() / 500) % 2 === 0) {
+                ctx.fillStyle = 'red';
+                ctx.beginPath();
+                ctx.arc(1250, 30, 10, 0, Math.PI * 2);
+                ctx.fill();
+            }
+            
+            requestAnimationFrame(canvasDrawLoop);
+        }
 
         async function toggleRecording() {
             const btn = document.getElementById('btn-record');
@@ -2033,16 +2057,9 @@
                         timerDisplay.innerText = `${mins}:${secs}`;
                     }, 1000);
 
-                    drawInterval = setInterval(() => {
-                        drawSlideToCanvas(currentSlide);
-                        const ctx = canvas.getContext('2d');
-                        if (Math.floor(Date.now() / 500) % 2 === 0) {
-                            ctx.fillStyle = 'red';
-                            ctx.beginPath();
-                            ctx.arc(1250, 30, 10, 0, Math.PI * 2);
-                            ctx.fill();
-                        }
-                    }, 1000 / 30);
+                    // CHANGED: Use requestAnimationFrame instead of setInterval for iOS Safari
+                    isCanvasDrawing = true;
+                    canvasDrawLoop();
 
                 } catch (err) {
                     alert("Error accessing microphone. Please ensure you have granted microphone permissions in your settings.");
@@ -2052,7 +2069,7 @@
                 isRecording = false;
                 
                 clearInterval(timerInterval);
-                clearInterval(drawInterval);
+                isCanvasDrawing = false; // Stop the requestAnimationFrame loop
                 
                 btn.innerHTML = '<span class="relative z-10 flex items-center gap-2"><i class="fa-solid fa-video"></i> Start Recording</span>';
                 btn.className = "btn-shine bg-gradient-to-r from-rose-500 to-pink-600 text-white px-6 py-3.5 md:px-10 md:py-4 rounded-full font-black text-base md:text-xl hover:from-rose-600 hover:to-pink-700 transition-all active:scale-95 shadow-[0_10px_20px_-10px_rgba(244,63,94,0.6)] mb-2 w-full max-w-sm flex items-center justify-center gap-2 md:gap-3 z-10 border border-rose-400/30";
