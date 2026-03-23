@@ -414,7 +414,6 @@
                     <span id="step3-badge" class="bg-emerald-50 text-emerald-600 text-xs font-black px-4 py-1.5 rounded-full tracking-widest uppercase shrink-0 border border-emerald-100 shadow-sm">3 of 3</span>
                 </div>
                 
-                <!-- UPDATED: Blue Info Box with Steps -->
                 <div class="bg-[#f4f7ff] border border-blue-100 rounded-2xl p-5 shadow-sm mb-8">
                     <div class="flex items-center gap-3 mb-4">
                         <div class="bg-blue-200 text-blue-700 w-8 h-8 flex items-center justify-center rounded-full shadow-inner">
@@ -485,6 +484,16 @@
                             <h4 class="font-black text-gray-800 mb-4 text-lg">Video Saved Successfully!</h4>
                             <video id="presentation-video-player" controls class="w-full mb-5 rounded-xl border border-gray-200 bg-black shadow-sm"></video>
                             
+                            <!-- 跨平台兼容提示 -->
+                            <div class="bg-amber-50 border border-amber-200 rounded-xl p-4 mb-5 text-left shadow-sm">
+                                <p class="text-amber-800 text-sm font-bold mb-1.5 flex items-center gap-2"><i class="fa-solid fa-mobile-screen"></i> 播放兼容性提示</p>
+                                <p class="text-amber-700 text-xs leading-relaxed mb-2">檔案已儲存為 <b>.mp4</b> 格式以提高兼容性。但由於網頁錄影限制，部分裝置可能仍有問題：</p>
+                                <ul class="text-amber-700 text-xs list-disc pl-4 space-y-1">
+                                    <li><b>iPhone / iOS 用戶：</b>如果原生相簿開唔到，建議使用 <b>VLC 播放器</b> 或將檔案傳到電腦用 Chrome 開啟。</li>
+                                    <li><b>Windows 用戶：</b>如果預設播放器無聲，請 <b>右鍵點擊影片 -> 開啟檔案 -> 選擇 Google Chrome 或 Edge</b>。</li>
+                                </ul>
+                            </div>
+
                             <div class="flex flex-col gap-3">
                                 <button onclick="shareVideo()" class="flex items-center justify-center gap-2 w-full bg-[#25D366] text-white px-4 py-3.5 rounded-xl hover:bg-[#128C7E] transition-all active:scale-95 font-bold shadow-sm">
                                     <i class="fa-brands fa-whatsapp text-xl"></i> Share to WhatsApp
@@ -803,20 +812,13 @@
             if (synth.speaking) synth.cancel();
             if (!text || text.trim() === '') return;
             
-            // 增強版時間與數字預處理
             let processedText = text
-                // 1. 處理整點 (例如 10:00 -> 10 o'clock)
                 .replace(/(\d{1,2}):00/g, "$1 o'clock")
-                // 2. 處理零幾分 (例如 10:05 -> 10 oh 5)
                 .replace(/(\d{1,2}):0(\d)/g, "$1 oh $2")
-                // 3. 處理普通分鐘 (例如 10:30 -> 10 30)
                 .replace(/(\d{1,2}):([1-5]\d)/g, "$1 $2")
-                // 4. 處理連住嘅 am/pm/a.m./p.m. (例如 10a.m. -> 10 a.m.)
                 .replace(/(\d)\s*(am|pm|a\.m\.|p\.m\.)/gi, '$1 $2')
-                // 5. 將 am/pm 拆開讀字母
                 .replace(/\b(pm|p\.m\.)\b/gi, 'P M')
                 .replace(/\b(am|a\.m\.)\b/gi, 'A M')
-                // 6. 其他特殊字眼
                 .replace(/20K/gi, '20 thousand')
                 .replace(/&/g, ' and ');
                                     
@@ -859,12 +861,8 @@
                 try {
                     const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
                     
-                    // ==========================================
-                    // FIXED: 確保 Assessment 音頻使用 PCM / MP4 格式
-                    // ==========================================
                     const audioTypes = [
                         'audio/mp4',
-                        'audio/webm;codecs=pcm',
                         'audio/webm'
                     ];
                     let mimeType = '';
@@ -889,9 +887,7 @@
                         const player = document.getElementById('assess-audio-player');
                         player.src = audioUrl;
                         
-                        let extAudio = 'webm';
-                        if (mimeType.includes('mp4')) extAudio = 'm4a';
-                        else if (mimeType.includes('pcm')) extAudio = 'wav';
+                        let extAudio = mimeType.includes('mp4') ? 'm4a' : 'mp3';
 
                         const downloadLink = document.getElementById('assess-download-link');
                         downloadLink.href = audioUrl;
@@ -920,7 +916,7 @@
 
         async function shareAudio() {
             if (!globalAssessAudioBlob) return;
-            const extAudio = globalAssessAudioBlob.type.includes('mp4') ? 'm4a' : (globalAssessAudioBlob.type.includes('pcm') ? 'wav' : 'webm');
+            const extAudio = globalAssessAudioBlob.type.includes('mp4') ? 'm4a' : 'mp3';
             const file = new File([globalAssessAudioBlob], `SpeakUp_Audio_Practice.${extAudio}`, { type: globalAssessAudioBlob.type });
             
             if (navigator.canShare && navigator.canShare({ files: [file] })) {
@@ -1061,11 +1057,9 @@
         };
 
         function showSyllable(word) {
-            // 移除前後標點符號，但保留 a.m. 同 p.m. 嘅點
             let cleanWord = word.replace(/^[.,;:!?()\-]+|[.,;:!?()\-]+$/g, '').trim();
             if (cleanWord === '') return;
             
-            // 處理 a.m. 同 p.m. 格式
             if (cleanWord.toLowerCase() === 'a.m' || cleanWord.toLowerCase() === 'am') cleanWord = 'a.m.';
             if (cleanWord.toLowerCase() === 'p.m' || cleanWord.toLowerCase() === 'pm') cleanWord = 'p.m.';
             
@@ -1076,7 +1070,6 @@
             let syllableStr = syllableDict[lowerWord];
             if (!syllableStr) {
                 if (/\d/.test(cleanWord)) {
-                    // 如果係數字或者時間（例如 10:30a.m.），將 am/pm 轉做 a.m./p.m.
                     syllableStr = cleanWord.replace(/(\d)(am|a\.m\.?)$/i, '$1 a.m.').replace(/(\d)(pm|p\.m\.?)$/i, '$1 p.m.');
                 } else {
                     syllableStr = estimateSyllables(cleanWord.replace(/[^a-zA-Z]/g, ''));
@@ -1264,7 +1257,7 @@
         let recordedChunks = [];
         let isRecording = false;
         let timerInterval;
-        let drawInterval; // 【新增】用來強制重繪 Canvas 嘅計時器
+        let drawInterval; 
         let seconds = 0;
         let audioStream;
         let globalRecordedBlob = null;
@@ -1279,8 +1272,6 @@
                 try {
                     audioStream = await navigator.mediaDevices.getUserMedia({ audio: true });
                     const canvas = document.getElementById('recording-canvas');
-                    
-                    // 【修改】將 FPS 由 15 提升到 30，畫面更順暢
                     const canvasStream = canvas.captureStream(30); 
                     
                     const combinedStream = new MediaStream([
@@ -1288,12 +1279,14 @@
                         ...audioStream.getAudioTracks()
                     ]);
                     
+                    // 【終極跨平台修正】
+                    // 1. 強制優先尋找 MP4 格式 (iOS 最愛)
+                    // 2. 如果無 MP4，搵 H.264 編碼嘅 WebM (呃 iOS 播放器)
                     const types = [
-                        'video/mp4',                           
-                        'video/x-matroska;codecs=avc1,pcm',    
-                        'video/x-matroska;codecs=vp8,pcm',     
-                        'video/webm;codecs=h264,pcm',          
-                        'video/webm'                           
+                        'video/mp4',
+                        'video/webm;codecs=h264,mp4a.40.2',
+                        'video/webm;codecs=h264',
+                        'video/webm'
                     ];
                     
                     let mimeType = '';
@@ -1315,19 +1308,16 @@
 
                     mediaRecorder.ondataavailable = e => { if (e.data.size > 0) recordedChunks.push(e.data); };
                     mediaRecorder.onstop = () => {
-                        globalRecordedBlob = new Blob(recordedChunks, { type: mimeType || 'video/webm' });
+                        globalRecordedBlob = new Blob(recordedChunks, { type: mimeType || 'video/mp4' });
                         const url = URL.createObjectURL(globalRecordedBlob);
                         
                         const videoPlayer = document.getElementById('presentation-video-player');
                         videoPlayer.src = url;
                         
-                        let ext = 'webm';
-                        if (mimeType.includes('mp4')) ext = 'mp4';
-                        else if (mimeType.includes('matroska')) ext = 'mkv';
-
+                        // 強制儲存為 .mp4，就算底層係 webm，H.264 編碼下改名做 mp4 都可以大大提高兼容性
                         const downloadLink = document.getElementById('download-link');
                         downloadLink.href = url;
-                        downloadLink.download = `SpeakUp_Presentation.${ext}`;
+                        downloadLink.download = `SpeakUp_Presentation.mp4`;
                         
                         document.getElementById('download-area').classList.remove('hidden');
                         
@@ -1348,7 +1338,6 @@
                     timerDisplay.innerText = "00:00";
                     timerDisplay.classList.add('text-rose-500', 'font-bold');
                     
-                    // 計時器 (每 1 秒更新一次時間)
                     timerInterval = setInterval(() => {
                         seconds++;
                         const mins = String(Math.floor(seconds / 60)).padStart(2, '0');
@@ -1356,11 +1345,8 @@
                         timerDisplay.innerText = `${mins}:${secs}`;
                     }, 1000);
 
-                    // 【關鍵修復】：每秒重繪 30 次，確保轉頁即時錄入
                     drawInterval = setInterval(() => {
                         drawSlideToCanvas(currentSlide);
-                        
-                        // 【防卡死秘技】：喺右上角畫一個閃爍嘅紅點，強制畫面有動態變化，防止 captureStream 停頓
                         const ctx = canvas.getContext('2d');
                         if (Math.floor(Date.now() / 500) % 2 === 0) {
                             ctx.fillStyle = 'red';
@@ -1368,7 +1354,7 @@
                             ctx.arc(1250, 30, 10, 0, Math.PI * 2);
                             ctx.fill();
                         }
-                    }, 1000 / 30); // 配合 30FPS
+                    }, 1000 / 30);
 
                 } catch (err) {
                     alert("Error accessing microphone. Please ensure you have granted microphone permissions in your settings.");
@@ -1378,7 +1364,6 @@
                 mediaRecorder.stop();
                 isRecording = false;
                 
-                // 停止計時器同重繪
                 clearInterval(timerInterval);
                 clearInterval(drawInterval);
                 
@@ -1394,11 +1379,8 @@
         async function shareVideo() {
             if (!globalRecordedBlob) return;
             
-            let ext = 'webm';
-            if (globalRecordedBlob.type.includes('mp4')) ext = 'mp4';
-            else if (globalRecordedBlob.type.includes('matroska')) ext = 'mkv';
-
-            const file = new File([globalRecordedBlob], `SpeakUp_Presentation.${ext}`, { type: globalRecordedBlob.type });
+            // 強制用 mp4 分享
+            const file = new File([globalRecordedBlob], `SpeakUp_Presentation.mp4`, { type: 'video/mp4' });
             
             if (navigator.canShare && navigator.canShare({ files: [file] })) {
                 try {
