@@ -2323,9 +2323,24 @@
             // iOS: use standard 1280×720 landscape (hardware encoder won't reject)
             var VW=1280, VH=720;
             var iosCodec='avc1.42001f';
-            try{var cs=await VideoEncoder.isConfigSupported({codec:'avc1.42E01E',width:1280,height:720,bitrate:2000000,framerate:1});if(cs.supported)iosCodec='avc1.42E01E';}catch(e){}
-            var videoEncoder=new VideoEncoder({output:function(c,m){muxer.addVideoChunk(c,m);},error:function(e){throw new Error('VideoEncoder: '+e.message);}});
-            videoEncoder.configure({codec:iosCodec,width:VW,height:VH,bitrate:2000000,framerate:1});
+            var encErr=null;
+            var videoEncoder=new VideoEncoder({
+                output:function(c,m){muxer.addVideoChunk(c,m);},
+                error:function(e){encErr=e;} // store, don't throw (async context issue)
+            });
+            // Try codecs from most to least compatible
+            var codecs=['avc1.42E01E','avc1.42001f','avc1.4D401E'];
+            var configured=false;
+            for(var ci=0;ci<codecs.length;ci++){
+                try{
+                    var sup=await VideoEncoder.isConfigSupported({codec:codecs[ci],width:1280,height:720,bitrate:1500000,framerate:30});
+                    if(!sup.supported) continue;
+                    videoEncoder.configure({codec:codecs[ci],width:1280,height:720,bitrate:1500000,framerate:30});
+                    await new Promise(function(r){setTimeout(r,150);}); // wait for async configure
+                    if(videoEncoder.state==='configured'){iosCodec=codecs[ci];configured=true;break;}
+                }catch(e3){}
+            }
+            if(!configured){throw new Error('VIDEO_NEEDS_SAFARI');}
             // OffscreenCanvas: designed for WebCodecs, no DOM needed, always renders
             var fc=(typeof OffscreenCanvas!=='undefined')?new OffscreenCanvas(VW,VH):document.createElement('canvas');
             if(fc.width!==undefined&&!fc.style){fc.width=VW;fc.height=VH;}
