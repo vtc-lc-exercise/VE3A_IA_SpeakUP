@@ -90,7 +90,6 @@
         .floating-bg { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; pointer-events: none; z-index: -1; overflow: hidden; }
         .emoji { position: absolute; top: 0; font-size: 2rem; opacity: 0; animation: floatUp linear infinite; filter: drop-shadow(0 4px 6px rgba(0,0,0,0.1)); }
         
-        /* FIXED: Removed transform from 10% and 90% so it smoothly translates to the top without stopping */
         @keyframes floatUp {
             0% { transform: translateY(100vh) rotate(0deg) scale(0.8); opacity: 0; }
             10% { opacity: 0.15; }
@@ -861,11 +860,11 @@
                     const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
                     
                     // ==========================================
-                    // FIXED: 確保 Assessment 音頻使用 PCM 格式
+                    // FIXED: 確保 Assessment 音頻使用 PCM / MP4 格式
                     // ==========================================
                     const audioTypes = [
-                        'audio/webm;codecs=pcm', // PCM無損音頻，Windows WMP支援
                         'audio/mp4',
+                        'audio/webm;codecs=pcm',
                         'audio/webm'
                     ];
                     let mimeType = '';
@@ -884,15 +883,19 @@
                     };
 
                     assessAudioRecorder.onstop = () => {
-                        globalAssessAudioBlob = new Blob(assessAudioChunks, { type: mimeType });
+                        globalAssessAudioBlob = new Blob(assessAudioChunks, { type: mimeType || 'audio/webm' });
                         const audioUrl = URL.createObjectURL(globalAssessAudioBlob);
                         
                         const player = document.getElementById('assess-audio-player');
                         player.src = audioUrl;
                         
+                        let extAudio = 'webm';
+                        if (mimeType.includes('mp4')) extAudio = 'm4a';
+                        else if (mimeType.includes('pcm')) extAudio = 'wav';
+
                         const downloadLink = document.getElementById('assess-download-link');
                         downloadLink.href = audioUrl;
-                        downloadLink.download = `SpeakUp_Audio_Practice.mp3`;
+                        downloadLink.download = `SpeakUp_Audio_Practice.${extAudio}`;
                         
                         document.getElementById('assess-audio-result').classList.remove('hidden');
                         stream.getTracks().forEach(track => track.stop());
@@ -917,7 +920,8 @@
 
         async function shareAudio() {
             if (!globalAssessAudioBlob) return;
-            const file = new File([globalAssessAudioBlob], `SpeakUp_Audio_Practice.mp3`, { type: globalAssessAudioBlob.type });
+            const extAudio = globalAssessAudioBlob.type.includes('mp4') ? 'm4a' : (globalAssessAudioBlob.type.includes('pcm') ? 'wav' : 'webm');
+            const file = new File([globalAssessAudioBlob], `SpeakUp_Audio_Practice.${extAudio}`, { type: globalAssessAudioBlob.type });
             
             if (navigator.canShare && navigator.canShare({ files: [file] })) {
                 try {
@@ -1260,6 +1264,7 @@
         let recordedChunks = [];
         let isRecording = false;
         let timerInterval;
+        let drawInterval; // 【新增】用來強制重繪 Canvas 嘅計時器
         let seconds = 0;
         let audioStream;
         let globalRecordedBlob = null;
@@ -1274,21 +1279,21 @@
                 try {
                     audioStream = await navigator.mediaDevices.getUserMedia({ audio: true });
                     const canvas = document.getElementById('recording-canvas');
-                    const canvasStream = canvas.captureStream(15);
+                    
+                    // 【修改】將 FPS 由 15 提升到 30，畫面更順暢
+                    const canvasStream = canvas.captureStream(30); 
                     
                     const combinedStream = new MediaStream([
                         ...canvasStream.getVideoTracks(),
                         ...audioStream.getAudioTracks()
                     ]);
                     
-                    // ==========================================
-                    // FIXED: 確保 Windows 播到聲嘅格式設定
-                    // ==========================================
                     const types = [
-                        'video/webm;codecs=vp8,pcm',   // 強制 PCM 音頻，Windows 原生完美支援
-                        'video/webm;codecs=h264,pcm',  
-                        'video/mp4',                   // Safari 支援
-                        'video/webm'                   // 終極後備
+                        'video/mp4',                           
+                        'video/x-matroska;codecs=avc1,pcm',    
+                        'video/x-matroska;codecs=vp8,pcm',     
+                        'video/webm;codecs=h264,pcm',          
+                        'video/webm'                           
                     ];
                     
                     let mimeType = '';
@@ -1305,7 +1310,6 @@
                     } catch (e) {
                         mediaRecorder = new MediaRecorder(combinedStream);
                     }
-                    // ==========================================
 
                     recordedChunks = [];
 
@@ -1317,7 +1321,10 @@
                         const videoPlayer = document.getElementById('presentation-video-player');
                         videoPlayer.src = url;
                         
-                        const ext = mimeType.includes('mp4') ? 'mp4' : 'webm';
+                        let ext = 'webm';
+                        if (mimeType.includes('mp4')) ext = 'mp4';
+                        else if (mimeType.includes('matroska')) ext = 'mkv';
+
                         const downloadLink = document.getElementById('download-link');
                         downloadLink.href = url;
                         downloadLink.download = `SpeakUp_Presentation.${ext}`;
@@ -1340,13 +1347,28 @@
                     seconds = 0;
                     timerDisplay.innerText = "00:00";
                     timerDisplay.classList.add('text-rose-500', 'font-bold');
+                    
+                    // 計時器 (每 1 秒更新一次時間)
                     timerInterval = setInterval(() => {
                         seconds++;
                         const mins = String(Math.floor(seconds / 60)).padStart(2, '0');
                         const secs = String(seconds % 60).padStart(2, '0');
                         timerDisplay.innerText = `${mins}:${secs}`;
-                        drawSlideToCanvas(currentSlide);
                     }, 1000);
+
+                    // 【關鍵修復】：每秒重繪 30 次，確保轉頁即時錄入
+                    drawInterval = setInterval(() => {
+                        drawSlideToCanvas(currentSlide);
+                        
+                        // 【防卡死秘技】：喺右上角畫一個閃爍嘅紅點，強制畫面有動態變化，防止 captureStream 停頓
+                        const ctx = canvas.getContext('2d');
+                        if (Math.floor(Date.now() / 500) % 2 === 0) {
+                            ctx.fillStyle = 'red';
+                            ctx.beginPath();
+                            ctx.arc(1250, 30, 10, 0, Math.PI * 2);
+                            ctx.fill();
+                        }
+                    }, 1000 / 30); // 配合 30FPS
 
                 } catch (err) {
                     alert("Error accessing microphone. Please ensure you have granted microphone permissions in your settings.");
@@ -1355,7 +1377,11 @@
             } else {
                 mediaRecorder.stop();
                 isRecording = false;
+                
+                // 停止計時器同重繪
                 clearInterval(timerInterval);
+                clearInterval(drawInterval);
+                
                 btn.innerHTML = '<span class="relative z-10 flex items-center gap-2"><i class="fa-solid fa-video"></i> Start Recording</span>';
                 btn.className = "btn-shine bg-gradient-to-r from-rose-500 to-pink-600 text-white px-10 py-4 rounded-full font-black text-xl hover:from-rose-600 hover:to-pink-700 transition-all active:scale-95 shadow-[0_10px_20px_-10px_rgba(244,63,94,0.6)] mb-2 w-full max-w-sm flex items-center justify-center gap-3 z-10 border border-rose-400/30";
                 
@@ -1367,7 +1393,11 @@
 
         async function shareVideo() {
             if (!globalRecordedBlob) return;
-            const ext = globalRecordedBlob.type.includes('mp4') ? 'mp4' : 'webm';
+            
+            let ext = 'webm';
+            if (globalRecordedBlob.type.includes('mp4')) ext = 'mp4';
+            else if (globalRecordedBlob.type.includes('matroska')) ext = 'mkv';
+
             const file = new File([globalRecordedBlob], `SpeakUp_Presentation.${ext}`, { type: globalRecordedBlob.type });
             
             if (navigator.canShare && navigator.canShare({ files: [file] })) {
