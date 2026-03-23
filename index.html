@@ -2125,7 +2125,17 @@
                     output:function(chunk,meta){muxer.addVideoChunk(chunk,meta);},
                     error:function(e){throw new Error('VideoEncoder: '+e.message);}
                 });
-                videoEncoder.configure({codec:'avc1.42001f',width:VW,height:VH,bitrate:2000000,framerate:1});
+                
+                // --- 修改處：使用 WhatsApp 支援度最高的 H.264 Baseline Profile ---
+                videoEncoder.configure({
+                    codec: 'avc1.42E01E', 
+                    width: VW,
+                    height: VH,
+                    bitrate: 2000000,
+                    framerate: 1,
+                    avc: { format: 'avc' }
+                });
+                // -----------------------------------------------------------
 
                 if(!slideCanvases||!slideCanvases[0]) preRenderSlides();
 
