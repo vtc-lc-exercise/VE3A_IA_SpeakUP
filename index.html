@@ -484,15 +484,7 @@
                             <h4 class="font-black text-gray-800 mb-4 text-lg">Video Saved Successfully!</h4>
                             <video id="presentation-video-player" controls class="w-full mb-5 rounded-xl border border-gray-200 bg-black shadow-sm"></video>
                             
-                            <!-- 跨平台兼容提示 -->
-                            <div class="bg-amber-50 border border-amber-200 rounded-xl p-4 mb-5 text-left shadow-sm">
-                                <p class="text-amber-800 text-sm font-bold mb-1.5 flex items-center gap-2"><i class="fa-solid fa-mobile-screen"></i> 播放兼容性提示</p>
-                                <p class="text-amber-700 text-xs leading-relaxed mb-2">檔案已儲存為 <b>.mp4</b> 格式以提高兼容性。但由於網頁錄影限制，部分裝置可能仍有問題：</p>
-                                <ul class="text-amber-700 text-xs list-disc pl-4 space-y-1">
-                                    <li><b>iPhone / iOS 用戶：</b>如果原生相簿開唔到，建議使用 <b>VLC 播放器</b> 或將檔案傳到電腦用 Chrome 開啟。</li>
-                                    <li><b>Windows 用戶：</b>如果預設播放器無聲，請 <b>右鍵點擊影片 -> 開啟檔案 -> 選擇 Google Chrome 或 Edge</b>。</li>
-                                </ul>
-                            </div>
+                            <!-- 已經刪除播放兼容性提示 -->
 
                             <div class="flex flex-col gap-3">
                                 <button onclick="shareVideo()" class="flex items-center justify-center gap-2 w-full bg-[#25D366] text-white px-4 py-3.5 rounded-xl hover:bg-[#128C7E] transition-all active:scale-95 font-bold shadow-sm">
@@ -1261,6 +1253,7 @@
         let seconds = 0;
         let audioStream;
         let globalRecordedBlob = null;
+        let currentExt = 'mp4';
 
         async function toggleRecording() {
             const btn = document.getElementById('btn-record');
@@ -1279,9 +1272,6 @@
                         ...audioStream.getAudioTracks()
                     ]);
                     
-                    // 【終極跨平台修正】
-                    // 1. 強制優先尋找 MP4 格式 (iOS 最愛)
-                    // 2. 如果無 MP4，搵 H.264 編碼嘅 WebM (呃 iOS 播放器)
                     const types = [
                         'video/mp4',
                         'video/webm;codecs=h264,mp4a.40.2',
@@ -1304,6 +1294,9 @@
                         mediaRecorder = new MediaRecorder(combinedStream);
                     }
 
+                    // 動態決定副檔名，避免檔案損壞
+                    currentExt = (mimeType && mimeType.includes('mp4')) ? 'mp4' : 'webm';
+
                     recordedChunks = [];
 
                     mediaRecorder.ondataavailable = e => { if (e.data.size > 0) recordedChunks.push(e.data); };
@@ -1314,10 +1307,9 @@
                         const videoPlayer = document.getElementById('presentation-video-player');
                         videoPlayer.src = url;
                         
-                        // 強制儲存為 .mp4，就算底層係 webm，H.264 編碼下改名做 mp4 都可以大大提高兼容性
                         const downloadLink = document.getElementById('download-link');
                         downloadLink.href = url;
-                        downloadLink.download = `SpeakUp_Presentation.mp4`;
+                        downloadLink.download = `SpeakUp_Presentation.${currentExt}`;
                         
                         document.getElementById('download-area').classList.remove('hidden');
                         
@@ -1379,8 +1371,7 @@
         async function shareVideo() {
             if (!globalRecordedBlob) return;
             
-            // 強制用 mp4 分享
-            const file = new File([globalRecordedBlob], `SpeakUp_Presentation.mp4`, { type: 'video/mp4' });
+            const file = new File([globalRecordedBlob], `SpeakUp_Presentation.${currentExt}`, { type: globalRecordedBlob.type });
             
             if (navigator.canShare && navigator.canShare({ files: [file] })) {
                 try {
