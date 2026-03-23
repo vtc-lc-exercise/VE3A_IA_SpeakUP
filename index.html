@@ -2131,6 +2131,23 @@
             dlArea.innerHTML=htmlStr;
         }
 
+        async function shareVideoBlob(){
+            if(!globalRecordedBlob){ alert('No recording found. Please record first.'); return; }
+            var fname='SpeakUp_Presentation.'+currentExt;
+            if(navigator.share && navigator.canShare){
+                var file=new File([globalRecordedBlob],fname,{type:globalRecordedBlob.type});
+                try{
+                    if(navigator.canShare({files:[file]})){
+                        await navigator.share({title:'My SpeakUp Presentation',files:[file]});
+                        return;
+                    }
+                }catch(e){ if(e.name==='AbortError') return; }
+            }
+            // Fallback: download
+            var a=document.createElement('a');
+            a.href=URL.createObjectURL(globalRecordedBlob);
+            a.download=fname; a.click();
+        }
         function openInSafari(){
             var u=encodeURIComponent(window.location.href);
             window.location.href='x-web-search://?url='+u;
