@@ -2167,7 +2167,7 @@
                 var file=new File([globalRecordedBlob],fname,{type:globalRecordedBlob.type});
                 try{
                     if(navigator.canShare({files:[file]})){
-                        await navigator.share({title:'My SpeakUp Presentation',files:[file]});
+                        await navigator.share({title:'Here is my VE3A IA Practice!😊',files:[file]});
                         return;
                     }
                 }catch(e){ if(e.name==='AbortError') return; }
@@ -2478,7 +2478,7 @@
             
             if (navigator.canShare && navigator.canShare({ files: [file] })) {
                 try {
-                    await navigator.share({ title: 'My SpeakUp Presentation', text: 'Here is my presentation recording!', files: [file] });
+                    await navigator.share({ title: 'Here is my VE3A IA Practice!😊', text: 'Here is my presentation recording!', files: [file] });
                 } catch (err) { console.log("Share cancelled"); }
             } else {
                 alert("Direct WhatsApp sharing is not supported on this browser. Please use the 'Save to Device' button below, then share manually.");
