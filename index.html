@@ -273,9 +273,9 @@
                         <div class="text-sm text-amber-700 space-y-2.5">
                             <p><strong class="text-amber-900">💻 Computer (Recommended):</strong> Use Google Chrome or Microsoft Edge.</p>
                             <p><strong class="text-amber-900">📱 Mobile:</strong> Use Safari for iPhone, and Google Chrome for Android.</p>
-                            <p class="text-xs italic opacity-90">⚠️ Note: Built-in browsers on some phone brands may not support the voice feature.</p>
+                            <p class="text-xs italic opacity-90">⚠️ Note: Built-in browsers on some mainland Chinese phone brands may not support the voice feature.</p>
                             <hr class="border-amber-200 my-3">
-                            <p class="text-xs leading-relaxed">為了獲得最佳體驗，強烈建議使用電腦 (Chrome/Edge)。手機用戶請使用 Safari (iPhone) 或 Chrome (Android)。部分品牌手機的內置瀏覽器可能無法支援語音功能。</p>
+                            <p class="text-xs leading-relaxed">為了獲得最佳體驗，強烈建議使用電腦 (Chrome/Edge)。手機用戶請使用 Safari (iPhone) 或 Chrome (Android)。部分內地品牌手機的內置瀏覽器可能無法支援語音功能。</p>
                         </div>
                     </div>
 
@@ -975,7 +975,7 @@
 
         // --- 2. Advanced Vocab Game (Workplace Context & UK Spelling) ---
         const advancedVocabBank = [
-            { word: "ad hoc", pos: "adjective", meaning: "臨時安排的", hint: "Unit 5", example: "The manager formed an ad hoc committee to handle the sudden supply chain crisis." },
+            { word: "ad hoc", pos: "adjective", meaning: "特派的", hint: "Unit 5", example: "The manager formed an ad hoc committee to handle the sudden supply chain crisis." },
             { word: "adequate", pos: "adjective", meaning: "足夠的", hint: "Unit 8", example: "Ensure we have adequate funding before launching the new marketing campaign." },
             { word: "adverse", pos: "adjective", meaning: "不利的", hint: "Unit 2", example: "The adverse economic conditions have negatively impacted our quarterly sales." },
             { word: "attractive", pos: "adjective", meaning: "有吸引力的", hint: "Unit 5", example: "The company provides an attractive remuneration package to retain top talent." },
@@ -2061,9 +2061,18 @@
                             rctx.fillStyle='#eef2ff'; rctx.fillRect(0,0,1280,720);
                             if(slideCanvases[currentSlide]) rctx.drawImage(slideCanvases[currentSlide],0,0,1280,720);
                         }
-                        drawRecordSlide();
+                        // Start captureStream BEFORE drawing - establishes t=0
+                        var vidStream=rc.captureStream(10); // 10fps = 100ms timing accuracy
+                        // Draw AFTER stream is attached - first frame = recording start
+                        rctx.fillStyle='#eef2ff'; rctx.fillRect(0,0,1280,720);
+                        if(slideCanvases[currentSlide]) rctx.drawImage(slideCanvases[currentSlide],0,0,1280,720);
                         window._drawRecordSlide=drawRecordSlide;
-                        var vidStream=rc.captureStream(1);
+                        // Continuous redraw at 10fps - keeps timestamp stream steady
+                        var _rdTimer=setInterval(function(){
+                            if(!isRecording){clearInterval(_rdTimer);return;}
+                            rctx.fillStyle='#eef2ff'; rctx.fillRect(0,0,1280,720);
+                            if(slideCanvases[currentSlide]) rctx.drawImage(slideCanvases[currentSlide],0,0,1280,720);
+                        },100);
                         var combStream=new MediaStream([...vidStream.getVideoTracks(),...audioStream.getAudioTracks()]);
                         var vmts=['video/mp4','video/webm;codecs=vp8,opus','video/webm'];
                         var vmt=vmts.find(function(t){return MediaRecorder.isTypeSupported(t);})||'';
@@ -2072,6 +2081,7 @@
                         recordedChunks=[];
                         mediaRecorder.ondataavailable=function(e){if(e.data.size>0)recordedChunks.push(e.data);};
                         mediaRecorder.onstop=function(){
+                            clearInterval(_rdTimer);
                             document.body.removeChild(rc);
                             window._drawRecordSlide=null;
                             var ext=recordedMimeType.includes('webm')?'webm':'mp4';
