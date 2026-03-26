@@ -228,7 +228,7 @@
                     <div class="absolute top-0 right-0 bg-blue-100 text-blue-600 text-[10px] md:text-xs font-bold px-3 py-1 rounded-bl-xl">Pronunciation</div>
                     <div class="text-5xl md:text-6xl mb-4 drop-shadow-md group-hover:scale-110 transition-transform mt-2">🗓️</div>
                     <h3 class="text-xl md:text-2xl font-bold text-gray-800 mb-2 group-hover:text-blue-600">Dates & Months Echo</h3>
-                    <p class="text-gray-500 text-xs md:text-sm flex-grow">Listen to the correct pronunciation and mimic it using your microphone! (Strict Grading)</p>
+                    <p class="text-gray-500 text-xs md:text-sm flex-grow">Listen to the correct pronunciation and mimic it using your microphone!=</p>
                     <div class="mt-4 text-blue-500 font-bold text-sm opacity-0 group-hover:opacity-100 transition-opacity">Play Now <i class="fa-solid fa-arrow-right ml-1"></i></div>
                 </div>
 
@@ -273,9 +273,9 @@
                         <div class="text-sm text-amber-700 space-y-2.5">
                             <p><strong class="text-amber-900">💻 Computer (Recommended):</strong> Use Google Chrome or Microsoft Edge.</p>
                             <p><strong class="text-amber-900">📱 Mobile:</strong> Use Safari for iPhone, and Google Chrome for Android.</p>
-                            <p class="text-xs italic opacity-90">⚠️ Note: Built-in browsers on some mainland Chinese phone brands may not support the voice feature.</p>
+                            <p class="text-xs italic opacity-90">⚠️ Note: Built-in browsers on some phone brands may not support the voice feature.</p>
                             <hr class="border-amber-200 my-3">
-                            <p class="text-xs leading-relaxed">為了獲得最佳體驗，強烈建議使用電腦 (Chrome/Edge)。手機用戶請使用 Safari (iPhone) 或 Chrome (Android)。部分內地品牌手機的內置瀏覽器可能無法支援語音功能。</p>
+                            <p class="text-xs leading-relaxed">為了獲得最佳體驗，強烈建議使用電腦 (Chrome/Edge)。手機用戶請使用 Safari (iPhone) 或 Chrome (Android)。部分品牌手機的內置瀏覽器可能無法支援語音功能。</p>
                         </div>
                     </div>
 
@@ -975,7 +975,7 @@
 
         // --- 2. Advanced Vocab Game (Workplace Context & UK Spelling) ---
         const advancedVocabBank = [
-            { word: "ad hoc", pos: "adjective", meaning: "特派的", hint: "Unit 5", example: "The manager formed an ad hoc committee to handle the sudden supply chain crisis." },
+            { word: "ad hoc", pos: "adjective", meaning: "臨時安排的", hint: "Unit 5", example: "The manager formed an ad hoc committee to handle the sudden supply chain crisis." },
             { word: "adequate", pos: "adjective", meaning: "足夠的", hint: "Unit 8", example: "Ensure we have adequate funding before launching the new marketing campaign." },
             { word: "adverse", pos: "adjective", meaning: "不利的", hint: "Unit 2", example: "The adverse economic conditions have negatively impacted our quarterly sales." },
             { word: "attractive", pos: "adjective", meaning: "有吸引力的", hint: "Unit 5", example: "The company provides an attractive remuneration package to retain top talent." },
@@ -2172,7 +2172,7 @@
                 var file=new File([globalRecordedBlob],fname,{type:globalRecordedBlob.type});
                 try{
                     if(navigator.canShare({files:[file]})){
-                        await navigator.share({title:'My SpeakUp Presentation',files:[file]});
+                        await navigator.share({title:'Here is my IA Presentation Practice! 😊',files:[file]});
                         return;
                     }
                 }catch(e){ if(e.name==='AbortError') return; }
@@ -2483,7 +2483,7 @@
             
             if (navigator.canShare && navigator.canShare({ files: [file] })) {
                 try {
-                    await navigator.share({ title: 'My SpeakUp Presentation', text: 'Here is my presentation recording!', files: [file] });
+                    await navigator.share({ title: 'Here is my IA Presentation Practice! 😊', text: 'Here is my presentation recording!', files: [file] });
                 } catch (err) { console.log("Share cancelled"); }
             } else {
                 alert("Direct WhatsApp sharing is not supported on this browser. Please use the 'Save to Device' button below, then share manually.");
