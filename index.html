@@ -273,9 +273,9 @@
                         <div class="text-sm text-amber-700 space-y-2.5">
                             <p><strong class="text-amber-900">💻 Computer (Recommended):</strong> Use Google Chrome or Microsoft Edge.</p>
                             <p><strong class="text-amber-900">📱 Mobile:</strong> Use Safari for iPhone, and Google Chrome for Android.</p>
-                            <p class="text-xs italic opacity-90">⚠️ Note: Built-in browsers on some phone brands may not support the voice feature.</p>
+                            <p class="text-xs italic opacity-90">⚠️ Note: Built-in browsers on some mainland Chinese phone brands may not support the voice feature.</p>
                             <hr class="border-amber-200 my-3">
-                            <p class="text-xs leading-relaxed">為了獲得最佳體驗，強烈建議使用電腦 (Chrome/Edge)。手機用戶請使用 Safari (iPhone) 或 Chrome (Android)。部分手機的內置瀏覽器可能無法支援語音功能。</p>
+                            <p class="text-xs leading-relaxed">為了獲得最佳體驗，強烈建議使用電腦 (Chrome/Edge)。手機用戶請使用 Safari (iPhone) 或 Chrome (Android)。部分內地品牌手機的內置瀏覽器可能無法支援語音功能。</p>
                         </div>
                     </div>
 
@@ -2061,18 +2061,20 @@
                             rctx.fillStyle='#eef2ff'; rctx.fillRect(0,0,1280,720);
                             if(slideCanvases[currentSlide]) rctx.drawImage(slideCanvases[currentSlide],0,0,1280,720);
                         }
-                        // Start captureStream BEFORE drawing - establishes t=0
-                        var vidStream=rc.captureStream(10); // 10fps = 100ms timing accuracy
-                        // Draw AFTER stream is attached - first frame = recording start
+                        // captureStream(5) + 2fps keepalive: continuous frames, low CPU, no overheating
+                        var vidStream=rc.captureStream(5);
+                        window._iosVidStream=vidStream;
+                        // Draw initial slide AFTER stream attached
                         rctx.fillStyle='#eef2ff'; rctx.fillRect(0,0,1280,720);
                         if(slideCanvases[currentSlide]) rctx.drawImage(slideCanvases[currentSlide],0,0,1280,720);
                         window._drawRecordSlide=drawRecordSlide;
-                        // Continuous redraw at 10fps - keeps timestamp stream steady
-                        var _rdTimer=setInterval(function(){
-                            if(!isRecording){clearInterval(_rdTimer);return;}
+                        // 2fps keepalive: forces regular frames so video timeline stays continuous
+                        // 1280×720 static redraw at 2fps = ~0.2ms/sec CPU, near-zero H.264 cost
+                        window._iosKeepalive=setInterval(function(){
+                            if(!isRecording){clearInterval(window._iosKeepalive);return;}
                             rctx.fillStyle='#eef2ff'; rctx.fillRect(0,0,1280,720);
                             if(slideCanvases[currentSlide]) rctx.drawImage(slideCanvases[currentSlide],0,0,1280,720);
-                        },100);
+                        },500);
                         var combStream=new MediaStream([...vidStream.getVideoTracks(),...audioStream.getAudioTracks()]);
                         var vmts=['video/mp4','video/webm;codecs=vp8,opus','video/webm'];
                         var vmt=vmts.find(function(t){return MediaRecorder.isTypeSupported(t);})||'';
@@ -2081,7 +2083,7 @@
                         recordedChunks=[];
                         mediaRecorder.ondataavailable=function(e){if(e.data.size>0)recordedChunks.push(e.data);};
                         mediaRecorder.onstop=function(){
-                            clearInterval(_rdTimer);
+                            clearInterval(window._iosKeepalive);
                             document.body.removeChild(rc);
                             window._drawRecordSlide=null;
                             var ext=recordedMimeType.includes('webm')?'webm':'mp4';
@@ -2117,6 +2119,9 @@
                 }catch(err){alert('Microphone error: '+err.message);}
             } else {
                 clearInterval(timerInterval); isRecording=false;
+                // Stop video track FIRST to prevent extra frames being appended
+                clearInterval(window._iosKeepalive);
+                if(window._iosVidStream){ window._iosVidStream.getTracks().forEach(function(t){t.stop();}); window._iosVidStream=null; }
                 mediaRecorder.stop(); audioStream.getTracks().forEach(function(t){t.stop();});
                 indicator.classList.add('hidden');
                 btn.innerHTML='<span class="relative z-10 flex items-center gap-2"><i class="fa-solid fa-video"></i> Start Recording</span>';
@@ -2167,7 +2172,7 @@
                 var file=new File([globalRecordedBlob],fname,{type:globalRecordedBlob.type});
                 try{
                     if(navigator.canShare({files:[file]})){
-                        await navigator.share({title:'Here is my VE3A IA Practice!😊',files:[file]});
+                        await navigator.share({title:'My SpeakUp Presentation',files:[file]});
                         return;
                     }
                 }catch(e){ if(e.name==='AbortError') return; }
@@ -2478,7 +2483,7 @@
             
             if (navigator.canShare && navigator.canShare({ files: [file] })) {
                 try {
-                    await navigator.share({ title: 'Here is my VE3A IA Practice!😊', text: 'Here is my presentation recording!', files: [file] });
+                    await navigator.share({ title: 'My SpeakUp Presentation', text: 'Here is my presentation recording!', files: [file] });
                 } catch (err) { console.log("Share cancelled"); }
             } else {
                 alert("Direct WhatsApp sharing is not supported on this browser. Please use the 'Save to Device' button below, then share manually.");
